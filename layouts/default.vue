@@ -89,7 +89,7 @@ export default {
         {
           icon: 'mdi-chart-bubble',
           title: 'Charts',
-          to: '/inspire'
+          to: '/charts'
         },
         {
           icon: 'mdi-chart-bubble',
