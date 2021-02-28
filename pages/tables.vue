@@ -120,7 +120,7 @@
           </tr>
         </thead>
       </template>
-      <template #item.rate="{ item }" >
+      <template #item.rate="{ item }">
         <span class="bold" :class="getColor(item)">{{ item.rate }}</span>
       </template>
       <template #item.change="{ item }">

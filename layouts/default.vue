@@ -95,6 +95,11 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Tables',
           to: '/tables'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Welcome Page',
+          to: '/welcome_page'
         }
       ],
       miniVariant: false,
