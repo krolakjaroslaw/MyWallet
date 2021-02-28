@@ -1,6 +1,8 @@
 <template>
   <v-footer
+    :color="bgColor"
     class="footer"
+    dark
   >
     <div class="container">
       <nav>
@@ -22,6 +24,12 @@
 <script>
 export default {
   name: 'Footer',
+  props: {
+    bgColor: {
+      type: String,
+      default: '#000000'
+    }
+  },
   data () {
     return {
       year: new Date().getFullYear()
@@ -60,8 +68,6 @@ export default {
 }
 
 .footer {
-  background-color: black;
-  color: white;
   padding: 24px 0;
 
   nav {

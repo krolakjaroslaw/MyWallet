@@ -54,8 +54,7 @@ import BasicElementsSelection from '../components/welcome-page/BasicElementsSele
 export default {
   name: 'WelcomePage',
   components: { BasicElementsSelection, Parallax },
-  // components: { Parallax },
-  layout: 'welcome'
+  layout: 'parallax'
 }
 </script>
 

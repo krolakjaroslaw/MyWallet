@@ -99,7 +99,17 @@ export default {
         {
           icon: 'mdi-chart-bubble',
           title: 'Welcome Page',
-          to: '/welcome_page'
+          to: '/welcome-page'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Login',
+          to: '/login'
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'Register',
+          to: '/sign-up'
         }
       ],
       miniVariant: false,
