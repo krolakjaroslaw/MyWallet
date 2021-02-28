@@ -15,7 +15,7 @@
 
     <v-btn
       plain
-      @click="$router.push({name: '/profile'})"
+      @click="$router.push({name: 'profile'})"
     >
       Profile
     </v-btn>
@@ -38,7 +38,7 @@
 
     <v-btn
       plain
-      @click="$router.push({name: '/login'})"
+      @click="$router.push({name: 'login'})"
     >
       <v-icon left>
         mdi-account

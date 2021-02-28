@@ -4,13 +4,18 @@
     <v-main>
       <nuxt />
     </v-main>
-    <Footer />
+    <Footer :bg-color="color" />
   </v-app>
 </template>
 
 <script>
 export default {
-  name: 'Welcome'
+  name: 'Parallax',
+  computed: {
+    color () {
+      return ['/login', '/sign-up'].includes(this.$route.path) ? 'transparent' : 'black'
+    }
+  }
 }
 </script>
 
