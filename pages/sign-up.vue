@@ -23,7 +23,7 @@
             <img
               :src="'now-logo.png'"
               alt=""
-              @click="$router.push({name: 'index'})"
+              @click="$router.push({name: 'welcome-page'})"
             >
           </div>
 
@@ -119,9 +119,9 @@ export default {
       margin-bottom: 48px;
 
       & img {
-          height: 100px;
-        }
+        max-width: 100px;
       }
+    }
   }
 }
 
