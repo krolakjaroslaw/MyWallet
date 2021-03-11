@@ -249,12 +249,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.section{
+.section {
   padding: 10px 0;
   position: relative;
   background: $white-color;
 
-  .row + .category{
+  .row + .category {
     margin-top: $margin-base-vertical;
   }
 }

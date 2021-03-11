@@ -15,7 +15,7 @@
 
     <v-btn
       plain
-      @click="$router.push({name: 'profile'})"
+      @click="$router.push({name: 'user-profile'})"
     >
       Profile
     </v-btn>
