@@ -1,6 +1,6 @@
 <template>
   <div id="chart">
-    <canvas id="planet-chart" />
+    <canvas id="eur-chart" />
   </div>
 </template>
 
@@ -18,7 +18,7 @@ export default {
   mounted () {
     const labels = json.main.map(el => new Date(el[0]))
     const values = json.main.map(el => el[1])
-    this.createChart('planet-chart', this.chartData(labels, values))
+    this.createChart('eur-chart', this.chartData(labels, values))
   },
   methods: {
     createChart (chartId, chartData) {
@@ -32,5 +32,4 @@ export default {
     }
   }
 }
-
 </script>

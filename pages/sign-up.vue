@@ -127,7 +127,7 @@ export default {
 
 .parallax {
   width: 100%;
-  height: 935px !important;
+  height: 100vh !important;
 }
 
 .buttons {
