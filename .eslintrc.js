@@ -15,9 +15,7 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
-    'vue/valid-v-slot': ['error', {
-      allowModifiers: true,
-      noConsole: false
-    }]
+    'vue/valid-v-slot': ['error'],
+    'curly': ['error', 'multi-line', 'consistent']
   }
 }

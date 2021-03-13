@@ -1,14 +1,13 @@
-const chartData = (labels, data) => {
+const miniChartData = (labels, data) => {
   return {
     type: 'line',
     data: {
       labels,
       datasets: [
         { // one line graph
-          label: 'EUR/PLN',
           data,
           backgroundColor: 'rgba(54,73,93,.5)',
-          borderColor: '#36495d',
+          borderColor: '#ff0000',
           borderWidth: 3,
           fill: false,
           hidden: false,
@@ -29,28 +28,43 @@ const chartData = (labels, data) => {
       ]
     },
     options: {
+      maintainAspectRadio: false,
       responsive: true,
       lineTension: 1,
+      legend: {
+        display: false
+      },
       scales: {
         yAxes: [{
           ticks: {
-            beginAtZero: false,
-            padding: 10
-
+            display: true,
+            padding: 50,
+            maxTicksLimit: 4,
+            maxRotation: 0,
+            fontSize: 50,
+            precision: 2
           },
           gridLines: {
-            drawOnChartArea: true
+            color: 'black',
+            lineWidth: 3,
+            drawOnChartArea: false,
+            drawTicks: false
           }
         }],
         xAxes: [{
           type: 'time',
-          time: {
-            unit: 'week'
-          },
           ticks: {
-            autoSkip: true,
-            maxTicksLimit: 10,
-            padding: 10
+            display: true,
+            padding: 40,
+            maxTicksLimit: 3,
+            maxRotation: 0,
+            fontSize: 50
+          },
+          gridLines: {
+            color: 'black',
+            lineWidth: 3,
+            drawOnChartArea: false,
+            drawTicks: false
           },
           tooltip: {
             mode: 'nearest'
@@ -61,4 +75,4 @@ const chartData = (labels, data) => {
   }
 }
 
-export default chartData
+export default miniChartData
