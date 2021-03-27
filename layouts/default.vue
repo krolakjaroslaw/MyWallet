@@ -108,6 +108,11 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
+          title: 'Steppers',
+          to: '/steppers'
+        },
+        {
+          icon: 'mdi-chart-bubble',
           title: 'Welcome Page',
           to: '/welcome-page'
         },
