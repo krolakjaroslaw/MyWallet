@@ -103,6 +103,11 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
+          title: 'Multi & Mini Tables',
+          to: '/multi-tables'
+        },
+        {
+          icon: 'mdi-chart-bubble',
           title: 'Welcome Page',
           to: '/welcome-page'
         },
