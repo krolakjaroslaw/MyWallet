@@ -15,16 +15,30 @@
 
     <v-btn
       plain
-      @click="$router.push({name: 'user-profile'})"
+      @click="$router.push({name: 'dashboard'})"
     >
-      Profile
+      Dashboard
     </v-btn>
 
     <v-btn
       plain
       @click="$router.push({name: '/'})"
     >
-      Investments
+      Wallets
+    </v-btn>
+
+    <v-btn
+      plain
+      @click="$router.push({name: '/'})"
+    >
+      Operations
+    </v-btn>
+
+    <v-btn
+      plain
+      @click="$router.push({name: '/'})"
+    >
+      Stock
     </v-btn>
 
     <v-btn
@@ -43,7 +57,7 @@
       <v-icon left>
         mdi-account
       </v-icon>
-      Login
+      {{ logged ? 'Profile' : 'Login' }}
     </v-btn>
   </v-app-bar>
 </template>
@@ -60,7 +74,8 @@ export default {
   data () {
     return {
       currentScrollValue: 0,
-      drawer: false
+      drawer: false,
+      logged: false
     }
   },
   computed: {

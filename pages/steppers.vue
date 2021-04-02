@@ -50,6 +50,7 @@
           <v-btn
             class="mx-2"
             color="primary"
+            :disabled="stepper === steps.length"
             @click="stepper++"
           >
             {{ stepper === steps.length ? 'Submit' : 'Continue' }}
@@ -126,6 +127,7 @@
             <v-btn
               class="mx-2"
               color="primary"
+              :disabled="stepper2 === steps.length"
               @click="stepper2++"
             >
               {{ stepper2 === steps.length ? 'Submit' : 'Continue' }}
