@@ -59,18 +59,10 @@
             </v-card-title>
 
             <v-card-text class="py-1">
-              <v-row class="my-0">
-                <v-col
-                  cols="3"
-                  class="py-0"
-                >
-                  <v-subheader>
-                    Photo
-                  </v-subheader>
-                </v-col>
+              <v-row class="my-4">
                 <v-col
                   cols="6"
-                  class="py-0"
+                  class="buttons py-0 mx-auto"
                 >
                   <v-btn
                     color="primary"
@@ -82,23 +74,15 @@
                     >
                       mdi-cloud-upload
                     </v-icon>
-                    Pick a file
+                    Change photo
                   </v-btn>
                 </v-col>
               </v-row>
 
               <v-row class="my-0">
                 <v-col
-                  cols="3"
-                  class="py-0"
-                >
-                  <v-subheader>
-                    Name
-                  </v-subheader>
-                </v-col>
-                <v-col
                   cols="6"
-                  class="py-0"
+                  class="py-0 mx-auto"
                 >
                   <v-text-field
                     append-icon="mdi-account-circle-outline"
@@ -137,20 +121,12 @@
             <v-card-text class="py-1">
               <v-row class="my-0">
                 <v-col
-                  cols="3"
-                  class="py-0"
-                >
-                  <v-subheader>
-                    Current password
-                  </v-subheader>
-                </v-col>
-                <v-col
                   cols="6"
-                  class="py-0"
+                  class="py-0 mx-auto"
                 >
                   <v-text-field
                     append-icon="mdi-lock-outline"
-                    label="Your current password..."
+                    label="Current password"
                     type="password"
                     outlined
                     rounded
@@ -161,20 +137,12 @@
 
               <v-row class="my-0">
                 <v-col
-                  cols="3"
-                  class="py-0"
-                >
-                  <v-subheader>
-                    New password
-                  </v-subheader>
-                </v-col>
-                <v-col
                   cols="6"
-                  class="py-0"
+                  class="py-0 mx-auto"
                 >
                   <v-text-field
                     append-icon="mdi-lock-outline"
-                    label="New password..."
+                    label="New password"
                     type="password"
                     outlined
                     rounded
@@ -185,20 +153,12 @@
 
               <v-row class="my-0">
                 <v-col
-                  cols="3"
-                  class="py-0"
-                >
-                  <v-subheader>
-                    Confirm password
-                  </v-subheader>
-                </v-col>
-                <v-col
                   cols="6"
-                  class="py-0"
+                  class="py-0 mx-auto"
                 >
                   <v-text-field
                     append-icon="mdi-lock-outline"
-                    label="Confirm new password..."
+                    label="Confirm new password"
                     type="password"
                     outlined
                     rounded
@@ -291,5 +251,11 @@ export default {
 .section {
   padding: 10px 0;
   position: relative;
+}
+
+.buttons {
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
 }
 </style>
