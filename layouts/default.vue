@@ -118,6 +118,11 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
+          title: 'Wallets',
+          to: '/wallets'
+        },
+        {
+          icon: 'mdi-chart-bubble',
           title: 'Welcome Page',
           to: '/welcome-page'
         },

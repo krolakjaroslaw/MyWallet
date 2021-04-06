@@ -22,7 +22,7 @@
 
     <v-btn
       plain
-      @click="$router.push({name: '/'})"
+      @click="$router.push({name: 'wallets'})"
     >
       Wallets
     </v-btn>

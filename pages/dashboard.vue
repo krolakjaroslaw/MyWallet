@@ -344,24 +344,24 @@ export default {
       wallets: [
         {
           name: 'Wallet 1',
-          sum: 100_000.00,
-          currencies: 45_000.00,
-          resources: 20_000.00,
-          stock: 35_000.00
+          sum: 100000.00,
+          currencies: 45000.00,
+          resources: 20000.00,
+          stock: 35000.00
         },
         {
           name: 'Wallet 2',
-          sum: 100_000.00,
-          currencies: 45_000.00,
-          resources: 20_000.00,
-          stock: 35_000.00
+          sum: 100000.00,
+          currencies: 45000.00,
+          resources: 20000.00,
+          stock: 35000.00
         },
         {
           name: 'Wallet 3',
-          sum: 100_000.00,
-          currencies: 45_000.00,
-          resources: 20_000.00,
-          stock: 35_000.00
+          sum: 100000.00,
+          currencies: 45000.00,
+          resources: 20000.00,
+          stock: 35000.00
         }
       ]
     }
