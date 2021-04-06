@@ -123,6 +123,11 @@ export default {
         },
         {
           icon: 'mdi-chart-bubble',
+          title: 'Add product',
+          to: '/add-product'
+        },
+        {
+          icon: 'mdi-chart-bubble',
           title: 'Welcome Page',
           to: '/welcome-page'
         },

@@ -16,15 +16,16 @@
 
           <v-divider
             v-if="index + 1 < steps.length"
-            style="width: 165px;" />
+            style="width: 165px;"
+          />
         </div>
       </v-stepper-header>
 
       <v-stepper-items>
         <v-stepper-content
           v-for="(step, index) in steps"
-          :step="index + 1"
           :key="`step-content-${index + 1}`"
+          :step="index + 1"
         >
           <v-card
             elevation="0"
@@ -34,7 +35,6 @@
             <Step1 v-if="stepper === 1" />
             <Step2 v-if="stepper === 2" />
             <Step3 v-if="stepper === 3" />
-            <Step4 v-if="stepper === 4" />
           </v-card>
         </v-stepper-content>
 
@@ -93,15 +93,16 @@
 
             <v-divider
               v-if="index + 1 < steps.length"
-              style="width: 45px;" />
+              style="width: 45px;"
+            />
           </div>
         </v-stepper-header>
 
         <v-stepper-items>
           <v-stepper-content
             v-for="(step, index) in steps"
-            :step="index + 1"
             :key="`step-content-${index + 1}`"
+            :step="index + 1"
           >
             <v-card
               elevation="0"
@@ -111,7 +112,6 @@
               <Step1 v-if="stepper2 === 1" />
               <Step2 v-if="stepper2 === 2" />
               <Step3 v-if="stepper2 === 3" />
-              <Step4 v-if="stepper2 === 4" />
             </v-card>
           </v-stepper-content>
 
@@ -136,33 +136,33 @@
         </v-stepper-items>
       </v-stepper>
     </v-dialog>
-<!--    <v-data-table-->
-<!--      dense-->
-<!--      calculate-widths-->
-<!--      :loading="rates.length === 0"-->
-<!--      loading-text="Loading items..."-->
-<!--      :headers="headers_rates"-->
-<!--      :items="rates"-->
-<!--      item-key="name"-->
-<!--      :items-per-page="5"-->
-<!--      class="elevation-1"-->
-<!--      :custom-filter="filterByName"-->
-<!--      :footer-props="{-->
-<!--        showCurrentPage: true,-->
-<!--        showFirstLastPage: true,-->
-<!--        itemsPerPageOptions: [10]-->
-<!--      }"-->
-<!--    >-->
-<!--      <template #header="{ props: { headers } }">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--          <th :colspan="headers.length">-->
-<!--            WIG20-->
-<!--          </th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--      </template>-->
-<!--    </v-data-table>-->
+    <!--    <v-data-table-->
+    <!--      dense-->
+    <!--      calculate-widths-->
+    <!--      :loading="rates.length === 0"-->
+    <!--      loading-text="Loading items..."-->
+    <!--      :headers="headers_rates"-->
+    <!--      :items="rates"-->
+    <!--      item-key="name"-->
+    <!--      :items-per-page="5"-->
+    <!--      class="elevation-1"-->
+    <!--      :custom-filter="filterByName"-->
+    <!--      :footer-props="{-->
+    <!--        showCurrentPage: true,-->
+    <!--        showFirstLastPage: true,-->
+    <!--        itemsPerPageOptions: [10]-->
+    <!--      }"-->
+    <!--    >-->
+    <!--      <template #header="{ props: { headers } }">-->
+    <!--        <thead>-->
+    <!--        <tr>-->
+    <!--          <th :colspan="headers.length">-->
+    <!--            WIG20-->
+    <!--          </th>-->
+    <!--        </tr>-->
+    <!--        </thead>-->
+    <!--      </template>-->
+    <!--    </v-data-table>-->
   </div>
 </template>
 
@@ -170,10 +170,9 @@
 import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 import Step3 from './steps/Step3'
-import Step4 from './steps/Step4'
 export default {
   name: 'Steppers',
-  components: { Step1, Step2, Step3, Step4 },
+  components: { Step1, Step2, Step3 },
   data () {
     return {
       showDialog: false,
@@ -182,8 +181,7 @@ export default {
       steps: [
         { header: 'Name of step 1' },
         { header: 'Name of step 2' },
-        { header: 'Name of step 3' },
-        { header: 'Name of step 4' }
+        { header: 'Name of step 3' }
       ],
       rates: [
         {
