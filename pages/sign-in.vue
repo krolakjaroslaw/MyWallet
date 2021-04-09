@@ -1,3 +1,4 @@
+<!--suppress JSCheckFunctionSignatures, JSUnresolvedVariable -->
 <template>
   <div class="page-header">
     <parallax
@@ -23,37 +24,51 @@
             <img
               :src="'now-logo.png'"
               alt=""
-              @click="$router.push({name: 'welcome-page'})"
+              @click="$router.push({name: 'index'})"
             >
           </div>
 
           <v-card-text class="py-1">
-            <v-text-field
-              prepend-inner-icon="mdi-at"
-              label="Email..."
-              dark
-              filled
-              rounded
-              dense
-            />
+            <v-form v-model="valid">
+              <v-text-field
+                v-model="email"
+                prepend-inner-icon="mdi-at"
+                label="Email"
+                :rules="[
+                  $rules.required,
+                  $rules.regexCheck( /^[^\s@]+@[^\s@]+\.[^\s@]+$/gi, 'Please provide correct email')
+                ]"
+                dark
+                filled
+                rounded
+                dense
+              />
 
-            <v-text-field
-              prepend-inner-icon="mdi-lock-outline"
-              label="Password..."
-              type="password"
-              dark
-              filled
-              rounded
-              dense
-            />
+              <v-text-field
+                v-model="password"
+                prepend-inner-icon="mdi-lock-outline"
+                type="password"
+                label="Password"
+                :rules="[
+                  $rules.required,
+                  $rules.minLength(8)
+                ]"
+                dark
+                filled
+                rounded
+                dense
+              />
+            </v-form>
           </v-card-text>
 
           <v-card-actions>
             <div class="buttons">
               <v-btn
                 color="primary"
+                :disabled="!valid"
                 dark
                 rounded
+                @click="sendRequest"
               >
                 Log in
               </v-btn>
@@ -73,7 +88,7 @@
                   x-small
                   plain
                 >
-                  Need Help?
+                  Forgot password?
                 </v-btn>
               </div>
             </div>
@@ -85,9 +100,34 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+
 export default {
-  name: 'Login',
-  layout: 'parallax'
+  name: 'SignIn',
+  layout: 'parallax',
+  data () {
+    return {
+      valid: true
+    }
+  },
+  computed: {
+    email: {
+      get () { return this.getEmail() },
+      set (val) { this.setEmail(val) }
+    },
+    password: {
+      get () { return this.getPassword() },
+      set (val) { this.setPassword(val) }
+    }
+  },
+  methods: {
+    ...mapGetters('authorization', ['getEmail', 'getPassword']),
+    ...mapMutations('authorization', ['setEmail', 'setPassword']),
+    ...mapActions('authorization', ['login']),
+    sendRequest () {
+      this.login()
+    }
+  }
 }
 </script>
 

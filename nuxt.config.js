@@ -1,4 +1,5 @@
 export default {
+  ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - my-wallet',
@@ -22,6 +23,10 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    './plugins/backend',
+    './plugins/permissions',
+    './plugins/validation-rules',
+    './plugins/vue-izitoast'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -43,6 +48,10 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
+
+  router: {
+    middleware: ['permissions-redirect']
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -71,7 +80,7 @@ export default {
           warning: '#ffb236',
           error: '#ff3636',
           success: '#18ce0f'
-        },
+        }
       }
     }
   },

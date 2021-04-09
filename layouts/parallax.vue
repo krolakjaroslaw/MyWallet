@@ -13,7 +13,7 @@ export default {
   name: 'Parallax',
   computed: {
     color () {
-      return ['/login', '/sign-up'].includes(this.$route.path) ? 'transparent' : 'black'
+      return ['/sign-in', '/sign-up'].includes(this.$route.path) ? 'transparent' : 'black'
     }
   }
 }

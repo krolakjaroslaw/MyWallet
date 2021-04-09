@@ -1,89 +1,117 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
+  <div>
+    <div class="page-header">
+      <parallax
+        class="parallax"
+        style="
+          background: -webkit-linear-gradient(rgba(20, 75, 150, 0.6), rgba(44, 44, 44, 0.2)), url('header.jpg') center center no-repeat; /* For Safari 5.1 to 6.0 */
+          background: -o-linear-gradient(rgba(20, 75, 150, 0.6), rgba(44, 44, 44, 0.2)), url('header.jpg') center center no-repeat; /* For Opera 11.1 to 12.0 */
+          background: -moz-linear-gradient(rgba(20, 75, 150, 0.6), rgba(44, 44, 44, 0.2)), url('header.jpg') center center no-repeat; /* For Firefox 3.6 to 15 */
+          background: linear-gradient(rgba(20, 75, 150, 0.6), rgba(44, 44, 44, 0.2)), url('header.jpg') center center no-repeat; /* Standard syntax */
+          -webkit-background-size: cover;
+          -moz-background-size: cover;
+          -o-background-size: cover;
+          background-size: cover;
+        "
+      />
+      <div class="container">
+        <div class="content-center brand">
+          <img class="n-logo" :src="'now-logo.png'" alt="">
+
+          <h1 class="h1-seo">
+            My Wallet
+          </h1>
+
+          <h3 class="h3-seo">
+            A beautiful service for beautiful people. <br> Start earning.
+          </h3>
+
           <v-btn
-            color="primary"
-            nuxt
-            to="/charts"
+            rounded
+            plain
+            outlined
+            dark
+            @click="$router.push({name: 'sign-in'})"
           >
-            Continue
+            Get started
           </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+        </div>
+        <h5 class="category category-absolute">
+          Designed by MJ Company.
+          Coded by MJ Company.
+        </h5>
+      </div>
+    </div>
+    <BasicElementsSelection />
+    <BasicElementsSelection />
+  </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import Parallax from '../components/Parallax'
+import BasicElementsSelection from '../components/welcome-page/BasicElementsSelection'
 
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
-  }
+  name: 'WelcomePage',
+  components: { BasicElementsSelection, Parallax },
+  layout: 'parallax'
 }
 </script>
+
+<style lang="scss" scoped>
+.page-header {
+  width: 100%;
+  height: 100vh;
+
+  .container {
+    height: 100vh;
+    left: 0;
+    padding: 200px;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    .content-center {
+      color: rgba(255, 255, 255, .9);
+      text-align: center;
+    }
+  }
+
+  .category-absolute {
+    bottom: 0;
+    color: rgba(255, 255, 255, .6);
+    margin-bottom: 50px;
+    left: 0;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.brand {
+  .n-logo {
+    max-width: 100px;
+    margin-bottom: 40px;
+  }
+
+  .h1-seo {
+    font-size: 2.8em;
+    text-transform: uppercase;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+
+  .h3-seo {
+    font-size: 1.9em;
+    font-weight: 400;
+    margin-bottom: 30px;
+  }
+}
+
+.parallax {
+  width: 100%;
+  height: 100vh !important;
+}
+</style>

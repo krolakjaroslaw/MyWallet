@@ -51,18 +51,28 @@
     <v-spacer />
 
     <v-btn
+      v-if="logged"
       plain
-      @click="$router.push({name: 'login'})"
+      @click="$router.push({ name: 'user-profile' })"
     >
       <v-icon left>
         mdi-account
       </v-icon>
-      {{ logged ? 'Profile' : 'Login' }}
+      Profile
+    </v-btn>
+
+    <v-btn
+      plain
+      @click="logged ? signOut() : $router.push({ name: 'sign-in' })"
+    >
+      {{ logged ? 'Logout' : 'Login' }}
     </v-btn>
   </v-app-bar>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Header',
   props: {
@@ -74,8 +84,7 @@ export default {
   data () {
     return {
       currentScrollValue: 0,
-      drawer: false,
-      logged: false
+      drawer: false
     }
   },
   computed: {
@@ -83,6 +92,9 @@ export default {
       return this.currentScrollValue < this.primaryOnScroll
         ? 'transparent'
         : 'primary'
+    },
+    logged () {
+      return this.getCurrentUser()
     }
   },
   mounted () {
@@ -92,6 +104,12 @@ export default {
     document.removeEventListener('scroll', this.scrollListener)
   },
   methods: {
+    ...mapActions('authorization', ['logout']),
+    ...mapGetters('authorization', ['getCurrentUser']),
+    signOut () {
+      this.logout()
+      this.$router.push({ name: 'sign-in' })
+    },
     handleScroll () {
       this.currentScrollValue = document.body.scrollTop || document.documentElement.scrollTop
     },
