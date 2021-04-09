@@ -1,3 +1,4 @@
+<!--suppress JSUnresolvedVariable, CssOverwrittenProperties -->
 <template>
   <div class="page-header">
     <parallax
@@ -23,65 +24,84 @@
             <img
               :src="'now-logo.png'"
               alt=""
-              @click="$router.push({name: 'welcome-page'})"
+              @click="$router.push({name: 'index'})"
             >
           </div>
 
           <v-card-text class="py-1">
-            <v-text-field
-              prepend-inner-icon="mdi-at"
-              label="Email..."
-              dark
-              filled
-              rounded
-              dense
-            />
+            <v-form v-model="valid">
+              <v-text-field
+                v-model="email"
+                prepend-inner-icon="mdi-at"
+                label="Email"
+                :rules="[
+                  $rules.required,
+                  $rules.regexCheck( /^[^\s@]+@[^\s@]+\.[^\s@]+$/gi, 'Please provide correct email')
+                ]"
+                dark
+                filled
+                rounded
+                dense
+              />
 
-            <v-text-field
-              prepend-inner-icon="mdi-lock-outline"
-              label="Password..."
-              type="password"
-              dark
-              filled
-              rounded
-              dense
-            />
+              <v-text-field
+                v-model="password"
+                prepend-inner-icon="mdi-lock-outline"
+                type="password"
+                label="Password"
+                :rules="[
+                  $rules.required,
+                  $rules.minLength(8),
+                  $rules.regexCheck(/(?=.*[a-z])/gi, 'Password must have at least one lowercase character'),
+                  $rules.regexCheck(/(?=.*[A-Z])/gi, 'Password must have at least one uppercase character'),
+                  $rules.regexCheck(/(?=.*[0-9])/gi, 'Password must have at least one number character'),
+                  $rules.regexCheck(/(?=.*[!@#$%^&*()_+])/gi, 'Password must have at least one special character'),
+                ]"
+                dark
+                filled
+                rounded
+                dense
+              />
 
-            <v-text-field
-              prepend-inner-icon="mdi-lock-outline"
-              label="Confirm Password..."
-              type="password"
-              dark
-              filled
-              rounded
-              dense
-            />
+              <v-text-field
+                v-model="confirmPassword"
+                prepend-inner-icon="mdi-lock-outline"
+                type="password"
+                label="Confirm Password"
+                :rules="[
+                  $rules.required,
+                  v => password === confirmPassword || 'Passwords do not match'
+                ]"
+                dark
+                filled
+                rounded
+                dense
+              />
 
-            <v-text-field
-              prepend-inner-icon="mdi-account-circle-outline"
-              label="Full Name..."
-              dark
-              filled
-              rounded
-              dense
-            />
-            <!--TODO: select-->
-            <v-text-field
-              prepend-inner-icon="mdi-flag-outline"
-              label="Country..."
-              dark
-              filled
-              rounded
-              dense
-            />
+              <v-text-field
+                v-model="name"
+                prepend-inner-icon="mdi-account-circle-outline"
+                label="Full Name"
+                :rules="[
+                  $rules.required,
+                  $rules.regexCheck( /^[\w-.\s]*$/gi, 'Only letters, numbers and \'.-_\' allowed')
+                ]"
+                dark
+                filled
+                rounded
+                dense
+              />
+            </v-form>
           </v-card-text>
 
           <v-card-actions>
             <div class="buttons">
               <v-btn
                 color="primary"
+                :disabled="!valid"
                 dark
                 rounded
+                @click="sendRequest"
               >
                 Register
               </v-btn>
@@ -94,9 +114,43 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'SignUp',
-  layout: 'parallax'
+  layout: 'parallax',
+  data () {
+    return {
+      valid: true
+    }
+  },
+  computed: {
+    name: {
+      get () { return this.getName() },
+      set (val) { this.setName(val) }
+    },
+    email: {
+      get () { return this.getEmail() },
+      set (val) { this.setEmail(val) }
+    },
+    password: {
+      get () { return this.getPassword() },
+      set (val) { this.setPassword(val) }
+    },
+    confirmPassword: {
+      get () { return this.getConfirmPassword() },
+      set (val) { this.setConfirmPassword(val) }
+    }
+  },
+  methods: {
+    ...mapActions('authorization', ['registerUser']),
+    ...mapGetters('authorization', ['getName', 'getEmail', 'getPassword', 'getConfirmPassword']),
+    ...mapMutations('authorization', ['setName', 'setEmail', 'setPassword', 'setConfirmPassword']),
+    sendRequest () {
+      // TODO: validation of email, password, confirmPassword and name
+      this.registerUser()
+      this.valid = true
+    }
+  }
 }
 </script>
 
