@@ -5,7 +5,8 @@ const basicState = {
   name: '',
   email: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  currentPassword: ''
 }
 
 const role = {
@@ -24,6 +25,7 @@ export const getters = {
   getEmail: (store) => { return store.email },
   getPassword: (store) => { return store.password },
   getConfirmPassword: (store) => { return store.confirmPassword },
+  getCurrentPassword: (store) => { return store.currentPassword },
   getCurrentUser: (store) => { return store.currentUser },
   getIsAdmin: (store) => { return store.roles.includes(role.ROLE_ADMIN) }
 }
@@ -39,23 +41,26 @@ export const mutations = {
   setEmail: (store, payload) => { store.email = payload },
   setPassword: (store, payload) => { store.password = payload },
   setConfirmPassword: (store, payload) => { store.confirmPassword = payload },
+  setCurrentPassword: (store, payload) => { store.currentPassword = payload },
   setCurrentUser: (store, payload) => {
     store.currentUser = payload
     sessionStorage.setItem('currentUser', JSON.stringify(store.currentUser))
-  }
+  },
+  updateName: (store, payload) => { store.currentUser.username = payload }
 }
 
 export const actions = {
-  async login ({ commit, state }) {
+  async login ({ commit, getters, state }) {
     const request = {
       email: state.email,
       password: state.password
     }
     const response = await this.$backend.authorization.login(request)
+
     if (response && response.status === 200) {
       commit('setCurrentUser', response.data)
+      sessionStorage.setItem('token', getters.getCurrentUser.token)
       await this.$router.push({ name: 'dashboard' })
-      console.log('data', response.data)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)
@@ -87,5 +92,30 @@ export const actions = {
       console.error('error', response.status, response.data.errors)
     }
     commit('resetState')
+  },
+
+  async updatePassword ({ state }) {
+    const request = {
+      oldPassword: state.currentPassword,
+      newPassword: state.password
+    }
+    const response = await this.$backend.authorization.updatePassword(request)
+    if (response && response.status === 200) {
+      this.$toast.success('Password successfully changed')
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.error('error', response.status, response.data.error)
+    }
+  },
+
+  async updateUserName ({ commit, state }) {
+    const response = await this.$backend.authorization.updateUserName(state.name)
+    if (response && response.status === 200) {
+      this.$toast.success('Username successfully changed')
+      commit('updateName', response.data.name)
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.error('error', response.status, response.data.error)
+    }
   }
 }

@@ -1,4 +1,4 @@
-<!--suppress JSUnresolvedVariable, CssOverwrittenProperties -->
+<!--suppress JSUnresolvedVariable, CssOverwrittenProperties, CssUnknownTarget -->
 <template>
   <div class="page-header">
     <parallax
@@ -27,6 +27,20 @@
               @click="$router.push({name: 'index'})"
             >
           </div>
+
+          <v-text-field
+            v-model="name"
+            prepend-inner-icon="mdi-account-circle-outline"
+            label="Username"
+            :rules="[
+              $rules.required,
+              $rules.regexCheck( /^[\w-.\s]*$/gi, 'Only letters, numbers and \'.-_\' allowed')
+            ]"
+            dark
+            filled
+            rounded
+            dense
+          />
 
           <v-card-text class="py-1">
             <v-form v-model="valid">
@@ -70,21 +84,8 @@
                 label="Confirm Password"
                 :rules="[
                   $rules.required,
+                  $rules.minLength(8),
                   v => password === confirmPassword || 'Passwords do not match'
-                ]"
-                dark
-                filled
-                rounded
-                dense
-              />
-
-              <v-text-field
-                v-model="name"
-                prepend-inner-icon="mdi-account-circle-outline"
-                label="Full Name"
-                :rules="[
-                  $rules.required,
-                  $rules.regexCheck( /^[\w-.\s]*$/gi, 'Only letters, numbers and \'.-_\' allowed')
                 ]"
                 dark
                 filled
@@ -98,9 +99,9 @@
             <div class="buttons">
               <v-btn
                 color="primary"
-                :disabled="!valid"
                 dark
                 rounded
+                :disabled="!valid"
                 @click="sendRequest"
               >
                 Register
@@ -146,7 +147,6 @@ export default {
     ...mapGetters('authorization', ['getName', 'getEmail', 'getPassword', 'getConfirmPassword']),
     ...mapMutations('authorization', ['setName', 'setEmail', 'setPassword', 'setConfirmPassword']),
     sendRequest () {
-      // TODO: validation of email, password, confirmPassword and name
       this.registerUser()
       this.valid = true
     }

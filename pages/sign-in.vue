@@ -1,4 +1,4 @@
-<!--suppress JSCheckFunctionSignatures, JSUnresolvedVariable -->
+<!--suppress JSCheckFunctionSignatures, JSUnresolvedVariable, CssOverwrittenProperties, CssUnknownTarget -->
 <template>
   <div class="page-header">
     <parallax

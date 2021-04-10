@@ -58,7 +58,7 @@
       <v-icon left>
         mdi-account
       </v-icon>
-      Profile
+      {{ username }}
     </v-btn>
 
     <v-btn
@@ -95,6 +95,9 @@ export default {
     },
     logged () {
       return this.getCurrentUser()
+    },
+    username () {
+      return this.getCurrentUser().username
     }
   },
   mounted () {
