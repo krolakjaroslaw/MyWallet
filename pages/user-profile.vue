@@ -1,3 +1,4 @@
+<!--suppress JSUnresolvedVariable, CssOverwrittenProperties, CssUnknownTarget -->
 <template>
   <div>
     <div class="page-header">
@@ -25,7 +26,7 @@
         </div>
 
         <h3 class="title-name">
-          Ryan Schneider
+          {{ name }}
         </h3>
 
         <div class="content">
@@ -67,6 +68,7 @@
                   <v-btn
                     color="primary"
                     rounded
+                    disabled
                   >
                     <v-icon
                       left
@@ -74,6 +76,7 @@
                     >
                       mdi-cloud-upload
                     </v-icon>
+                    <!--TODO: no BE support-->
                     Change photo
                   </v-btn>
                 </v-col>
@@ -84,15 +87,21 @@
                   cols="6"
                   class="py-0 mx-auto"
                 >
-                  <v-text-field
-                    append-icon="mdi-account-circle-outline"
-                    label="Name"
-                    type="text"
-                    value="Ryan Schneider"
-                    outlined
-                    rounded
-                    dense
-                  />
+                  <v-form v-model="validName">
+                    <v-text-field
+                      v-model="name"
+                      append-icon="mdi-account-circle-outline"
+                      type="text"
+                      label="Name"
+                      :rules="[
+                        $rules.required,
+                        $rules.minLength(5)
+                      ]"
+                      outlined
+                      rounded
+                      dense
+                    />
+                  </v-form>
                 </v-col>
               </v-row>
             </v-card-text>
@@ -102,6 +111,8 @@
                 color="primary"
                 class="mx-auto mb-2 px-5"
                 rounded
+                :disabled="!validName"
+                @click="updateUserName"
               >
                 Submit
               </v-btn>
@@ -119,53 +130,76 @@
             </v-card-title>
 
             <v-card-text class="py-1">
-              <v-row class="my-0">
-                <v-col
-                  cols="6"
-                  class="py-0 mx-auto"
-                >
-                  <v-text-field
-                    append-icon="mdi-lock-outline"
-                    label="Current password"
-                    type="password"
-                    outlined
-                    rounded
-                    dense
-                  />
-                </v-col>
-              </v-row>
+              <v-form v-model="validPass">
+                <v-row class="my-0">
+                  <v-col
+                    cols="6"
+                    class="py-0 mx-auto"
+                  >
+                    <v-text-field
+                      v-model="currentPassword"
+                      append-icon="mdi-lock-outline"
+                      type="password"
+                      label="Current password"
+                      :rules="[
+                        $rules.required,
+                        $rules.minLength(8)
+                      ]"
+                      outlined
+                      rounded
+                      dense
+                    />
+                  </v-col>
+                </v-row>
 
-              <v-row class="my-0">
-                <v-col
-                  cols="6"
-                  class="py-0 mx-auto"
-                >
-                  <v-text-field
-                    append-icon="mdi-lock-outline"
-                    label="New password"
-                    type="password"
-                    outlined
-                    rounded
-                    dense
-                  />
-                </v-col>
-              </v-row>
+                <v-row class="my-0">
+                  <v-col
+                    cols="6"
+                    class="py-0 mx-auto"
+                  >
+                    <v-text-field
+                      v-model="password"
+                      append-icon="mdi-lock-outline"
+                      type="password"
+                      label="New password"
+                      :rules="[
+                        $rules.required,
+                        $rules.minLength(8),
+                        $rules.regexCheck(/(?=.*[a-z])/gi, 'Password must have at least one lowercase character'),
+                        $rules.regexCheck(/(?=.*[A-Z])/gi, 'Password must have at least one uppercase character'),
+                        $rules.regexCheck(/(?=.*[0-9])/gi, 'Password must have at least one number character'),
+                        $rules.regexCheck(/(?=.*[!@#$%^&*()_+])/gi, 'Password must have at least one special character'),
+                        v => password !== currentPassword || 'New password must be different than current'
+                      ]"
+                      outlined
+                      rounded
+                      dense
+                    />
+                  </v-col>
+                </v-row>
 
-              <v-row class="my-0">
-                <v-col
-                  cols="6"
-                  class="py-0 mx-auto"
-                >
-                  <v-text-field
-                    append-icon="mdi-lock-outline"
-                    label="Confirm new password"
-                    type="password"
-                    outlined
-                    rounded
-                    dense
-                  />
-                </v-col>
-              </v-row>
+                <v-row class="my-0">
+                  <v-col
+                    cols="6"
+                    class="py-0 mx-auto"
+                  >
+                    <v-text-field
+                      v-model="confirmPassword"
+                      append-icon="mdi-lock-outline"
+                      type="password"
+                      label="Confirm new password"
+                      :rules="[
+                        $rules.required,
+                        $rules.minLength(8),
+                        v => password === confirmPassword || 'Passwords do not match'
+                      ]"
+                      outlined
+                      rounded
+                      dense
+                    />
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-card-text>
 
             <v-card-actions>
@@ -173,6 +207,8 @@
                 color="primary"
                 class="mx-auto mb-2 px-5"
                 rounded
+                :disabled="!validPass"
+                @click="updatePassword"
               >
                 Submit
               </v-btn>
@@ -185,9 +221,46 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+
 export default {
-  name: 'SignUp',
-  layout: 'parallax'
+  name: 'UserProfile',
+  layout: 'parallax',
+  data () {
+    return {
+      validName: true,
+      validPass: true
+    }
+  },
+  computed: {
+    name: {
+      get () {
+        if (!this.getCurrentUser()) return 'Guest'
+        return this.getCurrentUser().username
+      },
+      set (val) { this.setName(val) }
+    },
+    currentPassword: {
+      get () { return this.getCurrentPassword() },
+      set (val) { this.setCurrentPassword(val) }
+    },
+    password: {
+      get () { return this.getPassword() },
+      set (val) { this.setPassword(val) }
+    },
+    confirmPassword: {
+      get () { return this.getConfirmPassword() },
+      set (val) { this.setConfirmPassword(val) }
+    }
+  },
+  destroyed () {
+    this.resetState()
+  },
+  methods: {
+    ...mapActions('authorization', ['updatePassword', 'updateUserName']),
+    ...mapGetters('authorization', ['getConfirmPassword', 'getCurrentPassword', 'getCurrentUser', 'getPassword']),
+    ...mapMutations('authorization', ['resetState', 'setConfirmPassword', 'setCurrentPassword', 'setName', 'setPassword'])
+  }
 }
 </script>
 
