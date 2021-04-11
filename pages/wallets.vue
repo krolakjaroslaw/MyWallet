@@ -1,3 +1,4 @@
+<!--suppress CssOverwrittenProperties, CssUnknownTarget -->
 <template>
   <div>
     <div class="page-header">
@@ -37,21 +38,38 @@
                     class="rounded-xl"
                     style="height: 220px; width: 250px;"
                   >
-                    <v-card-title class="d-flex flex-row justify-space-between py-2 mb-2">
-                      {{ wallet.name }}
+                    <v-card-title
+                      class="d-flex flex-row justify-space-between py-2 mb-2"
+                      style="background-color: #144b96; color: white"
+                    >
+                      <v-btn
+                        label="Name"
+                        type="text"
+                        color="transparent"
+                        elevation="0"
+                        dark
+                        dense
+                        @click="showWallet(wallet)"
+                      >
+                        {{ wallet.name }}
+                      </v-btn>
                       <div>
                         <v-btn
                           icon
-                          @click.stop="showEditDialog = true"
+                          @click.stop="editDialog(wallet)"
                         >
-                          <v-icon>mdi-pencil</v-icon>
+                          <v-icon color="white">
+                            mdi-pencil
+                          </v-icon>
                         </v-btn>
 
                         <v-btn
                           icon
-                          @click.stop="showDeleteDialog = true"
+                          @click.stop="deleteDialog(wallet)"
                         >
-                          <v-icon>mdi-trash-can</v-icon>
+                          <v-icon color="white">
+                            mdi-trash-can
+                          </v-icon>
                         </v-btn>
                       </div>
                     </v-card-title>
@@ -98,7 +116,10 @@
                     class="rounded-xl"
                     style="height: 220px; width: 250px;"
                   >
-                    <v-card-title class="d-flex flex-row justify-space-between py-2 mb-2" style="background-color: #144b96; color: white">
+                    <v-card-title
+                      class="d-flex flex-row justify-space-between py-2 mb-2"
+                      style="background-color: #144b96; color: white"
+                    >
                       {{ wallet.name }}
                       <div>
                         <v-btn icon>
@@ -149,10 +170,10 @@
 
         <v-card-text>
           <v-text-field
+            v-model="name"
             label="Name"
             class="mt-4"
             type="text"
-            value="Wallet"
             outlined
             rounded
             dense
@@ -178,6 +199,7 @@
             color="primary"
             text
             rounded
+            outlined
             @click="showAddDialog = false"
           >
             Cancel
@@ -187,7 +209,7 @@
             color="primary"
             rounded
             depressed
-            @click="showAddDialog = false"
+            @click="addNewWallet"
           >
             Save
           </v-btn>
@@ -207,10 +229,10 @@
 
         <v-card-text>
           <v-text-field
+            v-model="name"
             label="Name"
             class="mt-4"
             type="text"
-            value="Wallet"
             outlined
             rounded
             dense
@@ -224,6 +246,7 @@
             color="primary"
             text
             rounded
+            outlined
             @click="showEditDialog = false"
           >
             Cancel
@@ -233,64 +256,60 @@
             color="primary"
             rounded
             depressed
-            @click="showEditDialog = false"
+            @click="editWalletName"
           >
             Save
           </v-btn>
         </v-card-actions>
       </v-card>
+    </v-dialog>
 
-      <v-dialog
-        v-model="showDeleteDialog"
-        width="500"
-        persistent
-      >
-        <v-card class="rounded-xl">
-          <v-card-title class="headline">
-            Remove wallet
-          </v-card-title>
-
-          <v-card-text>
-            Do you really want to remove wallet?
-          </v-card-text>
-
-          <v-card-actions>
-            <v-spacer />
-
-            <v-btn
-              color="primary"
-              text
-              rounded
-              @click="showDeleteDialog = false"
-            >
-              Cancel
-            </v-btn>
-
-            <v-btn
-              color="primary"
-              rounded
-              depressed
-              @click="showDeleteDialog = false"
-            >
-              Remove
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+    <v-dialog
+      v-model="showDeleteDialog"
+      width="500"
+      persistent
+    >
+      <v-card class="rounded-xl">
+        <v-card-title class="headline">
+          Remove wallet
+        </v-card-title>
+        <v-card-text>
+          Do you really want to remove wallet?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="primary"
+            text
+            rounded
+            outlined
+            @click="showDeleteDialog = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="primary"
+            rounded
+            depressed
+            @click="removeWallet()"
+          >
+            Remove
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+
 export default {
   name: 'Wallets',
   layout: 'parallax',
   data () {
     return {
-      showAddDialog: false,
-      showDeleteDialog: false,
-      showEditDialog: false,
-      currency: 'PLN',
+      selectedItem: null,
       currencies: [
         { name: 'CHF', label: 'CHF - frank szwajcarski' },
         { name: 'EUR', label: 'EUR - euro' },
@@ -298,30 +317,70 @@ export default {
         { name: 'JPY', label: 'JPY - jen japoński' },
         { name: 'PLN', label: 'PLN - złoty polski' },
         { name: 'USD', label: 'USD - dolar amerykański' }
-      ],
-      wallets: [
-        {
-          name: 'Wallet 1',
-          sum: 100000.00,
-          currencies: 45000.00,
-          resources: 20000.00,
-          stock: 35000.00
-        },
-        {
-          name: 'Wallet 2',
-          sum: 100000.00,
-          currencies: 45000.00,
-          resources: 20000.00,
-          stock: 35000.00
-        },
-        {
-          name: 'Wallet 3',
-          sum: 100000.00,
-          currencies: 45000.00,
-          resources: 20000.00,
-          stock: 35000.00
-        }
       ]
+    }
+  },
+  computed: {
+    name: {
+      get () { return this.getName() },
+      set (val) { this.setName(val) }
+    },
+    currency: {
+      get () { return this.getCurrency() },
+      set (val) { this.setCurrency(val) }
+    },
+    showAddDialog: {
+      get () { return this.getAddWalletDialog() },
+      set (val) { this.setAddWalletDialog(val) }
+    },
+    showDeleteDialog: {
+      get () { return this.getDeleteWalletDialog() },
+      set (val) { this.setDeleteWalletDialog(val) }
+    },
+    showEditDialog: {
+      get () { return this.getEditWalletDialog() },
+      set (val) { this.setEditWalletDialog(val) }
+    },
+    wallets () { return this.getWallets() }
+  },
+  created () {
+    this.loadWallets()
+  },
+  destroyed () {
+    this.resetState()
+  },
+  methods: {
+    ...mapActions('wallets', ['createWallet', 'deleteWallet', 'getWallet', 'loadWallets', 'updateWalletName']),
+    ...mapGetters('wallets', ['getAddWalletDialog', 'getDeleteWalletDialog', 'getEditWalletDialog',
+      'getCurrency', 'getName', 'getWallets']),
+    ...mapMutations('wallets', ['resetState', 'setAddWalletDialog', 'setDeleteWalletDialog', 'setEditWalletDialog',
+      'setCurrency', 'setName']),
+
+    addNewWallet () {
+      this.createWallet()
+    },
+
+    editWalletName () {
+      this.updateWalletName(this.selectedItem.id)
+    },
+
+    removeWallet () {
+      this.deleteWallet(this.selectedItem.id)
+    },
+
+    deleteDialog (wallet) {
+      this.showDeleteDialog = true
+      this.selectedItem = wallet
+    },
+
+    editDialog (wallet) {
+      this.showEditDialog = true
+      this.selectedItem = wallet
+      this.name = this.selectedItem.name
+      this.currency = this.selectedItem.currency
+    },
+    showWallet (wallet) {
+      this.getWallet(wallet.id)
     }
   }
 }
