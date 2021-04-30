@@ -85,7 +85,7 @@ export const actions = {
     const response = await this.$backend.authorization.registerUser(request)
 
     if (response && response.status === 200) {
-      this.$toast.success(response.data.message)
+      this.$toast.success('Your account has been successfully created')
       await this.$router.push({ name: 'sign-in' })
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.errors.join('\n')}`)
@@ -100,6 +100,7 @@ export const actions = {
       newPassword: state.password
     }
     const response = await this.$backend.authorization.updatePassword(request)
+
     if (response && response.status === 200) {
       this.$toast.success('Password successfully changed')
     } else if (response && response.status !== 200) {
@@ -110,6 +111,7 @@ export const actions = {
 
   async updateUserName ({ commit, state }) {
     const response = await this.$backend.authorization.updateUserName(state.name)
+
     if (response && response.status === 200) {
       this.$toast.success('Username successfully changed')
       commit('updateName', response.data.name)

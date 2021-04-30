@@ -3,7 +3,10 @@
 
 const basicState = {
   name: '',
-  currency: 'PLN',
+  currency: {
+    label: 'PLN - złoty polski',
+    name: 'PLN'
+  },
   // dialogs
   addWalletDialog: false,
   deleteWalletDialog: false,
@@ -53,7 +56,7 @@ export const actions = {
   async createWallet ({ commit, dispatch, state }) {
     const request = {
       name: state.name,
-      currency: state.currency
+      currency: state.currency.name
     }
     const response = await this.$backend.wallets.createWallet(request)
 

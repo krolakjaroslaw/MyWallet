@@ -36,7 +36,6 @@
                 label="Email"
                 :rules="[
                   $rules.required,
-                  $rules.regexCheck( /^[^\s@]+@[^\s@]+\.[^\s@]+$/gi, 'Please provide correct email')
                 ]"
                 dark
                 filled
@@ -51,7 +50,6 @@
                 label="Password"
                 :rules="[
                   $rules.required,
-                  $rules.minLength(8)
                 ]"
                 dark
                 filled
@@ -120,9 +118,12 @@ export default {
       set (val) { this.setPassword(val) }
     }
   },
+  destroyed () {
+    this.resetState()
+  },
   methods: {
     ...mapGetters('authorization', ['getEmail', 'getPassword']),
-    ...mapMutations('authorization', ['setEmail', 'setPassword']),
+    ...mapMutations('authorization', ['resetState', 'setEmail', 'setPassword']),
     ...mapActions('authorization', ['login']),
     sendRequest () {
       this.login()

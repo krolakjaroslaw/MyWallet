@@ -19,142 +19,86 @@
 
     <div class="section">
       <v-container>
-        <v-row no-gutters>
-          <v-col cols="12">
-            <v-card
-              class="col-12 mb-6 rounded-xl"
-              style="height: 310px; background-color: #f6f6f6"
-              outlined
-            >
-              <v-card-title class="py-2">
-                Wallets
-              </v-card-title>
-
-              <v-card-text class="py-1">
-                <div class="d-flex flex-row justify-space-between">
-                  <v-card
-                    v-for="wallet in wallets"
-                    :key="wallet.id"
-                    class="rounded-xl"
-                    style="height: 220px; width: 250px;"
+        <v-card
+          class="col-12 mb-6 rounded-xl"
+          style="height: 600px; background-color: #f6f6f6"
+          outlined
+        >
+          <v-card-title class="py-2">
+            Wallets
+          </v-card-title>
+          <v-card-text class="py-1">
+            <div class="d-flex flex-row flex-wrap justify-space-between">
+              <v-card
+                v-for="wallet in wallets"
+                :key="wallet.id"
+                class="rounded-xl my-5"
+                style="height: 220px; width: 350px;"
+              >
+                <v-card-title
+                  class="d-flex flex-row justify-space-between py-2 mb-2"
+                  style="background-color: #144b96; color: white"
+                >
+                  <v-btn
+                    label="Name"
+                    type="text"
+                    color="transparent"
+                    elevation="0"
+                    dark
+                    dense
+                    @click="showWallet(wallet)"
                   >
-                    <v-card-title
-                      class="d-flex flex-row justify-space-between py-2 mb-2"
-                      style="background-color: #144b96; color: white"
+                    {{ wallet.name }}
+                  </v-btn>
+                  <div>
+                    <v-btn
+                      icon
+                      @click.stop="editDialog(wallet)"
                     >
-                      <v-btn
-                        label="Name"
-                        type="text"
-                        color="transparent"
-                        elevation="0"
-                        dark
-                        dense
-                        @click="showWallet(wallet)"
-                      >
-                        {{ wallet.name }}
-                      </v-btn>
-                      <div>
-                        <v-btn
-                          icon
-                          @click.stop="editDialog(wallet)"
-                        >
-                          <v-icon color="white">
-                            mdi-pencil
-                          </v-icon>
-                        </v-btn>
-
-                        <v-btn
-                          icon
-                          @click.stop="deleteDialog(wallet)"
-                        >
-                          <v-icon color="white">
-                            mdi-trash-can
-                          </v-icon>
-                        </v-btn>
-                      </div>
-                    </v-card-title>
-                    <v-card-text>
-                      <span class="bold green">${{ wallet.sum }}</span>
-                    </v-card-text>
-                  </v-card>
+                      <v-icon color="white">
+                        mdi-pencil
+                      </v-icon>
+                    </v-btn>
+                    <v-btn
+                      icon
+                      @click.stop="deleteDialog(wallet)"
+                    >
+                      <v-icon color="white">
+                        mdi-trash-can
+                      </v-icon>
+                    </v-btn>
+                  </div>
+                </v-card-title>
+                <v-card-text>
+                  <span class="bold green">${{ wallet.sum }}</span>
+                </v-card-text>
+              </v-card>
+              <v-tooltip
+                bottom
+                :disabled="wallets.length < 5"
+              >
+                <template #activator="{ on }">
                   <div
                     class="d-flex justify-center align-center"
-                    style="height: 220px; width: 250px;"
+                    style="height: 220px; width: 350px;"
+                    v-on="on"
                   >
                     <v-btn
                       fab
                       x-large
                       color="primary"
+                      :disabled="wallets.length === 5"
                       @click.stop="showAddDialog = true"
                     >
                       <v-icon>mdi-plus</v-icon>
                     </v-btn>
                   </div>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-
-        <v-row no-gutters>
-          <v-col cols="12">
-            <v-card
-              class="col-12 mb-6 rounded-xl"
-              style="height: 310px; background-color: #f6f6f6"
-              outlined
-              disabled
-            >
-              <v-card-title class="py-2">
-                Master wallets
-              </v-card-title>
-
-              <v-card-text class="py-1">
-                <div class="d-flex flex-row justify-space-between">
-                  <v-card
-                    v-for="wallet in wallets"
-                    :key="wallet.id"
-                    class="rounded-xl"
-                    style="height: 220px; width: 250px;"
-                  >
-                    <v-card-title
-                      class="d-flex flex-row justify-space-between py-2 mb-2"
-                      style="background-color: #144b96; color: white"
-                    >
-                      {{ wallet.name }}
-                      <div>
-                        <v-btn icon>
-                          <v-icon color="white">
-                            mdi-pencil
-                          </v-icon>
-                        </v-btn>
-                        <v-btn icon>
-                          <v-icon color="white">
-                            mdi-trash-can
-                          </v-icon>
-                        </v-btn>
-                      </div>
-                    </v-card-title>
-                    <v-card-text>
-                      <span class="bold green">${{ wallet.sum }}</span>
-                    </v-card-text>
-                  </v-card>
-                  <div
-                    class="d-flex justify-center align-center"
-                    style="height: 220px; width: 250px;"
-                  >
-                    <v-btn
-                      color="primary"
-                      x-large
-                      fab
-                    >
-                      <v-icon>mdi-plus</v-icon>
-                    </v-btn>
-                  </div>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
+                </template>
+                <span>You have reached maximum number of wallets</span>
+              </v-tooltip>
+            </div>
+          </v-card-text>
+        </v-card>
       </v-container>
     </div>
 

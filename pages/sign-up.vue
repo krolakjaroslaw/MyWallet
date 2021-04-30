@@ -142,10 +142,13 @@ export default {
       set (val) { this.setConfirmPassword(val) }
     }
   },
+  destroyed () {
+    this.resetState()
+  },
   methods: {
     ...mapActions('authorization', ['registerUser']),
     ...mapGetters('authorization', ['getName', 'getEmail', 'getPassword', 'getConfirmPassword']),
-    ...mapMutations('authorization', ['setName', 'setEmail', 'setPassword', 'setConfirmPassword']),
+    ...mapMutations('authorization', ['resetState', 'setName', 'setEmail', 'setPassword', 'setConfirmPassword']),
     sendRequest () {
       this.registerUser()
       this.valid = true
