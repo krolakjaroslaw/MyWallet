@@ -324,7 +324,8 @@ export default {
       this.currency = this.selectedItem.currency
     },
     showWallet (wallet) {
-      this.getWallet(wallet.id)
+      this.$router.push({ name: 'wallet-details' })
+      // this.getWallet(wallet.id)
     }
   }
 }
