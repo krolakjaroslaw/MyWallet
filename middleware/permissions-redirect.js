@@ -2,6 +2,7 @@
 const ROUTES_ALLOWED_TO_USER = [
   'dashboard',
   'operations',
+  'product-details',
   'user-profile',
   'wallet-details',
   'wallets'

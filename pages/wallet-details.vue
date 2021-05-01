@@ -107,7 +107,7 @@
                       v-for="item in realEstates"
                       :key="item.id"
                     >
-                      <td>{{ item.name }}</td>
+                      <td><router-link to="product-details">{{ item.name }}</router-link></td>
                       <td>{{ item.value }}</td>
                       <td>{{ item.change }}</td>
                       <td>{{ item.lastUpdate }}</td>
