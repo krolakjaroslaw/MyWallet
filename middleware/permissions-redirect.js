@@ -3,6 +3,7 @@ const ROUTES_ALLOWED_TO_USER = [
   'dashboard',
   'operations',
   'user-profile',
+  'wallet-details',
   'wallets'
 ]
 
