@@ -1,8 +1,10 @@
 // TODO: move to const
 const ROUTES_ALLOWED_TO_USER = [
+  'buy-product',
   'dashboard',
   'operations',
   'product-details',
+  'sell-product',
   'user-profile',
   'wallet-details',
   'wallets'

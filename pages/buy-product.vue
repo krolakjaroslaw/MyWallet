@@ -1,3 +1,4 @@
+<!--suppress CssOverwrittenProperties, CssUnknownTarget -->
 <template>
   <div>
     <div class="page-header">
@@ -49,8 +50,8 @@
               :step="index + 1"
             >
               <v-card elevation="0">
-                <Step1 v-if="stepper === 1" />
-                <Step2 v-if="stepper === 2" />
+                <Step1 v-if="stepper === 1" @isValid="check()" />
+                <Step2 v-if="stepper === 2" @isValid="check()" />
                 <Step3 v-if="stepper === 3" />
               </v-card>
             </v-stepper-content>
@@ -68,9 +69,9 @@
               <v-btn
                 class="mx-2"
                 color="primary"
-                :disabled="stepper === steps.length"
+                :disabled="!isValid"
                 rounded
-                @click="stepper++"
+                @click="stepper === steps.length ? submit() : stepper++; valid = false"
               >
                 {{ stepper === steps.length ? 'Submit' : 'Continue' }}
               </v-btn>
@@ -83,6 +84,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 import Step3 from './steps/Step3'
@@ -93,12 +95,60 @@ export default {
   layout: 'parallax',
   data () {
     return {
+      valid: false,
       stepper: 1,
       steps: [
         { header: 'Choose wallet & product' },
         { header: 'Fill details' },
         { header: 'Summary & preview' }
       ]
+    }
+  },
+  computed: {
+    date () { return this.getDate() },
+    group () { return this.getGroup() },
+    number () { return this.getNumber() },
+    price () { return this.getPrice() },
+    product () { return this.getProduct() },
+    wallet () { return this.getWallet() },
+    isValid () {
+      if (this.stepper === this.steps.length) return true
+      return this.valid
+    }
+  },
+  watch: {
+    stepper () {
+      if (this.stepper === 1) {
+        if (this.wallet && this.group && ['Deposit', 'Real_Estate', 'Time_Deposit'].includes(this.group)) this.valid = true
+        if (this.wallet && this.group && this.product) this.valid = true
+      } else if (this.stepper === 2) {
+        if (this.date && this.number > 0 && this.price > 0) this.valid = true
+        if (this.name && this.price > 0) this.valid = true
+      }
+    }
+  },
+  created () {
+    this.loadWallets()
+  },
+  destroyed () {
+    this.resetState()
+  },
+  methods: {
+    ...mapActions('wallets', ['loadWallets']),
+    ...mapActions('wallets/operate-product', ['loadGroups', 'loadProducts']),
+    ...mapActions('wallets/entity', ['buyProduct']),
+    ...mapGetters('wallets/operate-product', ['getDate', 'getGroup', 'getNumber', 'getPrice', 'getProduct', 'getWallet']),
+    ...mapMutations('wallets/operate-product', ['resetState']),
+
+    check () {
+      this.valid = true
+    },
+
+    submit () {
+      // TODO: walletId
+      this.buyProduct('814ab358-81f7-4809-a83a-dccae6a34764')
+      this.resetState()
+      this.$router.push({ name: 'wallet-details' })
     }
   }
 }

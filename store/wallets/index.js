@@ -85,12 +85,24 @@ export const actions = {
     commit('resetState')
   },
 
-  async getWallet ({ state }, id) {
-    const response = await this.$backend.wallets.getWallet(id)
-
+  async getWalletInfo ({ commit, state }, id) {
+    const response = await this.$backend.wallets.getWalletInfo(id)
+    console.log('getWalletInfo', response.data)
     if (response && response.status === 200) {
       console.log('Wallet', response.data)
-      // commit('deleteWallet', response.data)
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async loadWallets ({ commit }) {
+    const response = await this.$backend.wallets.getWallets()
+    console.log('wallets', response.data)
+
+    if (response && response.status === 200) {
+      commit('setWallets', response.data)
+      commit('wallets/operate-product/setWallets', response.data, { root: true })
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)
@@ -109,17 +121,6 @@ export const actions = {
       this.$toast.success('Wallet name updated successfully')
       commit('updateWalletName', response.data)
       commit('resetState')
-    } else if (response && response.status !== 200) {
-      this.$toast.error(`Error: ${response.data.error}`)
-      console.log('error', response.status, response.data.error)
-    }
-  },
-
-  async loadWallets ({ commit }) {
-    const response = await this.$backend.wallets.getWallets()
-
-    if (response && response.status === 200) {
-      commit('setWallets', response.data)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)

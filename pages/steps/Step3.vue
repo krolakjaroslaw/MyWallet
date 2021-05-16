@@ -6,7 +6,7 @@
         class="py-0 mx-auto"
       >
         <v-text-field
-          v-model="wallet"
+          v-model="wallet.name"
           class="mt-4"
           label="Wallet"
           type="text"
@@ -37,10 +37,9 @@
         class="py-0 mx-auto"
       >
         <v-text-field
-          v-model="dateFormatted"
+          v-model="date"
           label="Date"
           readonly
-          @blur="date = parseDate(dateFormatted)"
         />
       </v-col>
     </v-row>
@@ -128,46 +127,38 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Step3',
-  data: vm => ({
-    comment: 'comment',
-    wallet: 'Wallet1',
-    product: 'EUR/PLN',
-    number: 0,
-    price: 0,
-    commission: 0,
-    date: new Date().toISOString().substr(0, 10),
-    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
-    menu: false
-  }),
-
+  data () {
+    return {
+      menu: false
+    }
+  },
   computed: {
     amount () {
       return parseFloat(this.number) * parseFloat(this.price) + parseFloat(this.commission)
-    }
-  },
-
-  watch: {
-    date (val) {
-      this.dateFormatted = this.formatDate(this.date)
-    }
-  },
-
-  methods: {
-    formatDate (date) {
-      if (!date) return null
-
-      const [year, month, day] = date.split('-')
-      return `${month}/${day}/${year}`
     },
-
-    parseDate (date) {
-      if (!date) return null
-
-      const [month, day, year] = date.split('/')
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-    }
+    comment () { return this.getComment() },
+    commission () { return this.getCommission() },
+    date () { return this.getDate() },
+    number () { return this.getNumber() },
+    price () { return this.getPrice() },
+    product () { return this.getProduct() },
+    wallet () { return this.getWallet() }
+  },
+  methods: {
+    ...mapGetters('wallets/operate-product', [
+      'getComment',
+      'getCommission',
+      'getDate',
+      'getGroup',
+      'getNumber',
+      'getPrice',
+      'getProduct',
+      'getWallet'
+    ])
   }
 }
 </script>
