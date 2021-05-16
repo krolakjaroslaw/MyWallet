@@ -7,9 +7,15 @@
     fixed
     dark
   >
-    <v-app-bar-nav-icon
-      @click="drawer = true"
-    />
+<!--    <v-app-bar-nav-icon-->
+<!--      @click="drawer = true"-->
+<!--    />-->
+    <v-btn
+      icon
+      @click="$router.go(-1)"
+    >
+      <v-icon>mdi-chevron-left</v-icon>
+    </v-btn>
 
     <v-spacer />
 

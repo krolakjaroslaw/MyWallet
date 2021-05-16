@@ -144,7 +144,7 @@
             text
             rounded
             outlined
-            @click="showAddDialog = false"
+            @click="closeDialog"
           >
             Cancel
           </v-btn>
@@ -191,7 +191,7 @@
             text
             rounded
             outlined
-            @click="showEditDialog = false"
+            @click="closeDialog"
           >
             Cancel
           </v-btn>
@@ -227,7 +227,7 @@
             text
             rounded
             outlined
-            @click="showDeleteDialog = false"
+            @click="closeDialog"
           >
             Cancel
           </v-btn>
@@ -235,7 +235,7 @@
             color="primary"
             rounded
             depressed
-            @click="removeWallet()"
+            @click="removeWallet"
           >
             Remove
           </v-btn>
@@ -289,12 +289,13 @@ export default {
   },
   created () {
     this.loadWallets()
+    console.log('created', this.wallets)
   },
   destroyed () {
     this.resetState()
   },
   methods: {
-    ...mapActions('wallets', ['createWallet', 'deleteWallet', 'getWallet', 'loadWallets', 'updateWalletName']),
+    ...mapActions('wallets', ['createWallet', 'deleteWallet', 'getWalletInfo', 'loadWallets', 'updateWalletName']),
     ...mapGetters('wallets', ['getAddWalletDialog', 'getDeleteWalletDialog', 'getEditWalletDialog',
       'getCurrency', 'getName', 'getWallets']),
     ...mapMutations('wallets', ['resetState', 'setAddWalletDialog', 'setDeleteWalletDialog', 'setEditWalletDialog',
@@ -312,6 +313,13 @@ export default {
       this.deleteWallet(this.selectedItem.id)
     },
 
+    closeDialog () {
+      this.resetState()
+      this.showAddDialog = false
+      this.showDeleteDialog = false
+      this.showEditDialog = false
+    },
+
     deleteDialog (wallet) {
       this.showDeleteDialog = true
       this.selectedItem = wallet
@@ -323,9 +331,10 @@ export default {
       this.name = this.selectedItem.name
       this.currency = this.selectedItem.currency
     },
+
     showWallet (wallet) {
-      this.$router.push({ name: 'wallet-details' })
-      // this.getWallet(wallet.id)
+      this.$router.push({ name: 'wallets-id', params: { id: wallet.id } })
+      // this.getWalletInfo(wallet.id)
     }
   }
 }
