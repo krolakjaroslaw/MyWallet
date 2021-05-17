@@ -1,17 +1,27 @@
 // noinspection JSUnresolvedVariable,JSCheckFunctionSignatures
 
-const basicState = {
-  // Step1
-  wallet: '',
-  group: '',
-  product: '',
-
+const step2State = {
   // Step2
-  date: new Date().toISOString().substr(0, 10),
-  number: 0,
-  price: 0.0,
+  capitalization: '',
+  comment: '',
   commission: 0,
-  comment: ''
+  currency: '',
+  date: null,
+  interestRate: 0.0,
+  investmentTime: '',
+  name: '',
+  number: 0,
+  price: 0.0
+}
+
+const basicState = {
+  ...step2State,
+  stepper: 1,
+
+  // Step1
+  group: '',
+  product: null,
+  wallet: null
 }
 
 export const state = () => ({
@@ -32,6 +42,8 @@ export const state = () => ({
 })
 
 export const getters = {
+  getStepper: (store) => { return store.stepper },
+
   getGroups: (store) => { return store.groups },
   getProducts: (store) => { return store.products },
   getWallets: (store) => { return store.wallets },
@@ -42,9 +54,14 @@ export const getters = {
   getWallet: (store) => { return store.wallet },
 
   // Step2
+  getCapitalization: (store) => { return store.capitalization },
   getComment: (store) => { return store.comment },
   getCommission: (store) => { return store.commission },
+  getCurrency: (store) => { return store.currency },
   getDate: (store) => { return store.date },
+  getInterestRate: (store) => { return store.interestRate },
+  getInvestmentTime: (store) => { return store.investmentTime },
+  getName: (store) => { return store.name },
   getNumber: (store) => { return store.number },
   getPrice: (store) => { return store.price }
 }
@@ -54,7 +71,18 @@ export const mutations = {
     Object.keys(basicState).forEach((key) => {
       store[key] = basicState[key]
     })
+    store.date = null
+    store.product = null
+    store.wallet = null
   },
+  resetStep2State: (store) => {
+    Object.keys(step2State).forEach((key) => {
+      store[key] = step2State[key]
+    })
+    store.date = null
+  },
+  setStepper: (store, payload) => { store.stepper = payload },
+
   setGroups: (store, payload) => { store.groups = payload },
   setProducts: (store, payload) => { store.products = payload },
   setWallets: (store, payload) => { store.wallets = payload },
@@ -65,9 +93,14 @@ export const mutations = {
   setWallet: (store, payload) => { store.wallet = payload },
 
   // Step2
+  setCapitalization: (store, payload) => { store.capitalization = payload },
   setComment: (store, payload) => { store.comment = payload },
   setCommission: (store, payload) => { store.commission = payload },
+  setCurrency: (store, payload) => { store.currency = payload },
   setDate: (store, payload) => { store.date = payload },
+  setInterestRate: (store, payload) => { store.interestRate = payload },
+  setInvestmentTime: (store, payload) => { store.investmentTime = payload },
+  setName: (store, payload) => { store.name = payload },
   setNumber: (store, payload) => { store.number = payload },
   setPrice: (store, payload) => { store.price = payload }
 }

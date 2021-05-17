@@ -8,6 +8,7 @@
           class="py-0 mx-auto"
         >
           <v-menu
+            v-if="stepper === 2"
             ref="menu"
             v-model="menu"
             :close-on-content-click="false"
@@ -17,13 +18,13 @@
             <template #activator="{ on, attrs }">
               <v-text-field
                 v-model="dateFormatted"
+                label="Date"
                 hint="MM/DD/YYYY"
                 prepend-icon="mdi-calendar"
-                label="Date"
-                persistent-hint
                 :rules="[
                   $rules.required
                 ]"
+                persistent-hint
                 v-bind="attrs"
                 v-on="on"
                 @blur="date = parseDate(dateFormatted)"
@@ -31,10 +32,18 @@
             </template>
             <v-date-picker
               v-model="date"
+              :max="new Date().toISOString().substr(0,10)"
               no-title
               @input="menu = false"
             />
           </v-menu>
+
+          <v-text-field
+            v-else-if="stepper === 3"
+            v-model="date"
+            label="Date"
+            readonly
+          />
         </v-col>
       </v-row>
 
@@ -43,6 +52,7 @@
           cols="6"
           class="py-0 mx-auto"
         >
+          <!--TODO: check if wallet has this number-->
           <v-text-field
             v-model="number"
             label="Number"
@@ -52,17 +62,19 @@
               $rules.required,
               $rules.greaterThan(0)
             ]"
-            outlined
-            rounded
+            :outlined="stepper === 2"
+            :rounded="stepper === 2"
+            :readonly="stepper === 3"
             dense
           />
         </v-col>
       </v-row>
 
       <v-row class="my-0">
-        <v-col cols="3" />
-
-        <v-col cols="5">
+        <v-col
+          cols="6"
+          class="py-0 mx-auto"
+        >
           <v-text-field
             v-model="price"
             label="Price"
@@ -71,21 +83,11 @@
               $rules.required,
               $rules.greaterThan(0)
             ]"
-            outlined
-            rounded
+            :outlined="stepper === 2"
+            :rounded="stepper === 2"
+            :readonly="stepper === 3"
             dense
           />
-        </v-col>
-
-        <v-col cols="1">
-          <v-btn
-            color="primary"
-            :disabled="!date || number === 0"
-            rounded
-            @click="verify"
-          >
-            Verify
-          </v-btn>
         </v-col>
       </v-row>
 
@@ -102,8 +104,9 @@
               $rules.required,
               $rules.greaterThanEquals(0)
             ]"
-            outlined
-            rounded
+            :outlined="stepper === 2"
+            :rounded="stepper === 2"
+            :readonly="stepper === 3"
             dense
           />
         </v-col>
@@ -119,9 +122,10 @@
           v-model="amount"
           label="Amount"
           type="number"
-          disabled
-          outlined
-          rounded
+          :disabled="stepper === 2"
+          :outlined="stepper === 2"
+          :rounded="stepper === 2"
+          :readonly="stepper === 3"
           dense
         />
       </v-col>
@@ -137,10 +141,11 @@
           label="Comment"
           rows="3"
           auto-grow
-          outlined
           no-resize
           clearable
-          rounded
+          outlined
+          :rounded="stepper === 2"
+          :readonly="stepper === 3"
           dense
         />
       </v-col>
@@ -152,7 +157,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: 'Step2',
+  name: 'AddInvestmentProduct',
   data () {
     return {
       valid: true,
@@ -186,22 +191,37 @@ export default {
     price: {
       get () { return this.getPrice() },
       set (val) { this.setPrice(val) }
-    }
+    },
+    stepper () { return this.getStepper() }
   },
   watch: {
+    commission () {
+      this.$nuxt.$emit('isValid', false)
+      if (this.date && this.number > 0 && this.price > 0 && this.commission >= 0) this.$nuxt.$emit('isValid', true)
+    },
     date () {
+      this.$nuxt.$emit('isValid', false)
       this.dateFormatted = this.formatDate(this.date)
-      if (this.date && this.number > 0 && this.price > 0) this.$emit('isValid')
+      if (this.date && this.number > 0 && this.price > 0 && this.commission >= 0) this.$nuxt.$emit('isValid', true)
     },
     number () {
-      if (this.date && this.number > 0 && this.price > 0) this.$emit('isValid')
+      this.$nuxt.$emit('isValid', false)
+      if (this.date && this.number > 0 && this.price > 0 && this.commission >= 0) this.$nuxt.$emit('isValid', true)
     },
     price () {
-      if (this.date && this.number > 0 && this.price > 0) this.$emit('isValid')
+      this.$nuxt.$emit('isValid', false)
+      if (this.date && this.number > 0 && this.price > 0 && this.commission >= 0) this.$nuxt.$emit('isValid', true)
     }
   },
   methods: {
-    ...mapGetters('wallets/operate-product', ['getComment', 'getCommission', 'getDate', 'getNumber', 'getPrice']),
+    ...mapGetters('wallets/operate-product', [
+      'getComment',
+      'getCommission',
+      'getDate',
+      'getNumber',
+      'getPrice',
+      'getStepper'
+    ]),
     ...mapMutations('wallets/operate-product', ['setComment', 'setCommission', 'setDate', 'setNumber', 'setPrice']),
 
     formatDate (date) {
@@ -216,14 +236,14 @@ export default {
 
       const [month, day, year] = date.split('/')
       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-    },
-    verify () {
-      // TODO: implement
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+.v-menu__content {
+  min-width: 290px !important;
+  max-width: 290px !important;
+}
 </style>
