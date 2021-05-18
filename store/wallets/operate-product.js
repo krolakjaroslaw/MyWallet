@@ -26,17 +26,7 @@ const basicState = {
 
 export const state = () => ({
   ...basicState,
-  // TODO: get from somewhere?
-  groups: [
-    'Commodity',
-    'Currency',
-    'Deposit',
-    'ETF_GPW',
-    'Stock_GPW',
-    'Real_Estate',
-    'Time_Deposit'
-  ],
-  // TODO: get from somewhere?
+  groups: [],
   products: [],
   wallets: []
 })
@@ -107,12 +97,48 @@ export const mutations = {
 
 export const actions = {
   async loadGroups ({ commit }) {
-    // TODO: implement
-    await commit('setGroups')
+    const response = await this.$backend.wallets.getAllProductTypes()
+
+    if (response && response.status === 200) {
+      commit('setGroups', response.data.sort())
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
   },
 
-  async loadProducts ({ commit }) {
-    // TODO: implement
-    await commit('setProducts')
+  async loadGroupsInWallet ({ commit }, walletId) {
+    const response = await this.$backend.wallets.getProductTypesInWallet(walletId)
+
+    if (response && response.status === 200) {
+      commit('setGroups', response.data.filter(item => !['DEPOSIT', 'TIME_DEPOSIT'].includes(item)).sort())
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async loadProducts ({ commit, dispatch, state }, routeName) {
+    let response
+    const walletId = state.wallet.id
+    const group = state.group
+    if (routeName === 'buy-product') response = await dispatch('loadBuyingProducts')
+    if (routeName === 'sell-product') response = await this.$backend.wallets.getWalletInvestmentProducts(walletId, group)
+
+    if (response && response.status === 200) {
+      commit('setProducts', response.data.sort())
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async loadBuyingProducts ({ state }) {
+    let response
+    if (state.group === 'COMMODITY') response = await this.$backend.products.getCommoditySymbols()
+    if (state.group === 'CURRENCY') response = await this.$backend.products.getCurrencySymbols()
+    if (state.group === 'ETF_GPW') response = await this.$backend.products.getETFSymbols()
+    if (state.group === 'STOCK_GPW') response = await this.$backend.products.getStockSymbols()
+    return response
   }
 }

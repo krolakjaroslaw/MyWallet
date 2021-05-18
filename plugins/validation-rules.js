@@ -9,6 +9,7 @@ export default ({ store }, inject) => {
     minLength: (threshold) => { return value => value.length >= threshold || `Field must have minimum ${threshold} characters` },
     maxLength: (threshold) => { return value => value.length <= threshold || `Field must have maximum ${threshold} characters` },
     greaterThan: (threshold) => { return value => value > threshold || `Field must be greater than ${threshold}` },
-    greaterThanEquals: (threshold) => { return value => value >= threshold || `Field must be not lower than ${threshold}` }
+    greaterThanEquals: (threshold) => { return value => value >= threshold || `Field must be not lower than ${threshold}` },
+    lowerThanEquals: (threshold) => { return value => value <= threshold || `Field must be not greater than ${threshold}` }
   })
 }

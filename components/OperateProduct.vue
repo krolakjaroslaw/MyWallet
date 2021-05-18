@@ -125,10 +125,9 @@ export default {
   },
   watch: {
     stepper () {
-      console.log('stepper')
       this.valid = false
       if (this.stepper === 1) {
-        if (this.wallet && this.group && ['Deposit', 'Real_Estate', 'Time_Deposit'].includes(this.group)) this.valid = true
+        if (this.wallet && this.group && ['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(this.group)) this.valid = true
         if (this.wallet && this.group && this.product) this.valid = true
       } else if (this.stepper === 2) {
         if (this.name > 0 && this.price >= 0 && this.currency >= 0) this.valid = true
@@ -149,7 +148,6 @@ export default {
   },
   methods: {
     ...mapActions('wallets', ['loadWallets']),
-    ...mapActions('wallets/operate-product', ['loadGroups', 'loadProducts']),
     ...mapActions('wallets/entity', ['buyOrSellInvestmentProduct']),
     ...mapGetters('wallets/operate-product', [
       'getCommission',

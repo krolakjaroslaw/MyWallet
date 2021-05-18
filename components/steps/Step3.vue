@@ -17,7 +17,7 @@
     </v-row>
 
     <v-row
-      v-if="!['Deposit', 'Real_Estate', 'Time_Deposit'].includes(group)"
+      v-if="!['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(group)"
       class="my-0"
     >
       <v-col
@@ -34,9 +34,9 @@
       </v-col>
     </v-row>
 
-    <AddDepositAccountProduct v-if="group === 'Deposit'" />
-    <AddRealEstateProduct v-else-if="group === 'Real_Estate'" />
-    <AddTimeDepositProduct v-else-if="group === 'Time_Deposit'" />
+    <AddDepositAccountProduct v-if="group === 'DEPOSIT'" />
+    <AddRealEstateProduct v-else-if="group === 'REAL_ESTATE'" />
+    <AddTimeDepositProduct v-else-if="group === 'TIME_DEPOSIT'" />
     <AddInvestmentProduct v-else />
   </div>
 </template>

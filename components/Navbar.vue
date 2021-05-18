@@ -71,6 +71,9 @@
       plain
       @click="logged ? signOut() : $router.push({ name: 'sign-in' })"
     >
+      <v-icon left>
+        mdi-logout
+      </v-icon>
       {{ logged ? 'Logout' : 'Login' }}
     </v-btn>
   </v-app-bar>

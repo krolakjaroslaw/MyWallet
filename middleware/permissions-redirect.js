@@ -3,11 +3,11 @@ const ROUTES_ALLOWED_TO_USER = [
   'buy-product',
   'dashboard',
   'operations',
-  'product-details',
+  'products-id',
   'sell-product',
   'user-profile',
-  'wallet-details',
-  'wallets'
+  'wallets',
+  'wallets-id'
 ]
 
 const saveUserInStore = (store) => {

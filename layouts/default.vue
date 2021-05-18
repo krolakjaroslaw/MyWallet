@@ -110,41 +110,6 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Steppers',
           to: '/steppers'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Dashboard',
-          to: '/dashboard'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Wallets',
-          to: '/wallets'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Add product',
-          to: '/add-product'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Welcome Page',
-          to: '/welcome-page'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Login',
-          to: '/sign-in'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Register',
-          to: '/sign-up'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Profile',
-          to: '/user-profile'
         }
       ],
       miniVariant: false,
