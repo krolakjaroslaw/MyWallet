@@ -10,11 +10,11 @@ export default {
 
     submit () {
       const routeName = this.$route.name
-      if (['Commodity', 'Currency', 'ETF_GPW', 'Stock_GPW'].includes(this.group)) {
+      if (['COMMODITY', 'CURRENCY', 'ETF_GPW', 'STOCK_GPW'].includes(this.group)) {
         this.buyOrSellInvestmentProduct({ operationType: routeName, walletId: this.getWallet().id })
-      } else if (this.group === 'Deposit') {
+      } else if (this.group === 'DEPOSIT') {
         this.deleteDepositAccountProduct(this.getProduct().id)
-      } else if (this.group === 'Real_Estate') {
+      } else if (this.group === 'REAL_ESTATE') {
         this.sellRealEstateProduct(this.getProduct().id)
       }
       this.resetState()

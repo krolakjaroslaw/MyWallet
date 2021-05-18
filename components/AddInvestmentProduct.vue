@@ -52,16 +52,12 @@
           cols="6"
           class="py-0 mx-auto"
         >
-          <!--TODO: check if wallet has this number-->
           <v-text-field
             v-model="number"
             label="Number"
             type="number"
             class="mt-2"
-            :rules="[
-              $rules.required,
-              $rules.greaterThan(0)
-            ]"
+            :rules="numberRules"
             :outlined="stepper === 2"
             :rounded="stepper === 2"
             :readonly="stepper === 3"
@@ -188,10 +184,19 @@ export default {
       get () { return this.getNumber() },
       set (val) { this.setNumber(val) }
     },
+    numberRules () {
+      const rules = [
+        this.$rules.required,
+        this.$rules.greaterThan(0)
+      ]
+      if (this.$route.name === 'sell-product') rules.push(this.$rules.lowerThanEquals(this.product.numberOfUnits))
+      return rules
+    },
     price: {
       get () { return this.getPrice() },
       set (val) { this.setPrice(val) }
     },
+    product () { return this.getProduct() },
     stepper () { return this.getStepper() }
   },
   watch: {
@@ -220,6 +225,7 @@ export default {
       'getDate',
       'getNumber',
       'getPrice',
+      'getProduct',
       'getStepper'
     ]),
     ...mapMutations('wallets/operate-product', ['setComment', 'setCommission', 'setDate', 'setNumber', 'setPrice']),

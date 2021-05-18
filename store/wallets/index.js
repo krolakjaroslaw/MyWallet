@@ -89,7 +89,7 @@ export const actions = {
     const response = await this.$backend.wallets.getWalletInfo(id)
     console.log('getWalletInfo', response.data)
     if (response && response.status === 200) {
-      console.log('Wallet', response.data)
+      commit('wallets/entity/setWallet', response.data, { root: true })
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)

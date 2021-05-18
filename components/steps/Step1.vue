@@ -27,7 +27,6 @@
         cols="6"
         class="py-0 mx-auto"
       >
-        <!--TODO: selling product (check if wallet has this product)-->
         <v-select
           v-model="group"
           :items="groups"
@@ -45,15 +44,15 @@
         cols="6"
         class="py-0 mx-auto"
       >
-        <!--TODO: select with search-->
-        <!--TODO: selling product (check if wallet has this product)-->
-        <v-select
+        <!--TODO: to const everywhere-->
+        <v-autocomplete
           v-model="product"
           :items="products"
           item-text="symbol"
           label="Product"
           class="select"
-          :disabled="['Deposit', 'Real_Estate', 'Time_Deposit'].includes(group)"
+          :disabled="['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(group)"
+          clearable
           dense
           rounded
           outlined
@@ -65,7 +64,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Step1',
@@ -95,28 +94,14 @@ export default {
   },
   watch: {
     async group () {
+      const routeName = this.$route.name
       this.$nuxt.$emit('isValid', false)
-      // TODO: move to store
-      if (this.group === 'Commodity') {
-        const products = await this.$backend.products.getCommoditySymbols()
-        this.products = products.data
-      }
-      if (this.group === 'Currency') {
-        const products = await this.$backend.products.getCurrencySymbols()
-        this.products = products.data
-      }
-      if (this.group === 'ETF_GPW') {
-        const products = await this.$backend.products.getETFSymbols()
-        this.products = products.data
-      }
-      if (this.group === 'Stock_GPW') {
-        const products = await this.$backend.products.getStockSymbols()
-        this.products = products.data
-      }
+      // TODO: to const
+      if (!['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(this.group)) await this.loadProducts(routeName)
 
-      if (this.wallet && !!this.group && ['Deposit', 'Real_Estate', 'Time_Deposit'].includes(this.group)) {
+      if (this.wallet && this.group && ['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(this.group)) {
         this.product = null
-        this.$nuxt.$emit('isValid', true)
+        setTimeout(() => this.$nuxt.$emit('isValid', true), 100)
       }
       if (this.wallet && this.group && this.product) this.$nuxt.$emit('isValid', true)
       this.resetStep2State()
@@ -127,8 +112,12 @@ export default {
       this.resetStep2State()
     },
     wallet () {
+      if (this.$route.name === 'sell-product') this.loadGroupsInWallet(this.wallet.id)
+      else if (this.$route.name === 'buy-product') this.loadGroups()
+
       this.$nuxt.$emit('isValid', false)
-      if (this.wallet && !!this.group && ['Deposit', 'Real_Estate', 'Time_Deposit'].includes(this.group)) {
+      // TODO: to const
+      if (this.wallet && !!this.group && ['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(this.group)) {
         this.product = null
         this.$nuxt.$emit('isValid', true)
       }
@@ -137,6 +126,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('wallets/operate-product', ['loadGroups', 'loadGroupsInWallet', 'loadProducts']),
     ...mapGetters('wallets/operate-product', [
       'getGroup',
       'getGroups',

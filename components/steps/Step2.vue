@@ -1,9 +1,9 @@
 <!--suppress JSUnresolvedVariable -->
 <template>
   <div>
-    <AddDepositAccountProduct v-if="group === 'Deposit'" />
-    <AddRealEstateProduct v-else-if="group === 'Real_Estate'" />
-    <AddTimeDepositProduct v-else-if="group === 'Time_Deposit'" />
+    <AddDepositAccountProduct v-if="group === 'DEPOSIT'" />
+    <AddRealEstateProduct v-else-if="group === 'REAL_ESTATE'" />
+    <AddTimeDepositProduct v-else-if="group === 'TIME_DEPOSIT'" />
     <AddInvestmentProduct v-else />
   </div>
 </template>

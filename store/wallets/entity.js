@@ -1,10 +1,62 @@
 // noinspection JSUnresolvedVariable,JSCheckFunctionSignatures
 
+const basicState = {
+  commodities: [],
+  currencies: [],
+  deposits: [],
+  etfs: [],
+  realEstates: [],
+  stock: [],
+  timeDeposits: [],
+
+  wallet: {}
+}
+
+export const state = () => ({
+  ...basicState
+})
+
+export const getters = {
+  getCommodities: (store) => { return store.commodities },
+  getCurrencies: (store) => { return store.currencies },
+  getDeposits: (store) => { return store.deposits },
+  getEtfs: (store) => { return store.etfs },
+  getRealEstates: (store) => { return store.realEstates },
+  getStock: (store) => { return store.stock },
+  getTimeDeposits: (store) => { return store.timeDeposits },
+  getWallet: (store) => { return store.wallet }
+}
+
+export const mutations = {
+  resetState: (store) => {
+    Object.keys(basicState).forEach((key) => {
+      store[key] = basicState[key]
+    })
+    store.commodities = []
+    store.currencies = []
+    store.deposits = []
+    store.etfs = []
+    store.realEstates = []
+    store.stock = []
+    store.timeDeposits = []
+
+    store.wallet = {}
+  },
+  setCommodities: (store, payload) => { store.commodities = payload },
+  setCurrencies: (store, payload) => { store.currencies = payload },
+  setDeposits: (store, payload) => { store.deposits = payload },
+  setEtfs: (store, payload) => { store.etfs = payload },
+  setRealEstates: (store, payload) => { store.realEstates = payload },
+  setStock: (store, payload) => { store.stock = payload },
+  setTimeDeposits: (store, payload) => { store.timeDeposits = payload },
+  setWallet: (store, payload) => { store.wallet = payload }
+}
+
 export const actions = {
   async buyOrSellInvestmentProduct ({ rootState }, { operationType, walletId }) {
     const purchaseState = rootState.wallets['operate-product']
     const request = {
-      name: ['Commodity', 'Currency'].includes(purchaseState.group)
+      name: ['COMMODITY', 'CURRENCY'].includes(purchaseState.group)
         ? purchaseState.product.symbol
         : purchaseState.product.symbolShort,
       productType: purchaseState.group.toUpperCase(),
@@ -87,6 +139,82 @@ export const actions = {
 
     if (response && response.status === 200) {
       this.$toast.success(`${purchaseState.name} successfully added to wallet`)
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async getDepositProducts ({ commit, dispatch, state }, walletId) {
+    const response = await this.$backend.wallets.getWalletDepositProducts(walletId)
+    console.log('deposits', response)
+
+    if (response && response.status === 200) {
+      commit('setDeposits', response.data)
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async getInvestmentProducts ({ commit, dispatch, state }, walletId) {
+    const groups = ['COMMODITY', 'CURRENCY', 'ETF_GPW', 'STOCK_GPW']
+
+    const commodityResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[0])
+    console.log('commodities', commodityResponse)
+    if (commodityResponse && commodityResponse.status === 200) {
+      commit('setCommodities', commodityResponse.data)
+    } else if (commodityResponse && commodityResponse.status !== 200) {
+      this.$toast.error(`Error: ${commodityResponse.data.error}`)
+      console.log('error', commodityResponse.status, commodityResponse.data.error)
+    }
+
+    const currencyResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[1])
+    console.log('currencies', currencyResponse)
+    if (currencyResponse && currencyResponse.status === 200) {
+      commit('setCurrencies', currencyResponse.data)
+    } else if (currencyResponse && currencyResponse.status !== 200) {
+      this.$toast.error(`Error: ${currencyResponse.data.error}`)
+      console.log('error', currencyResponse.status, currencyResponse.data.error)
+    }
+
+    const etfResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[2])
+    console.log('etfs', etfResponse)
+    if (etfResponse && etfResponse.status === 200) {
+      commit('setEtfs', etfResponse.data)
+    } else if (etfResponse && etfResponse.status !== 200) {
+      this.$toast.error(`Error: ${etfResponse.data.error}`)
+      console.log('error', etfResponse.status, etfResponse.data.error)
+    }
+
+    const stockResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[3])
+    console.log('stock', stockResponse)
+    if (stockResponse && stockResponse.status === 200) {
+      commit('setStock', stockResponse.data)
+    } else if (stockResponse && stockResponse.status !== 200) {
+      this.$toast.error(`Error: ${stockResponse.data.error}`)
+      console.log('error', stockResponse.status, stockResponse.data.error)
+    }
+  },
+
+  async getRealEstateProducts ({ commit, dispatch, state }, walletId) {
+    const response = await this.$backend.wallets.getWalletRealEstateProducts(walletId)
+    console.log('realEstates', response)
+
+    if (response && response.status === 200) {
+      commit('setRealEstates', response.data)
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async getTimeDepositProducts ({ commit, dispatch, state }, walletId) {
+    const response = await this.$backend.wallets.getWalletTimeDepositProducts(walletId)
+    console.log('timeDeposits', response)
+
+    if (response && response.status === 200) {
+      commit('setTimeDeposits', response.data)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)

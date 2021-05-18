@@ -13,13 +13,13 @@ export default {
       const routeName = this.$route.name
       console.log('routeName', routeName)
       console.log('group', this.group)
-      if (['Commodity', 'Currency', 'ETF_GPW', 'Stock_GPW'].includes(this.group)) {
+      if (['COMMODITY', 'CURRENCY', 'ETF_GPW', 'STOCK_GPW'].includes(this.group)) {
         this.buyOrSellInvestmentProduct({ operationType: routeName, walletId: this.getWallet().id })
-      } else if (this.group === 'Deposit') {
+      } else if (this.group === 'DEPOSIT') {
         this.createDepositAccountProduct(this.getWallet().id)
-      } else if (this.group === 'Real_Estate') {
+      } else if (this.group === 'REAL_ESTATE') {
         this.buyRealEstateProduct(this.getWallet().id)
-      } else if (this.group === 'Time_Deposit') {
+      } else if (this.group === 'TIME_DEPOSIT') {
         this.createTimeDepositProduct(this.getWallet().id)
         console.log('time deposit')
       }
