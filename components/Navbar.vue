@@ -7,9 +7,6 @@
     fixed
     dark
   >
-<!--    <v-app-bar-nav-icon-->
-<!--      @click="drawer = true"-->
-<!--    />-->
     <v-btn
       icon
       @click="$router.go(-1)"

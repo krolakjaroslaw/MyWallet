@@ -98,7 +98,6 @@ export const actions = {
 
   async loadWallets ({ commit }) {
     const response = await this.$backend.wallets.getWallets()
-    console.log('wallets', response.data)
 
     if (response && response.status === 200) {
       commit('setWallets', response.data)

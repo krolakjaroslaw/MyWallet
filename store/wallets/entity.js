@@ -53,8 +53,9 @@ export const mutations = {
 }
 
 export const actions = {
-  async buyOrSellInvestmentProduct ({ rootState }, { operationType, walletId }) {
+  async buyOrSellInvestmentProduct ({ rootState }, operationType) {
     const purchaseState = rootState.wallets['operate-product']
+    const walletId = purchaseState.wallet.id
     const request = {
       name: ['COMMODITY', 'CURRENCY'].includes(purchaseState.group)
         ? purchaseState.product.symbol
@@ -76,8 +77,9 @@ export const actions = {
     }
   },
 
-  async buyRealEstateProduct ({ rootState }, walletId) {
+  async buyRealEstateProduct ({ rootState }) {
     const purchaseState = rootState.wallets['operate-product']
+    const walletId = purchaseState.wallet.id
     const request = {
       name: purchaseState.name,
       currentValue: purchaseState.price
@@ -92,8 +94,9 @@ export const actions = {
     }
   },
 
-  async createDepositAccountProduct ({ rootState }, walletId) {
+  async createDepositAccountProduct ({ rootState }) {
     const purchaseState = rootState.wallets['operate-product']
+    const walletId = purchaseState.wallet.id
     const request = {
       name: purchaseState.name,
       value: purchaseState.price,
@@ -109,8 +112,9 @@ export const actions = {
     }
   },
 
-  async createTimeDepositProduct ({ rootState }, walletId) {
+  async createTimeDepositProduct ({ rootState }) {
     const purchaseState = rootState.wallets['operate-product']
+    const walletId = purchaseState.wallet.id
     const request = {
       name: purchaseState.name,
       depositBaseAmount: purchaseState.price,
@@ -121,9 +125,7 @@ export const actions = {
       comment: purchaseState.comment,
       startTime: purchaseState.date
     }
-    console.log('request', request)
     const response = await this.$backend.wallets.addTimeDepositToWallet(walletId, request)
-    console.log('request', response)
 
     if (response && response.status === 200) {
       this.$toast.success(`${request.name} successfully added to wallet`)
@@ -147,7 +149,6 @@ export const actions = {
 
   async getDepositProducts ({ commit, dispatch, state }, walletId) {
     const response = await this.$backend.wallets.getWalletDepositProducts(walletId)
-    console.log('deposits', response)
 
     if (response && response.status === 200) {
       commit('setDeposits', response.data)
@@ -161,7 +162,7 @@ export const actions = {
     const groups = ['COMMODITY', 'CURRENCY', 'ETF_GPW', 'STOCK_GPW']
 
     const commodityResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[0])
-    console.log('commodities', commodityResponse)
+
     if (commodityResponse && commodityResponse.status === 200) {
       commit('setCommodities', commodityResponse.data)
     } else if (commodityResponse && commodityResponse.status !== 200) {
@@ -170,7 +171,7 @@ export const actions = {
     }
 
     const currencyResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[1])
-    console.log('currencies', currencyResponse)
+
     if (currencyResponse && currencyResponse.status === 200) {
       commit('setCurrencies', currencyResponse.data)
     } else if (currencyResponse && currencyResponse.status !== 200) {
@@ -179,7 +180,7 @@ export const actions = {
     }
 
     const etfResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[2])
-    console.log('etfs', etfResponse)
+
     if (etfResponse && etfResponse.status === 200) {
       commit('setEtfs', etfResponse.data)
     } else if (etfResponse && etfResponse.status !== 200) {
@@ -188,7 +189,7 @@ export const actions = {
     }
 
     const stockResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[3])
-    console.log('stock', stockResponse)
+
     if (stockResponse && stockResponse.status === 200) {
       commit('setStock', stockResponse.data)
     } else if (stockResponse && stockResponse.status !== 200) {
@@ -199,7 +200,6 @@ export const actions = {
 
   async getRealEstateProducts ({ commit, dispatch, state }, walletId) {
     const response = await this.$backend.wallets.getWalletRealEstateProducts(walletId)
-    console.log('realEstates', response)
 
     if (response && response.status === 200) {
       commit('setRealEstates', response.data)
@@ -211,7 +211,6 @@ export const actions = {
 
   async getTimeDepositProducts ({ commit, dispatch, state }, walletId) {
     const response = await this.$backend.wallets.getWalletTimeDepositProducts(walletId)
-    console.log('timeDeposits', response)
 
     if (response && response.status === 200) {
       commit('setTimeDeposits', response.data)
