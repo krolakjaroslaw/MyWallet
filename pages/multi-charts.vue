@@ -278,11 +278,6 @@ export default {
   height: 200px !important;
 }
 
-.carousel-chart {
-  width: 350px !important;
-  height: 200px !important;
-}
-
 .select {
   width: 200px;
 }

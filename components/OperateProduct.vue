@@ -180,40 +180,13 @@ export default {
   height: 17vh;
 }
 
-.container {
-  padding-top: 0;
-}
-
 .parallax {
   width: 100%;
   height: 150px !important;
 }
 
-.title {
-  font-weight: bold;
-  margin: 0 auto;
-}
-
 .section {
   padding: 10px 0;
   position: relative;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.red {
-  background-color: transparent !important;
-  color: #C62828;
-}
-
-.green {
-  background-color: transparent !important;
-  color: #43A047;
-}
-
-.black {
-  background-color: transparent !important;
 }
 </style>

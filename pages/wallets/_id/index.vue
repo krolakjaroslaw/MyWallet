@@ -24,23 +24,6 @@
           style="height: 525px; background-color: #f6f6f6;"
           outlined
         >
-          <!-- <v-card-->
-          <!--   class="rounded-xl"-->
-          <!--   elevation="0"-->
-          <!--   style="min-width: 150px; max-width: 200px;"-->
-          <!-- >-->
-          <!--   <v-card-title class="mb-4">-->
-          <!--     Wallets:-->
-          <!--   </v-card-title>-->
-          <!--   <v-card-text-->
-          <!--     v-for="item in wallets"-->
-          <!--     :key="item.id"-->
-          <!--     class="py-3"-->
-          <!--   >-->
-          <!--     {{ item.name }}-->
-          <!--   </v-card-text>-->
-          <!-- </v-card>-->
-
           <v-card
             elevation="0"
             style="background-color: transparent"
@@ -106,8 +89,8 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id } }">
-                          {{ item.name }}
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
+                          {{ item.symbol }}
                         </router-link>
                       </td>
                       <td class="text-center">
@@ -172,8 +155,8 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id } }">
-                          {{ item.name }}
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
+                          {{ item.symbol }}
                         </router-link>
                       </td>
                       <td class="text-center">
@@ -232,7 +215,7 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id } }">
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
                           {{ item.name }}
                         </router-link>
                       </td>
@@ -292,8 +275,8 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id } }">
-                          {{ item.name }}
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
+                          {{ item.symbol }}
                         </router-link>
                       </td>
                       <td class="text-center">
@@ -358,7 +341,7 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id } }">
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
                           {{ item.name }}
                         </router-link>
                       </td>
@@ -424,7 +407,7 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id } }">
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
                           {{ item.name }}
                         </router-link>
                       </td>
@@ -490,8 +473,8 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id } }">
-                          {{ item.name }}
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
+                          {{ item.symbol }}
                         </router-link>
                       </td>
                       <td class="text-center">
@@ -695,41 +678,14 @@ export default {
   height: 17vh;
 }
 
-.container {
-  padding-top: 0;
-}
-
 .parallax {
   width: 100%;
   height: 150px !important;
 }
 
-.title {
-  font-weight: bold;
-  margin: 0 auto;
-}
-
 .section {
   padding: 10px 0;
   position: relative;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.red {
-  background-color: transparent !important;
-  color: #C62828;
-}
-
-.green {
-  background-color: transparent !important;
-  color: #43A047;
-}
-
-.black {
-  background-color: transparent !important;
 }
 
 .v-expansion-panel--active > .v-expansion-panel-header {

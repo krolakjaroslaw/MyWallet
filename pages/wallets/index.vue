@@ -289,7 +289,6 @@ export default {
   },
   created () {
     this.loadWallets()
-    console.log('created', this.wallets)
   },
   destroyed () {
     this.resetState()
@@ -346,18 +345,9 @@ export default {
   height: 17vh;
 }
 
-.container {
-  padding-top: 0;
-}
-
 .parallax {
   width: 100%;
   height: 150px !important;
-}
-
-.title {
-  font-weight: bold;
-  margin: 0 auto;
 }
 
 .section {
@@ -369,17 +359,8 @@ export default {
   font-weight: bold;
 }
 
-.red {
-  background-color: transparent !important;
-  color: #C62828;
-}
-
 .green {
   background-color: transparent !important;
   color: #43A047;
-}
-
-.black {
-  background-color: transparent !important;
 }
 </style>
