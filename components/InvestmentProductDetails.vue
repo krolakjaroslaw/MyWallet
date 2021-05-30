@@ -1,4 +1,4 @@
-<!--suppress CssUnknownTarget, CssOverwrittenProperties -->
+<!--suppress CssUnknownTarget, CssOverwrittenProperties, JSUnresolvedVariable -->
 <!--eslint-disable vue/no-parsing-error-->
 <template>
   <v-container>
@@ -13,7 +13,7 @@
         style="min-width: 300px; max-width: 300px;"
       >
         <v-card-title class="d-flex flex-column mb-15">
-          {{ symbol }}
+          {{ symbolLong }}
           <v-divider style="background-color: #144b96; width: 100%;" />
         </v-card-title>
         <v-card-text>
@@ -82,7 +82,7 @@
         style="background-color: transparent"
       >
         <v-card-title class="d-flex flex-row justify-space-between fill-width py-2">
-          <span>{{ symbol }}</span>
+          <span>{{ symbolLong }}</span>
           <span>
             <b>{{ currentUnitPrice }} zł</b>
             <!--TODO-->
@@ -172,10 +172,9 @@
 </template>
 
 <script>
-import json from 'assets/allegro-data.json'
 import chartData from 'assets/allegro-chart-data'
 import Chart from 'chart.js'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'InvestmentProductDetails',
@@ -187,35 +186,55 @@ export default {
   },
   computed: {
     averagePurchaseValue () { return this.getAveragePurchaseValue() },
+    chartJson () { return this.getChartJson() },
     currentPurchaseValue () { return this.getCurrentPurchaseValue() },
     currentUnitPrice () { return this.getCurrentUnitPrice() },
     numberOfUnits () { return this.getNumberOfUnits() },
+    productType () { return this.getProductType() },
     profit () { return this.getProfit() },
     purchaseHistory () { return this.getPurchaseHistory() },
     rateOfReturn () { return this.getRateOfReturn() },
-    symbol () { return this.getSymbol() }
+    symbol () { return this.getSymbol() },
+    symbolLong: {
+      get () { return this.getSymbolLong() },
+      set (val) { this.setSymbolLong(val) }
+    }
   },
-  created () {
-    this.getProductSummary(this.$route.params.id)
-    this.getHistoryData(this.$route.params.id)
-  },
-  mounted () {
-    const labels = json.main.map(el => new Date(el[0]))
-    const values = json.main.map(el => el[1])
-    this.createChart('chart', this.chartData(labels, values))
+
+  async mounted () {
+    await this.getProductSummary(this.$route.params.id)
+    await this.getHistoryData(this.$route.params.id)
+    switch (this.productType) {
+      case 'ETF_GPW': this.symbolLong = (await this.$backend.products.getETFSymbols())
+        .data.find(item => item.symbolShort === this.symbol).symbol
+        break
+      case 'STOCK_GPW': this.symbolLong = (await this.$backend.products.getStockSymbols())
+        .data.find(item => item.symbolShort === this.symbol).symbol
+        break
+      default: this.symbolLong = this.symbol
+    }
+    await this.getStockData()
+
+    const labels = this.chartJson.map(el => new Date(el[0]))
+    const values = this.chartJson.map(el => el[1])
+    this.createChart('chart', this.chartData(labels, values, values[0]))
   },
   methods: {
-    ...mapActions('products/entity', ['getHistoryData', 'getProductSummary']),
+    ...mapActions('products/entity', ['getHistoryData', 'getProductSummary', 'getAllStockData', 'getStockData']),
     ...mapGetters('products/entity', [
       'getAveragePurchaseValue',
+      'getChartJson',
       'getCurrentPurchaseValue',
       'getCurrentUnitPrice',
       'getNumberOfUnits',
+      'getProductType',
       'getProfit',
       'getPurchaseHistory',
       'getRateOfReturn',
-      'getSymbol'
+      'getSymbol',
+      'getSymbolLong'
     ]),
+    ...mapMutations('products/entity', ['setSymbolLong']),
 
     createChart (chartId, chartData) {
       const ctx = document.getElementById(chartId)
@@ -225,9 +244,6 @@ export default {
         options: chartData.options
       })
       console.log(myChart)
-    },
-    changeData (item) {
-      console.log('change', item)
     }
   }
 }

@@ -124,7 +124,6 @@
 </template>
 
 <script>
-import json from 'assets/allegro-data.json'
 import chartData from 'assets/allegro-chart-data'
 import Chart from 'chart.js'
 import { mapActions, mapGetters } from 'vuex'
@@ -138,6 +137,7 @@ export default {
     }
   },
   computed: {
+    chartJson () { return this.getChartJson() },
     currentValuation () { return this.getCurrentValuation() },
     name () { return this.getName() },
     profit () { return this.getProfit() },
@@ -145,18 +145,19 @@ export default {
     purchaseValuation () { return this.getPurchaseValuation() },
     rateOfReturn () { return this.getRateOfReturn() }
   },
-  created () {
-    this.getProductSummary(this.$route.params.id)
-    this.getHistoryData(this.$route.params.id)
-  },
-  mounted () {
-    const labels = json.main.map(el => new Date(el[0]))
-    const values = json.main.map(el => el[1])
-    this.createChart('chart', this.chartData(labels, values))
+  async mounted () {
+    await this.getProductSummary(this.$route.params.id)
+    await this.getHistoryData(this.$route.params.id)
+    this.getRealEstateChartData()
+
+    const labels = this.chartJson.map(el => new Date(el.date))
+    const values = this.chartJson.map(el => el.value)
+    this.createChart('chart', this.chartData(labels, values, values[0]))
   },
   methods: {
-    ...mapActions('products/entity', ['getHistoryData', 'getProductSummary']),
+    ...mapActions('products/entity', ['getHistoryData', 'getProductSummary', 'getRealEstateChartData']),
     ...mapGetters('products/entity', [
+      'getChartJson',
       'getCurrentValuation',
       'getName',
       'getProfit',
@@ -173,9 +174,6 @@ export default {
         options: chartData.options
       })
       console.log(myChart)
-    },
-    changeData (item) {
-      console.log('change', item)
     }
   }
 }
