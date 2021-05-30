@@ -5,6 +5,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SellProduct',
   extends: OperateProduct,
+  layout: 'parallax',
   methods: {
     ...mapGetters('wallets/operate-product', ['getProduct', 'getWallet']),
 

@@ -4,7 +4,8 @@
   <v-container>
     <v-card
       class="col-12 mb-6 rounded-xl d-flex flex-row"
-      style="height: 525px; background-color: #f6f6f6;"
+      :class="productType === 'DEPOSIT' ? 'card-expanded' : 'card'"
+      style="background-color: #f6f6f6;"
       outlined
     >
       <v-card
@@ -150,7 +151,6 @@
 </template>
 
 <script>
-import json from 'assets/allegro-data.json'
 import chartData from 'assets/allegro-chart-data'
 import Chart from 'chart.js'
 import { mapActions, mapGetters } from 'vuex'
@@ -171,6 +171,7 @@ export default {
   },
   computed: {
     capitalization () { return this.getCapitalization() },
+    chartJson () { return this.getChartJson() },
     currency () { return this.getCurrency() },
     currentProfit () { return this.getCurrentProfit() },
     depositBaseAmount () { return this.getDepositBaseAmount() },
@@ -183,19 +184,27 @@ export default {
     startTime () { return this.getStartTime() },
     value () { return this.getValue() }
   },
-  created () {
-    this.getProductSummary(this.$route.params.id)
-    this.getHistoryData(this.$route.params.id)
-  },
-  mounted () {
-    const labels = json.main.map(el => new Date(el[0]))
-    const values = json.main.map(el => el[1])
-    this.createChart('chart', this.chartData(labels, values))
+  async mounted () {
+    await this.getProductSummary(this.$route.params.id)
+    await this.getHistoryData(this.$route.params.id)
+    this.productType === 'DEPOSIT'
+      ? this.getDepositChartData()
+      : this.getTimeDepositChartData()
+
+    const labels = this.chartJson.map(el => new Date(el.date))
+    const values = this.chartJson.map(el => el.value)
+    this.createChart('chart', this.chartData(labels, values, values[0]))
   },
   methods: {
-    ...mapActions('products/entity', ['getHistoryData', 'getProductSummary']),
+    ...mapActions('products/entity', [
+      'getDepositChartData',
+      'getHistoryData',
+      'getProductSummary',
+      'getTimeDepositChartData'
+    ]),
     ...mapGetters('products/entity', [
       'getCapitalization',
+      'getChartJson',
       'getCurrency',
       'getCurrentProfit',
       'getDepositBaseAmount',
@@ -217,9 +226,6 @@ export default {
         options: chartData.options
       })
       console.log(myChart)
-    },
-    changeData (item) {
-      console.log('change', item)
     }
   }
 }
@@ -228,14 +234,24 @@ export default {
 <style lang="scss" scoped>
 $chart-width: 800px;
 $table-width: 300px;
+$chart-height: 400px;
+$table-height: 150px;
+
+.card {
+  height: 525px;
+}
+
+.card-expanded {
+  height: 675px;
+}
 
 .chart {
   width: $chart-width !important;
-  height: 400px !important;
+  height: $chart-height;
 }
 
 .chart-expanded {
   width: $chart-width + $table-width;
-  height: 400px !important;
+  height: $chart-height + $table-height;
 }
 </style>

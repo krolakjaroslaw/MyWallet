@@ -1,5 +1,7 @@
 // noinspection JSUnresolvedVariable,JSCheckFunctionSignatures
 
+import moment from 'moment'
+
 const basicState = {
   averagePurchaseValue: 0.0,
   capitalization: '',
@@ -21,7 +23,9 @@ const basicState = {
   rateOfReturn: 0.0,
   startTime: '',
   symbol: '',
+  symbolLong: '',
   value: 0.0,
+  chartJson: [],
   purchaseHistory: []
 }
 
@@ -32,6 +36,7 @@ export const state = () => ({
 export const getters = {
   getAveragePurchaseValue: (store) => { return store.averagePurchaseValue },
   getCapitalization: (store) => { return store.capitalization },
+  getChartJson: (store) => { return store.chartJson },
   getCurrency: (store) => { return store.currency },
   getCurrentProfit: (store) => { return store.currentProfit },
   getCurrentPurchaseValue: (store) => { return store.currentPurchaseValue },
@@ -51,6 +56,7 @@ export const getters = {
   getRateOfReturn: (store) => { return store.rateOfReturn },
   getStartTime: (store) => { return store.startTime },
   getSymbol: (store) => { return store.symbol },
+  getSymbolLong: (store) => { return store.symbolLong },
   getValue: (store) => { return store.value }
 }
 
@@ -60,14 +66,17 @@ export const mutations = {
       store[key] = basicState[key]
     })
     store.purchaseHistory = []
+    store.chartJson = {}
   },
+  setChartJson: (store, payload) => { store.chartJson = payload },
   setProductDetails: (store, payload) => {
     Object.keys(payload).forEach((key) => {
       store[key] = payload[key]
     })
   },
   setProductType: (store, payload) => { store.productType = payload },
-  setPurchaseHistory: (store, payload) => { store.purchaseHistory = payload }
+  setPurchaseHistory: (store, payload) => { store.purchaseHistory = payload },
+  setSymbolLong: (store, payload) => { store.symbolLong = payload }
 }
 
 export const actions = {
@@ -126,5 +135,79 @@ export const actions = {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)
     }
+  },
+
+  async getAllStockData () {
+    const response = await this.$backend.products.getAllGpwStockWithDetailedInfo()
+    console.log('getAllStockData', response)
+  },
+
+  async getStockData ({ commit, state }) {
+    const today = moment(new Date()).format('YYYY-MM-DD')
+    const request = {
+      today: false,
+      dateFrom: convertStringToCurrentMillisPlusDay(state.purchaseHistory[0].transactionDate),
+      dateTo: convertStringToCurrentMillisPlusDay(today),
+      maxPeriod: false
+    }
+    const response = await this.$backend.products.getGpwStockDetailedInfo(state.symbol)
+    console.log('getStockData', response)
+    const chartResponse = await this.$backend.products.getGpwStockChartInfo(state.symbolLong, request)
+    commit('setChartJson', chartResponse.data.main)
+  },
+
+  getTimeDepositChartData ({ commit, state }) {
+    const data = []
+    data.push({
+      date: convertStringToCurrentMillis(state.startTime),
+      value: state.depositBaseAmount
+    })
+    data.push({
+      date: convertStringToCurrentMillis(moment(new Date()).format('YYYY-MM-DD')),
+      value: state.depositBaseAmount + state.currentProfit
+    })
+    data.push({
+      // TODO: flex it
+      date: convertStringToCurrentMillis(
+        moment(state.startTime).add(state.investmentTermTimeCount, 'M').format('YYYY-MM-DD')
+      ),
+      value: state.depositBaseAmount + state.estimatedProfit
+    })
+    commit('setChartJson', data)
+  },
+
+  getDepositChartData ({ commit, state }) {
+    const data = state.purchaseHistory.map(item => ({
+      date: convertStringToCurrentMillis(item.balanceChangeDate),
+      value: item.balance
+    }))
+
+    data.push({
+      date: convertStringToCurrentMillis(moment(new Date()).format('YYYY-MM-DD')),
+      value: state.value
+    })
+    commit('setChartJson', data)
+  },
+
+  getRealEstateChartData ({ commit, state }) {
+    const data = state.purchaseHistory.map(item => ({
+      date: convertStringToCurrentMillis(item.valuationDate),
+      value: item.valuation
+    }))
+
+    data.push({
+      date: convertStringToCurrentMillis(moment(new Date()).format('YYYY-MM-DD')),
+      value: state.purchaseValuation
+    })
+    commit('setChartJson', data)
   }
+}
+
+// TODO: move to plugin
+function convertStringToCurrentMillisPlusDay (date) {
+  return moment(date).add(1, 'day').toDate().valueOf()
+}
+
+function convertStringToCurrentMillis (date) {
+  return moment(date).toDate().valueOf()
 }
