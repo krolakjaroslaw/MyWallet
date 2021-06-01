@@ -17,8 +17,9 @@
       />
       <div class="container">
         <div class="photo-container">
+          <!--TODO-->
           <img
-            :src="'ryan.jpg'"
+            :src="getImage()"
             alt=""
             height="123"
             width="123"
@@ -28,7 +29,7 @@
         <h3 class="title-name">
           {{ name }}
         </h3>
-
+        <!--TODO-->
         <div class="content">
           <div class="social-description">
             <h2>$260.000</h2>
@@ -60,34 +61,32 @@
             </v-card-title>
 
             <v-card-text class="py-1">
-              <v-row class="my-4">
-                <v-col
-                  cols="6"
-                  class="buttons py-0 mx-auto"
-                >
-                  <v-btn
-                    color="primary"
-                    rounded
-                    disabled
+              <v-form v-model="validName">
+                <v-row class="my-4">
+                  <v-col
+                    cols="6"
+                    class="buttons py-0 mx-auto"
                   >
-                    <v-icon
-                      left
-                      dark
-                    >
-                      mdi-cloud-upload
-                    </v-icon>
-                    <!--TODO: no BE support-->
-                    Change photo
-                  </v-btn>
-                </v-col>
-              </v-row>
+                    <v-file-input
+                      v-model="userPhoto"
+                      prepend-icon="mdi-camera"
+                      accept="image/*"
+                      label="Photo"
+                      :rules="[
+                        $rules.maxSize(1000)
+                      ]"
+                      outlined
+                      rounded
+                      dense
+                    />
+                  </v-col>
+                </v-row>
 
-              <v-row class="my-0">
-                <v-col
-                  cols="6"
-                  class="py-0 mx-auto"
-                >
-                  <v-form v-model="validName">
+                <v-row class="my-0">
+                  <v-col
+                    cols="6"
+                    class="py-0 mx-auto"
+                  >
                     <v-text-field
                       v-model="name"
                       append-icon="mdi-account-circle-outline"
@@ -101,9 +100,9 @@
                       rounded
                       dense
                     />
-                  </v-form>
-                </v-col>
-              </v-row>
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-card-text>
 
             <v-card-actions>
@@ -112,7 +111,7 @@
                 class="mx-auto mb-2 px-5"
                 rounded
                 :disabled="!validName"
-                @click="updateUserName"
+                @click="editProfile"
               >
                 Submit
               </v-btn>
@@ -228,6 +227,7 @@ export default {
   layout: 'parallax',
   data () {
     return {
+      userPhoto: null,
       validName: true,
       validPass: true
     }
@@ -259,7 +259,34 @@ export default {
   methods: {
     ...mapActions('authorization', ['updatePassword', 'updateUserName']),
     ...mapGetters('authorization', ['getConfirmPassword', 'getCurrentPassword', 'getCurrentUser', 'getPassword']),
-    ...mapMutations('authorization', ['resetState', 'setConfirmPassword', 'setCurrentPassword', 'setName', 'setPassword'])
+    ...mapMutations('authorization', ['resetState', 'setConfirmPassword', 'setCurrentPassword', 'setName', 'setPassword']),
+    editProfile () {
+      if (this.name) this.updateUserName()
+
+      if (this.userPhoto) {
+        // const reader = new FileReader()
+        // reader.readAsDataURL(this.userPhoto)
+        // reader.onload = (e) => {
+        //   this.image = e.target.result
+        // }
+        const dataForm = new FormData()
+        dataForm.append('file', this.userPhoto)
+        this.$backend.authorization.updateUserPhoto(dataForm)
+      }
+    },
+    getImage () {
+      return this.$backend.authorization.getUserPhoto()
+        .then((response) => {
+          console.log('response', response)
+          window.URL.createObjectURL(response.data)
+        })
+    }
+    // const reader = new FileReader()
+    // reader.readAsDataURL(response.data)
+    // reader.onload = (e) => {
+    //   this.image = e.target.result
+    //   console.log('image', this.image)
+    // }
   }
 }
 </script>

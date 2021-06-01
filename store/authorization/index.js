@@ -110,7 +110,7 @@ export const actions = {
   },
 
   async updateUserName ({ commit, state }) {
-    const response = await this.$backend.authorization.updateUserName(state.name)
+    const response = await this.$backend.authorization.updateUserName(state.currentUser.username)
 
     if (response && response.status === 200) {
       this.$toast.success('Username successfully changed')

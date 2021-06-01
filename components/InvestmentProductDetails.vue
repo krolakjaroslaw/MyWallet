@@ -102,7 +102,7 @@
       elevation="0"
     >
       <v-card-title class="d-flex flex-column">
-        Historia trasakcji
+        Historia transakcji
         <v-divider style="background-color: #144b96; width: 100%;" />
       </v-card-title>
       <v-card-text>

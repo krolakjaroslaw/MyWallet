@@ -32,14 +32,14 @@
 
     <v-btn
       plain
-      @click="$router.push({name: '/'})"
+      @click="$router.push({name: 'operations'})"
     >
       Operations
     </v-btn>
 
     <v-btn
       plain
-      @click="$router.push({name: '/'})"
+      @click="$router.push({name: 'stock'})"
     >
       Stock
     </v-btn>

@@ -1,6 +1,7 @@
 <!--suppress JSUnresolvedVariable, CssOverwrittenProperties, CssUnknownTarget -->
 <template>
   <div class="page-header">
+    <!--TODO: move to separate component-->
     <parallax
       class="parallax"
       style="
@@ -28,22 +29,25 @@
             >
           </div>
 
-          <v-text-field
-            v-model="name"
-            prepend-inner-icon="mdi-account-circle-outline"
-            label="Username"
-            :rules="[
-              $rules.required,
-              $rules.regexCheck( /^[\w-.\s]*$/gi, 'Only letters, numbers and \'.-_\' allowed')
-            ]"
-            dark
-            filled
-            rounded
-            dense
-          />
+          <v-form
+            v-model="valid"
+            @submit.prevent="sendRequest"
+          >
+            <v-card-text class="py-1">
+              <v-text-field
+                v-model="name"
+                prepend-inner-icon="mdi-account-circle-outline"
+                label="Username"
+                :rules="[
+                  $rules.required,
+                  $rules.regexCheck( /^[\w-.\s]*$/gi, 'Only letters, numbers and \'.-_\' allowed')
+                ]"
+                dark
+                filled
+                rounded
+                dense
+              />
 
-          <v-card-text class="py-1">
-            <v-form v-model="valid">
               <v-text-field
                 v-model="email"
                 prepend-inner-icon="mdi-at"
@@ -92,22 +96,23 @@
                 rounded
                 dense
               />
-            </v-form>
-          </v-card-text>
+            </v-card-text>
 
-          <v-card-actions>
-            <div class="buttons">
-              <v-btn
-                color="primary"
-                dark
-                rounded
-                :disabled="!valid"
-                @click="sendRequest"
-              >
-                Register
-              </v-btn>
-            </div>
-          </v-card-actions>
+            <v-card-actions>
+              <div class="buttons">
+                <v-btn
+                  color="primary"
+                  type="submit"
+                  dark
+                  rounded
+                  :disabled="!valid"
+                  @click="sendRequest"
+                >
+                  Register
+                </v-btn>
+              </div>
+            </v-card-actions>
+          </v-form>
         </v-card>
       </div>
     </div>

@@ -1,6 +1,7 @@
 <!--suppress JSCheckFunctionSignatures, JSUnresolvedVariable, CssOverwrittenProperties, CssUnknownTarget -->
 <template>
   <div class="page-header">
+    <!--    TODO: move to separate component-->
     <parallax
       class="parallax"
       style="
@@ -28,8 +29,11 @@
             >
           </div>
 
-          <v-card-text class="py-1">
-            <v-form v-model="valid">
+          <v-form
+            v-model="valid"
+            @submit.prevent="sendRequest"
+          >
+            <v-card-text class="py-1">
               <v-text-field
                 v-model="email"
                 prepend-inner-icon="mdi-at"
@@ -56,41 +60,42 @@
                 rounded
                 dense
               />
-            </v-form>
-          </v-card-text>
+            </v-card-text>
 
-          <v-card-actions>
-            <div class="buttons">
-              <v-btn
-                color="primary"
-                :disabled="!valid"
-                dark
-                rounded
-                @click="sendRequest"
-              >
-                Log in
-              </v-btn>
-
-              <div class="secondary-buttons mt-3">
+            <v-card-actions>
+              <div class="buttons">
                 <v-btn
-                  color="white"
-                  x-small
-                  plain
-                  @click="$router.push({ name: 'sign-up' })"
+                  color="primary"
+                  type="submit"
+                  :disabled="!valid"
+                  dark
+                  rounded
+                  @click="sendRequest"
                 >
-                  Create Account
+                  Log in
                 </v-btn>
 
-                <v-btn
-                  color="white"
-                  x-small
-                  plain
-                >
-                  Forgot password?
-                </v-btn>
+                <div class="secondary-buttons mt-3">
+                  <v-btn
+                    color="white"
+                    x-small
+                    plain
+                    @click="$router.push({ name: 'sign-up' })"
+                  >
+                    Create Account
+                  </v-btn>
+
+                  <v-btn
+                    color="white"
+                    x-small
+                    plain
+                  >
+                    Forgot password?
+                  </v-btn>
+                </div>
               </div>
-            </div>
-          </v-card-actions>
+            </v-card-actions>
+          </v-form>
         </v-card>
       </div>
     </div>

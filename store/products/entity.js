@@ -1,7 +1,7 @@
 // noinspection JSUnresolvedVariable,JSCheckFunctionSignatures
 
 import moment from 'moment'
-
+// TODO: refactor
 const basicState = {
   averagePurchaseValue: 0.0,
   capitalization: '',
@@ -137,11 +137,7 @@ export const actions = {
     }
   },
 
-  async getAllStockData () {
-    const response = await this.$backend.products.getAllGpwStockWithDetailedInfo()
-    console.log('getAllStockData', response)
-  },
-
+  // TODO: move to stock.js
   async getStockData ({ commit, state }) {
     const today = moment(new Date()).format('YYYY-MM-DD')
     const request = {
@@ -150,6 +146,7 @@ export const actions = {
       dateTo: convertStringToCurrentMillisPlusDay(today),
       maxPeriod: false
     }
+    // TODO: ?
     const response = await this.$backend.products.getGpwStockDetailedInfo(state.symbol)
     console.log('getStockData', response)
     const chartResponse = await this.$backend.products.getGpwStockChartInfo(state.symbolLong, request)
