@@ -6,6 +6,7 @@
         cols="6"
         class="py-0 mx-auto"
       >
+        <!--TODO: load wallet name from params-->
         <v-select
           v-model="wallet"
           :items="wallets"

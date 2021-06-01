@@ -2,6 +2,7 @@
 <template>
   <div>
     <div class="page-header">
+      <!--TODO: move to separate component-->
       <parallax
         class="parallax"
         style="
@@ -17,6 +18,7 @@
       />
     </div>
 
+    <!--TODO: modularity-->
     <div class="section">
       <v-container>
         <v-card
@@ -69,8 +71,70 @@
                     </v-btn>
                   </div>
                 </v-card-title>
+                <!--TODO: currency & data-->
                 <v-card-text>
-                  <span class="bold green">${{ wallet.sum }}</span>
+                  <v-row>
+                    <v-col class="pb-0" cols="5">
+                      <span class="font-weight-bold">Sum:</span>
+                    </v-col>
+                    <v-col class="pb-0 text-right" cols="4">
+                      <span class="font-weight-bold">${{ wallet.sum }}</span>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="py-0" cols="5">
+                      <span>Deposits:</span>
+                    </v-col>
+                    <v-col class="py-0 text-right" cols="4">
+                      <span>${{ wallet.currencies }}</span>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="py-0" cols="5">
+                      <span>Investments:</span>
+                    </v-col>
+                    <v-col class="py-0 text-right" cols="4">
+                      <span>${{ wallet.currencies }}</span>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="py-0" cols="5">
+                      <span>Real estates:</span>
+                    </v-col>
+                    <v-col class="py-0 text-right" cols="4">
+                      <span>${{ wallet.currencies }}</span>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="py-0" cols="5">
+                      <span>TIme deposits:</span>
+                    </v-col>
+                    <v-col class="py-0 text-right" cols="4">
+                      <span>${{ wallet.currencies }}</span>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12 text-right">
+                      <v-btn
+                        icon
+                        small
+                        @click="$router.push({ name: 'buy-product', params: { id: wallet.id } })"
+                      >
+                        <v-icon color="primary">
+                          mdi-database-plus
+                        </v-icon>
+                      </v-btn>
+                      <v-btn
+                        icon
+                        small
+                        @click="$router.push({ name: 'sell-product', params: { id: wallet.id } })"
+                      >
+                        <v-icon color="primary">
+                          mdi-database-minus
+                        </v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
                 </v-card-text>
               </v-card>
               <v-tooltip

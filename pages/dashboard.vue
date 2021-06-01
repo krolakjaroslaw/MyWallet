@@ -2,6 +2,7 @@
 <template>
   <div>
     <div class="page-header">
+      <!--TODO: move to separate component-->
       <parallax
         class="parallax"
         style="
@@ -16,7 +17,7 @@
         "
       />
     </div>
-
+    <!--TODO: modularity-->
     <div class="section">
       <v-container class="d-flex flex-row">
         <div class="col-md-7">
@@ -31,30 +32,45 @@
 
             <v-card-text class="py-1">
               <div class="display-1">
-                <v-data-table
-                  dense
-                  calculate-widths
-                  hide-default-header
-                  hide-default-footer
-                  :loading="wallets.length === 0"
-                  loading-text="Loading items..."
-                  :headers="headers2"
-                  :items="wallets"
-                  item-key="name"
-                  class="elevation-3 rounded-lg"
-                  style="width: 700px;"
-                  :footer-props="{
-                    showCurrentPage: false,
-                    showFirstLastPage: false
-                  }"
-                >
-                  <template #[`item.name`]="{ item }">
-                    <span class="bold">{{ item.name }}</span>
+                <v-simple-table dense>
+                  <template #default>
+                    <tbody>
+                      <tr
+                        v-for="wallet in wallets"
+                        :key="wallet.name"
+                      >
+                        <td class="text-left">
+                          <b>{{ wallet.name }}</b>
+                        </td>
+                        <!--TODO: currency-->
+                        <td class="text-center">
+                          Value:
+                          <span class="bold green"> {{ wallet.sum }} </span>
+                        </td>
+                        <td class="text-right">
+                          <v-btn
+                            icon
+                            small
+                            @click="$router.push({ name: 'buy-product', params: { id: wallet.id } })"
+                          >
+                            <v-icon color="primary">
+                              mdi-database-plus
+                            </v-icon>
+                          </v-btn>
+                          <v-btn
+                            icon
+                            small
+                            @click="$router.push({ name: 'sell-product', params: { id: wallet.id } })"
+                          >
+                            <v-icon color="primary">
+                              mdi-database-minus
+                            </v-icon>
+                          </v-btn>
+                        </td>
+                      </tr>
+                    </tbody>
                   </template>
-                  <template #[`item.sum`]="{ item }">
-                    <span class="bold" :class="getColor2(item)">${{ item.sum }}</span>
-                  </template>
-                </v-data-table>
+                </v-simple-table>
               </div>
             </v-card-text>
           </v-card>
@@ -71,6 +87,7 @@
             <v-card-text class="d-flex justify-center py-1">
               <v-expansion-panels
                 v-model="panel"
+                focusable
                 style="width: 700px;"
               >
                 <v-expansion-panel
@@ -87,11 +104,78 @@
                     </template>
                   </v-expansion-panel-header>
 
-                  <v-expansion-panel-content>
-                    <span class="font-weight-bold">Sum: ${{ wallet.sum }}</span><br>
-                    <span>Currencies: ${{ wallet.currencies }}</span><br>
-                    <span>Resources: ${{ wallet.resources }}</span><br>
-                    <span>Stock: ${{ wallet.stock }}</span><br>
+                  <!--TODO: currency & color-->
+                  <v-expansion-panel-content class="my-2">
+                    <v-row>
+                      <v-col class="pb-0" cols="3">
+                        <span class="font-weight-bold">Sum:</span>
+                      </v-col>
+                      <v-col class="pb-0 text-right" cols="2">
+                        <span class="font-weight-bold">${{ wallet.sum }}</span>
+                      </v-col>
+                      <v-col class="pb-0" cols="3">
+                        <span class="font-weight-bold">Investments:</span>
+                      </v-col>
+                      <v-col class="pb-0 text-right" cols="2">
+                        <span class="font-weight-bold">${{ wallet.sum }}</span>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col class="py-0" cols="3">
+                        <span>Deposits:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="2">
+                        <span>${{ wallet.currencies }}</span>
+                      </v-col>
+                      <v-col class="py-0" cols="3">
+                        <span>Commodities:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="2">
+                        <span>${{ wallet.currencies }}</span>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col class="py-0" cols="3">
+                        <span>Investments:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="2">
+                        <span>${{ wallet.currencies }}</span>
+                      </v-col>
+                      <v-col class="py-0" cols="3">
+                        <span>Currencies:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="2">
+                        <span>${{ wallet.currencies }}</span>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col class="py-0" cols="3">
+                        <span>Real estates:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="2">
+                        <span>${{ wallet.currencies }}</span>
+                      </v-col>
+                      <v-col class="py-0" cols="3">
+                        <span>ETF_GPW:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="2">
+                        <span>${{ wallet.currencies }}</span>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col class="py-0" cols="3">
+                        <span>TIme deposits:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="2">
+                        <span>${{ wallet.currencies }}</span>
+                      </v-col>
+                      <v-col class="py-0" cols="3">
+                        <span>Stock_GPW:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="2">
+                        <span>${{ wallet.currencies }}</span>
+                      </v-col>
+                    </v-row>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -108,7 +192,7 @@
             <v-card-title class="py-2">
               Charts
             </v-card-title>
-
+            <!--TODO:-->
             <v-card-text class="d-flex justify-center py-1">
               <v-carousel
                 cycle
@@ -183,6 +267,7 @@
               Stock
             </v-card-title>
 
+            <!--TODO:-->
             <v-card-text class="d-flex justify-center py-1">
               <v-carousel
                 cycle
@@ -363,6 +448,20 @@ export default {
           currencies: 45000.00,
           resources: 20000.00,
           stock: 35000.00
+        },
+        {
+          name: 'Wallet 4',
+          sum: 100000.00,
+          currencies: 45000.00,
+          resources: 20000.00,
+          stock: 35000.00
+        },
+        {
+          name: 'Wallet 5',
+          sum: 100000.00,
+          currencies: 45000.00,
+          resources: 20000.00,
+          stock: 35000.00
         }
       ]
     }
@@ -429,5 +528,14 @@ export default {
 
 .black {
   background-color: transparent !important;
+}
+
+.v-expansion-panel-header {
+  min-height: 24px !important;
+  padding: 6px 24px !important;
+}
+
+.v-expansion-panel-header--active {
+  padding: 8px 24px !important;
 }
 </style>

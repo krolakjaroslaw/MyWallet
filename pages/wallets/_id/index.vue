@@ -89,7 +89,7 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
                           {{ item.symbol }}
                         </router-link>
                       </td>
@@ -155,7 +155,7 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
                           {{ item.symbol }}
                         </router-link>
                       </td>
@@ -215,7 +215,7 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
                           {{ item.name }}
                         </router-link>
                       </td>
@@ -275,7 +275,7 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
                           {{ item.symbol }}
                         </router-link>
                       </td>
@@ -549,9 +549,6 @@ export default {
     wallet: {
       get () { return this.getWallet() },
       set (val) { this.setWallet(val) }
-    // },
-    // wallets () {
-    //   return this.getWallets()
     }
   },
   async mounted () {

@@ -5,6 +5,8 @@ const ROUTES_ALLOWED_TO_USER = [
   'operations',
   'products-id',
   'sell-product',
+  'stock',
+  'stock-name',
   'user-profile',
   'wallets',
   'wallets-id'
