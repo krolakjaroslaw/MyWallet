@@ -220,7 +220,7 @@ export default {
     this.createChart('chart', this.chartData(labels, values, values[0]))
   },
   methods: {
-    ...mapActions('products/entity', ['getHistoryData', 'getProductSummary', 'getAllStockData', 'getStockData']),
+    ...mapActions('products/entity', ['getHistoryData', 'getProductSummary', 'getStockData']),
     ...mapGetters('products/entity', [
       'getAveragePurchaseValue',
       'getChartJson',

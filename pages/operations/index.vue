@@ -16,7 +16,6 @@
         "
       />
     </div>
-    <!--TODO: data-->
     <div class="section">
       <v-container>
         <v-data-table
@@ -43,12 +42,9 @@
               class="mx-4"
             />
           </template>
-          <!--TODO: date format-->
-          <!--<template #[`item.symbol`]="{ item }">-->
-          <!--  <router-link :to="{ name: 'stock-name', params: { name: item.symbol, symbol: item.symbolShort } }">-->
-          <!--    <b>{{ item.symbol }}</b>-->
-          <!--  </router-link>-->
-          <!--</template>-->
+          <template #[`item.createdAt`]="{ item }">
+            {{ formattedDate(item.createdAt) }}
+          </template>
         </v-data-table>
       </v-container>
     </div>
@@ -56,6 +52,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'Operations',
   layout: 'parallax',
@@ -70,8 +68,8 @@ export default {
       return [
         { text: 'Date', value: 'createdAt', align: 'start', filterable: false },
         { text: 'Type', value: 'eventType', align: 'start' },
-        { text: 'Nazwa', value: 'name', align: 'start', filterable: false },
-        { text: 'Typ produktu', value: 'productType', align: 'start', filterable: false },
+        { text: 'Nazwa', value: 'name', align: 'start' },
+        { text: 'Typ produktu', value: 'productType', align: 'start' },
         { text: 'Liczba jednostek', value: 'numberOfUnits', align: 'right', filterable: false },
         { text: 'Wartość', value: 'value', align: 'right', filterable: false }
       ]
@@ -81,6 +79,11 @@ export default {
     // TODO: move to store
     this.events = (await this.$backend.stock.getUserEvents()).data
     console.log('events', this.events)
+  },
+  methods: {
+    formattedDate (date) {
+      return moment(date).format('YYYY-MM-DD HH:mm:ss')
+    }
   }
 }
 </script>

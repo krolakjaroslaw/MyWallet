@@ -1,15 +1,16 @@
-// TODO: move to const
+import { ROUTES } from 'assets/constant/api'
+
 const ROUTES_ALLOWED_TO_USER = [
-  'buy-product',
-  'dashboard',
-  'operations',
-  'products-id',
-  'sell-product',
-  'stock',
-  'stock-name',
-  'user-profile',
-  'wallets',
-  'wallets-id'
+  ROUTES.buyProduct,
+  ROUTES.dashboard,
+  ROUTES.operations,
+  ROUTES.productId,
+  ROUTES.sellProduct,
+  ROUTES.stock,
+  ROUTES.stockName,
+  ROUTES.userProfile,
+  ROUTES.walletId,
+  ROUTES.wallets
 ]
 
 const saveUserInStore = (store) => {

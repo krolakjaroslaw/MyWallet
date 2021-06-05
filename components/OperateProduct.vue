@@ -59,6 +59,7 @@
 
             <div class="d-flex justify-end ma-3">
               <v-btn
+                v-if="stepper !== 1"
                 class="mx-2"
                 :disabled="stepper === 1"
                 rounded
@@ -89,6 +90,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import Step1 from '@/components/steps/Step1'
 import Step2 from '@/components/steps/Step2'
 import Step3 from '@/components/steps/Step3'
+import { CONSTANTS } from 'assets/constant/components'
 
 export default {
   name: 'OperateProduct',
@@ -127,7 +129,7 @@ export default {
     stepper () {
       this.valid = false
       if (this.stepper === 1) {
-        if (this.wallet && this.group && ['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(this.group)) this.valid = true
+        if (this.wallet && this.group && CONSTANTS.depositRealEstateTimeDepositTypes.includes(this.group)) this.valid = true
         if (this.wallet && this.group && this.product) this.valid = true
       } else if (this.stepper === 2) {
         if (this.name > 0 && this.price >= 0 && this.currency >= 0) this.valid = true

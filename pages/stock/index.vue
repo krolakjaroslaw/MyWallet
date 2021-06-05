@@ -49,7 +49,7 @@
               :hide-default-footer="etfs.length <= 20"
               :loading="etfs.length === 0"
               loading-text="Loading items..."
-              :headers="headers"
+              :headers="stockHeaders"
               :items="etfs"
               :search="search"
               item-key="symbol"
@@ -60,7 +60,7 @@
                 itemsPerPageOptions: [20]
               }"
             >
-              <template v-if="etfs.length > 20" #top>
+              <template #top>
                 <v-text-field
                   v-model="search"
                   label="Search"
@@ -68,7 +68,7 @@
                 />
               </template>
               <template #[`item.symbol`]="{ item }">
-                <router-link :to="{ name: 'stock-name', params: { name: item.symbol, symbol: item.symbolShort } }">
+                <router-link :to="{ name: 'stock-name', params: { name: item.symbol, type: 'ETF_GPW' } }">
                   <b>{{ item.symbol }}</b>
                 </router-link>
               </template>
@@ -81,7 +81,7 @@
               :hide-default-footer="stock.length <= 20"
               :loading="stock.length === 0"
               loading-text="Loading items..."
-              :headers="headers"
+              :headers="stockHeaders"
               :items="stock"
               :search="search"
               item-key="symbol"
@@ -92,7 +92,7 @@
                 itemsPerPageOptions: [20]
               }"
             >
-              <template v-if="stock.length > 20" #top>
+              <template #top>
                 <v-text-field
                   v-model="search"
                   label="Search"
@@ -100,7 +100,7 @@
                 />
               </template>
               <template #[`item.symbol`]="{ item }">
-                <router-link :to="{ name: 'stock-name', params: { name: item.symbol, symbol: item.symbolShort } }">
+                <router-link :to="{ name: 'stock-name', params: { name: item.symbol, symbol: item.symbolShort, type: 'STOCK_GPW' } }">
                   <b>{{ item.symbol }}</b>
                 </router-link>
                 <!--<v-icon v-if="item.change.includes('0.0000')">-->
@@ -119,7 +119,7 @@
               :hide-default-footer="indexes.length <= 20"
               :loading="indexes.length === 0"
               loading-text="Loading items..."
-              :headers="headers"
+              :headers="stockHeaders"
               :items="indexes"
               :search="search"
               item-key="symbol"
@@ -130,7 +130,7 @@
                 itemsPerPageOptions: [20]
               }"
             >
-              <template v-if="indexes.length > 20" #top>
+              <template #top>
                 <v-text-field
                   v-model="search"
                   label="Search"
@@ -138,7 +138,7 @@
                 />
               </template>
               <template #[`item.symbol`]="{ item }">
-                <router-link :to="{ name: 'stock-name', params: { name: item.symbol, symbol: item.symbolShort } }">
+                <router-link :to="{ name: 'stock-name', params: { name: item.symbol, type: 'INDEX_GPW' } }">
                   <b>{{ item.symbol }}</b>
                 </router-link>
               </template>
@@ -162,16 +162,15 @@
                 itemsPerPageOptions: [20]
               }"
             >
-              <template v-if="commodities.length > 20" #top>
+              <template #top>
                 <v-text-field
                   v-model="search"
                   label="Search"
                   class="mx-4"
                 />
               </template>
-              <!--TODO: adjust columns-->
               <template #[`item.symbol`]="{ item }">
-                <router-link :to="{ name: 'stock-name', params: { name: item.symbol, symbol: item.symbolShort } }">
+                <router-link :to="{ name: 'stock-name', params: { name: item.symbol, type: 'COMMODITY' } }">
                   <b>{{ item.symbol }}</b>
                 </router-link>
               </template>
@@ -195,18 +194,15 @@
                 itemsPerPageOptions: [20]
               }"
             >
-              <template v-if="currencies.length > 20" #top>
+              <template #top>
                 <v-text-field
                   v-model="search"
                   label="Search"
                   class="mx-4"
                 />
               </template>
-              <!--TODO: adjust columns-->
               <template #[`item.symbol`]="{ item }">
-                <router-link :to="{ name: 'stock-name', params: { name: item.symbol, symbol: item.symbolShort } }">
-                  <b>{{ item.symbol }}</b>
-                </router-link>
+                <b>{{ item.symbol.split('.')[0] }}</b>
               </template>
             </v-data-table>
           </v-tab-item>
@@ -232,7 +228,7 @@ export default {
     }
   },
   computed: {
-    headers () {
+    stockHeaders () {
       return [
         { text: 'Walor', value: 'symbol', align: 'start' },
         { text: 'Symbol', value: 'symbolShort', align: 'start' },
@@ -243,6 +239,16 @@ export default {
         { text: 'Wolumen', value: 'volume', align: 'right', filterable: false },
         { text: 'Max', value: 'quoteMax', align: 'right', filterable: false },
         { text: 'Min', value: 'quoteMin', align: 'right', filterable: false }
+      ]
+    },
+    headers () {
+      return [
+        { text: 'Walor', value: 'symbol', align: 'start' },
+        { text: 'Oferta kupna', value: 'bidPrice', align: 'right', filterable: false },
+        { text: 'Oferta sprzedaży', value: 'askPrice', align: 'right', filterable: false },
+        { text: 'Zmiana', value: 'bidDatChangePercentage', align: 'right', filterable: false },
+        { text: 'Max', value: 'highBidPrice', align: 'right', filterable: false },
+        { text: 'Min', value: 'lowBidPrice', align: 'right', filterable: false }
       ]
     }
   },

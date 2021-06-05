@@ -397,7 +397,6 @@ export default {
 
     showWallet (wallet) {
       this.$router.push({ name: 'wallets-id', params: { id: wallet.id } })
-      // this.getWalletInfo(wallet.id)
     }
   }
 }
