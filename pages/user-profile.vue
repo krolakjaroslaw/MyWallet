@@ -2,6 +2,7 @@
 <template>
   <div>
     <div class="page-header">
+      <!--TODO: zmniejszyc tlo-->
       <parallax
         class="parallax"
         style="

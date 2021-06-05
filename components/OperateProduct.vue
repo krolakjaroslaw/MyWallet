@@ -119,6 +119,10 @@ export default {
       get () { return this.getStepper() },
       set (val) { this.setStepper(val) }
     },
+    showAccountDialog: {
+      get () { return this.getShowAccountDialog() },
+      set (val) { this.setShowAccountDialog(val) }
+    },
     wallet () { return this.getWallet() },
     isValid () {
       if (this.stepper === this.steps.length) return true
@@ -145,9 +149,6 @@ export default {
   beforeDestroy () {
     this.$nuxt.$off('isValid')
   },
-  destroyed () {
-    this.resetState()
-  },
   methods: {
     ...mapActions('wallets', ['loadWallets']),
     ...mapActions('wallets/entity', ['buyOrSellInvestmentProduct']),
@@ -160,10 +161,11 @@ export default {
       'getNumber',
       'getPrice',
       'getProduct',
+      'getShowAccountDialog',
       'getStepper',
       'getWallet'
     ]),
-    ...mapMutations('wallets/operate-product', ['resetState', 'setStepper']),
+    ...mapMutations('wallets/operate-product', ['resetState', 'setShowAccountDialog', 'setStepper']),
 
     check (event) {
       this.valid = event

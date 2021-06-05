@@ -16,6 +16,7 @@ const step2State = {
 
 const basicState = {
   ...step2State,
+  showAccountDialog: false,
   stepper: 1,
 
   // Step1
@@ -32,6 +33,7 @@ export const state = () => ({
 })
 
 export const getters = {
+  getShowAccountDialog: (store) => { return store.showAccountDialog },
   getStepper: (store) => { return store.stepper },
 
   getGroups: (store) => { return store.groups },
@@ -71,6 +73,7 @@ export const mutations = {
     })
     store.date = null
   },
+  setShowAccountDialog: (store, payload) => { store.showAccountDialog = payload },
   setStepper: (store, payload) => { store.stepper = payload },
 
   setGroups: (store, payload) => { store.groups = payload },
