@@ -16,15 +16,15 @@
         "
       />
       <div class="container">
-        <div class="photo-container">
-          <!--TODO-->
-          <img
-            :src="getImage()"
-            alt=""
-            height="123"
-            width="123"
-          >
-        </div>
+        <!--<div class="photo-container">-->
+        <!--  &lt;!&ndash;TODO&ndash;&gt;-->
+        <!--  <img-->
+        <!--    :src="getImage()"-->
+        <!--    alt=""-->
+        <!--    height="123"-->
+        <!--    width="123"-->
+        <!--  >-->
+        <!--</div>-->
 
         <h3 class="title-name">
           {{ name }}
@@ -62,25 +62,25 @@
 
             <v-card-text class="py-1">
               <v-form v-model="validName">
-                <v-row class="my-4">
-                  <v-col
-                    cols="6"
-                    class="buttons py-0 mx-auto"
-                  >
-                    <v-file-input
-                      v-model="userPhoto"
-                      prepend-icon="mdi-camera"
-                      accept="image/*"
-                      label="Photo"
-                      :rules="[
-                        $rules.maxSize(1000)
-                      ]"
-                      outlined
-                      rounded
-                      dense
-                    />
-                  </v-col>
-                </v-row>
+                <!--<v-row class="my-4">-->
+                <!--  <v-col-->
+                <!--    cols="6"-->
+                <!--    class="buttons py-0 mx-auto"-->
+                <!--  >-->
+                <!--    <v-file-input-->
+                <!--      v-model="userPhoto"-->
+                <!--      prepend-icon="mdi-camera"-->
+                <!--      accept="image/*"-->
+                <!--      label="Photo"-->
+                <!--      :rules="[-->
+                <!--        $rules.maxSize(1000)-->
+                <!--      ]"-->
+                <!--      outlined-->
+                <!--      rounded-->
+                <!--      dense-->
+                <!--    />-->
+                <!--  </v-col>-->
+                <!--</v-row>-->
 
                 <v-row class="my-0">
                   <v-col

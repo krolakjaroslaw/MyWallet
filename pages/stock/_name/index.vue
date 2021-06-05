@@ -55,7 +55,7 @@
                         {{ today ? 'Oferta kupna:' : 'Data początkowa:' }}
                       </th>
                       <td class="px-2">
-                        {{ today ? parseFloat(profileData.bidSize).toFixed(4) : profileData.startDate }}
+                        {{ today ?`${parseFloat(profileData.bidSize).toFixed(4)} zł` : profileData.startDate }}
                       </td>
                     </tr>
                     <tr>
@@ -63,7 +63,7 @@
                         {{ today ? 'Oferta sprzedaży:' : 'Data końcowa:' }}
                       </th>
                       <td class="px-2">
-                        {{ today ? parseFloat(profileData.askSize).toFixed(4) : profileData.endDate }}
+                        {{ today ? `${parseFloat(profileData.askSize).toFixed(4)} zł` : profileData.endDate }}
                       </td>
                     </tr>
                     <tr v-if="!today">
@@ -317,16 +317,15 @@ export default {
   },
   async mounted () {
     this.symbolLong = this.$route.params.name
-    this.symbol = this.symbolLong
-    this.symbol = (await this.$backend.products.getETFSymbols())
-      .data.find(item => item.symbol === this.symbolLong)?.symbolShort
-    this.symbol = (await this.$backend.products.getStockSymbols())
-      .data.find(item => item.symbol === this.symbolLong)?.symbolShort
+    if (this.$route.params.symbol) this.symbol = this.$route.params.symbol
+    await this.getStockData(this.$route.params.type)
 
-    await this.getStockData()
     const labels = this.chartJson.map(el => new Date(el[0]))
     const values = this.chartJson.map(el => el[1])
     this.createChart('chart', this.chartData(labels, values))
+  },
+  destroyed () {
+    this.resetState()
   },
   methods: {
     ...mapActions('products/stock', ['getStockData']),
@@ -341,6 +340,7 @@ export default {
       'getSymbolLong'
     ]),
     ...mapMutations('products/stock', [
+      'resetState',
       'setChartJson',
       'setDateFrom',
       'setDateTo',
@@ -398,7 +398,7 @@ export default {
       if (item === '6M' || item === '1Y') timeUnit = 'month'
       if (item === '5Y' || item === 'MAX') timeUnit = 'year'
 
-      await this.getStockData()
+      await this.getStockData(this.$route.params.type)
       this.updateChart(timeUnit)
     },
     changeInterval (item) {

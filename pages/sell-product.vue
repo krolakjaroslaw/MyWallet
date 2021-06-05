@@ -1,18 +1,19 @@
 <script>
 import OperateProduct from '@/components/OperateProduct'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'SellProduct',
   extends: OperateProduct,
   layout: 'parallax',
   methods: {
+    ...mapActions('wallets/entity', ['deleteDepositAccountProduct', 'sellRealEstateProduct']),
     ...mapGetters('wallets/operate-product', ['getProduct', 'getWallet']),
 
     submit () {
       const routeName = this.$route.name
       if (['COMMODITY', 'CURRENCY', 'ETF_GPW', 'STOCK_GPW'].includes(this.group)) {
-        this.buyOrSellInvestmentProduct({ operationType: routeName, walletId: this.getWallet().id })
+        this.buyOrSellInvestmentProduct(routeName)
       } else if (this.group === 'DEPOSIT') {
         this.deleteDepositAccountProduct(this.getProduct().id)
       } else if (this.group === 'REAL_ESTATE') {

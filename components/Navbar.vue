@@ -8,6 +8,7 @@
     dark
   >
     <v-btn
+      v-if="logged"
       icon
       @click="$router.go(-1)"
     >

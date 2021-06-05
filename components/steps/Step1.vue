@@ -6,13 +6,13 @@
         cols="6"
         class="py-0 mx-auto"
       >
-        <!--TODO: load wallet name from params-->
         <v-select
           v-model="wallet"
           :items="wallets"
           item-text="name"
           label="Wallet"
           class="select"
+          :disabled="!!$route.params.id"
           dense
           rounded
           outlined
@@ -45,7 +45,6 @@
         cols="6"
         class="py-0 mx-auto"
       >
-        <!--TODO: to const everywhere-->
         <v-autocomplete
           v-model="product"
           :items="products"
@@ -65,6 +64,7 @@
 </template>
 
 <script>
+import { CONSTANTS } from 'assets/constant/components'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -97,10 +97,9 @@ export default {
     async group () {
       const routeName = this.$route.name
       this.$nuxt.$emit('isValid', false)
-      // TODO: to const
-      if (!['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(this.group)) await this.loadProducts(routeName)
+      if (!CONSTANTS.depositRealEstateTimeDepositTypes.includes(this.group)) await this.loadProducts(routeName)
 
-      if (this.wallet && this.group && ['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(this.group)) {
+      if (this.wallet && this.group && CONSTANTS.depositRealEstateTimeDepositTypes.includes(this.group)) {
         this.product = null
         setTimeout(() => this.$nuxt.$emit('isValid', true), 100)
       }
@@ -113,18 +112,20 @@ export default {
       this.resetStep2State()
     },
     wallet () {
-      if (this.$route.name === 'sell-product') this.loadGroupsInWallet(this.wallet.id)
+      if (this.$route.name === 'sell-product' && this.wallet) this.loadGroupsInWallet(this.wallet.id)
       else if (this.$route.name === 'buy-product') this.loadGroups()
 
       this.$nuxt.$emit('isValid', false)
-      // TODO: to const
-      if (this.wallet && !!this.group && ['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(this.group)) {
+      if (this.wallet && !!this.group && CONSTANTS.depositRealEstateTimeDepositTypes.includes(this.group)) {
         this.product = null
         this.$nuxt.$emit('isValid', true)
       }
       if (this.wallet && this.group && this.product) this.$nuxt.$emit('isValid', true)
       this.resetStep2State()
     }
+  },
+  created () {
+    if (this.$route.params) this.wallet = this.wallets.filter(item => item.id === this.$route.params.id)[0]
   },
   methods: {
     ...mapActions('wallets/operate-product', ['loadGroups', 'loadGroupsInWallet', 'loadProducts']),

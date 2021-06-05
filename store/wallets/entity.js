@@ -70,7 +70,7 @@ export const actions = {
     const response = await this.$backend.wallets.addInvestmentToWallet(walletId, request)
 
     if (response && response.status === 200) {
-      this.$toast.success(`${request.name} successfully added to wallet`)
+      this.$toast.success(`${request.name} successfully ${operationType === 'buy-product' ? 'added to' : 'removed from'} wallet`)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)

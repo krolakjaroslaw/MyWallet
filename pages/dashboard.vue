@@ -27,7 +27,7 @@
             outlined
           >
             <v-card-title class="py-2">
-              Wallets
+              Portfele
             </v-card-title>
 
             <v-card-text class="py-1">
@@ -37,15 +37,20 @@
                     <tbody>
                       <tr
                         v-for="wallet in wallets"
-                        :key="wallet.name"
+                        :key="wallet.id"
                       >
                         <td class="text-left">
-                          <b>{{ wallet.name }}</b>
+                          <router-link :to="{ name: 'wallets-id', params: { id: wallet.id } }">
+                            <b>{{ wallet.name }}</b>
+                          </router-link>
                         </td>
-                        <!--TODO: currency-->
                         <td class="text-center">
-                          Value:
-                          <span class="bold green"> {{ wallet.sum }} </span>
+                          Wartość:
+                          <span class="bold"> {{ parseFloat(wallet.productScore).toFixed(2) }} {{ wallet.currency }} </span>
+                        </td>
+                        <td class="text-center">
+                          Subkonto:
+                          <span class="bold"> {{ parseFloat(wallet.subAccountBalance).toFixed(2) }} {{ wallet.currency }} </span>
                         </td>
                         <td class="text-right">
                           <v-btn
@@ -81,7 +86,7 @@
             outlined
           >
             <v-card-title class="py-2">
-              Wallets - details
+              Portfele - szczegóły
             </v-card-title>
 
             <v-card-text class="d-flex justify-center py-1">
@@ -104,76 +109,117 @@
                     </template>
                   </v-expansion-panel-header>
 
-                  <!--TODO: currency & color-->
                   <v-expansion-panel-content class="my-2">
                     <v-row>
                       <v-col class="pb-0" cols="3">
-                        <span class="font-weight-bold">Sum:</span>
+                        <span class="font-weight-bold">Suma:</span>
                       </v-col>
-                      <v-col class="pb-0 text-right" cols="2">
-                        <span class="font-weight-bold">${{ wallet.sum }}</span>
+                      <v-col class="pb-0 text-right" cols="3">
+                        <span class="font-weight-bold">{{ wallet.sum }} {{ wallet.currency }}</span>
                       </v-col>
                       <v-col class="pb-0" cols="3">
-                        <span class="font-weight-bold">Investments:</span>
+                        <span class="font-weight-bold">Inwestycje:</span>
                       </v-col>
-                      <v-col class="pb-0 text-right" cols="2">
-                        <span class="font-weight-bold">${{ wallet.sum }}</span>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col class="py-0" cols="3">
-                        <span>Deposits:</span>
-                      </v-col>
-                      <v-col class="py-0 text-right" cols="2">
-                        <span>${{ wallet.currencies }}</span>
-                      </v-col>
-                      <v-col class="py-0" cols="3">
-                        <span>Commodities:</span>
-                      </v-col>
-                      <v-col class="py-0 text-right" cols="2">
-                        <span>${{ wallet.currencies }}</span>
+                      <v-col class="pb-0 text-right" cols="3">
+                        <span class="font-weight-bold">{{ wallet.sum }} {{ wallet.currency }}</span>
                       </v-col>
                     </v-row>
                     <v-row>
                       <v-col class="py-0" cols="3">
-                        <span>Investments:</span>
+                        <span>Inwestycje:</span>
                       </v-col>
-                      <v-col class="py-0 text-right" cols="2">
-                        <span>${{ wallet.currencies }}</span>
-                      </v-col>
-                      <v-col class="py-0" cols="3">
-                        <span>Currencies:</span>
-                      </v-col>
-                      <v-col class="py-0 text-right" cols="2">
-                        <span>${{ wallet.currencies }}</span>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col class="py-0" cols="3">
-                        <span>Real estates:</span>
-                      </v-col>
-                      <v-col class="py-0 text-right" cols="2">
-                        <span>${{ wallet.currencies }}</span>
+                      <v-col class="py-0 text-right" cols="3">
+                        <span>{{ wallet.currencies }} {{ wallet.currency }}</span>
                       </v-col>
                       <v-col class="py-0" cols="3">
                         <span>ETF_GPW:</span>
                       </v-col>
-                      <v-col class="py-0 text-right" cols="2">
-                        <span>${{ wallet.currencies }}</span>
+                      <v-col class="py-0 text-right" cols="3">
+                        <span>
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .filter(item => item.productType === 'ETF_GPW')
+                              .map(item => item.totalScore)[0] || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
                       </v-col>
                     </v-row>
                     <v-row>
                       <v-col class="py-0" cols="3">
-                        <span>TIme deposits:</span>
+                        <span>Konta bankowe:</span>
                       </v-col>
-                      <v-col class="py-0 text-right" cols="2">
-                        <span>${{ wallet.currencies }}</span>
+                      <v-col class="py-0 text-right" cols="3">
+                        <span>
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .filter(item => item.productType === 'DEPOSIT')
+                              .map(item => item.totalScore)[0] || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
                       </v-col>
                       <v-col class="py-0" cols="3">
-                        <span>Stock_GPW:</span>
+                        <span>Giełda_GPW:</span>
                       </v-col>
-                      <v-col class="py-0 text-right" cols="2">
-                        <span>${{ wallet.currencies }}</span>
+                      <v-col class="py-0 text-right" cols="3">
+                        <span>
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .filter(item => item.productType === 'STOCK_GPW')
+                              .map(item => item.totalScore)[0] || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col class="py-0" cols="3">
+                        <span>Lokaty:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="3">
+                        <span>
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .filter(item => item.productType === 'TIME_DEPOSIT')
+                              .map(item => item.totalScore)[0] || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
+                      </v-col>
+                      <v-col class="py-0" cols="3">
+                        <span>Surowce:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="3">
+                        <span>
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .filter(item => item.productType === 'COMMODITY')
+                              .map(item => item.totalScore)[0] || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col class="py-0" cols="3">
+                        <span>Nieruchomości:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="3">
+                        <span>
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .filter(item => item.productType === 'REAL_ESTATE')
+                              .map(item => item.totalScore)[0] || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
+                      </v-col>
+                      <v-col class="py-0" cols="3">
+                        <span>Waluty:</span>
+                      </v-col>
+                      <v-col class="py-0 text-right" cols="3">
+                        <span>
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .filter(item => item.productType === 'CURRENCY')
+                              .map(item => item.totalScore)[0] || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
                       </v-col>
                     </v-row>
                   </v-expansion-panel-content>
@@ -190,7 +236,7 @@
             outlined
           >
             <v-card-title class="py-2">
-              Charts
+              Wykresy
             </v-card-title>
             <!--TODO:-->
             <v-card-text class="d-flex justify-center py-1">
@@ -264,7 +310,7 @@
             outlined
           >
             <v-card-title class="py-2">
-              Stock
+              Giełda
             </v-card-title>
 
             <!--TODO:-->
@@ -339,6 +385,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Dashboard',
   layout: 'parallax',
@@ -427,7 +475,7 @@ export default {
           }
         ]
       ],
-      wallets: [
+      wallets2: [
         {
           name: 'Wallet 1',
           sum: 100000.00,
@@ -474,14 +522,14 @@ export default {
         { text: 'Zmiana', value: 'change', align: 'right' }
       ]
     },
-    headers2 () {
-      return [
-        { text: 'Portfel', value: 'name', align: 'start' },
-        { text: 'Suma', value: 'sum', align: 'right' }
-      ]
-    }
+    wallets () { return this.getWallets() }
+  },
+  async created () {
+    await this.loadWallets()
   },
   methods: {
+    ...mapActions('wallets', ['loadWallets']),
+    ...mapGetters('wallets', ['getWallets']),
     getColor (item) {
       if (item.change.includes('-')) return 'red'
       if (item.change.includes('0.0000')) return 'black'

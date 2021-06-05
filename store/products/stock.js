@@ -43,6 +43,26 @@ export const mutations = {
   setIsToday: (store, payload) => { store.today = payload },
   setProfileData: (store, payload) => {
     store.profileData = payload
+    if (store.profileData.prevClose) {
+      store.profileData.prevClose = store.profileData.prevClose
+        .replaceAll('&nbsp;', '').replaceAll('&nbsp', '')
+        .split('zł')[0]
+    }
+    if (store.profileData.maxValue) {
+      store.profileData.maxValue = store.profileData.maxValue
+        .replaceAll('&nbsp;', '').replaceAll('&nbsp', '')
+        .split('zł')[0]
+    }
+    if (store.profileData.minValue) {
+      store.profileData.minValue = store.profileData.minValue
+        .replaceAll('&nbsp;', '').replaceAll('&nbsp', '')
+        .split('zł')[0]
+    }
+    if (store.profileData.valueAverage) {
+      store.profileData.valueAverage = store.profileData.valueAverage
+        .replaceAll('&nbsp;', '').replaceAll('&nbsp', '')
+        .split('zł')[0]
+    }
     if (store.profileData.volumeSumValue) {
       store.profileData.volumeSumValue = store.profileData.volumeSumValue
         .replaceAll('&nbsp;', '').replaceAll('&nbsp', '')
@@ -54,7 +74,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async getStockData ({ commit, state }) {
+  async getStockData ({ commit, state }, type) {
     const today = moment(new Date()).format('YYYY-MM-DD')
     const request = {
       today: state.today,
@@ -64,9 +84,19 @@ export const actions = {
     }
     const chartResponse = await this.$backend.products.getGpwStockChartInfo(state.symbolLong, request)
     commit('setChartJson', chartResponse.data.main)
-    console.log('getStockData', chartResponse)
+
     if (state.today) {
-      const response = await this.$backend.products.getGpwStockDetailedInfo(state.symbol)
+      let response
+      switch (type) {
+        case 'COMMODITY': response = await this.$backend.products.getCommodityDetailedInfo(state.symbolLong)
+          break
+        case 'ETF_GPW': response = await this.$backend.products.getGpwEtfDetailedInfo(state.symbolLong)
+          break
+        case 'INDEX_GPW': response = await this.$backend.products.getGpwIndexDetailedInfo(state.symbolLong)
+          break
+        case 'STOCK_GPW': response = await this.$backend.products.getGpwStockDetailedInfo(state.symbol)
+          break
+      }
       commit('setProfileData', response.data)
     } else {
       commit('setProfileData', chartResponse.data.profileData)
