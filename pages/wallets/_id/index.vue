@@ -20,8 +20,8 @@
     <div class="section">
       <v-container>
         <v-card
-          class="col-12 mb-6 rounded-xl d-flex flex-row"
-          style="height: 525px; background-color: #f6f6f6;"
+          class="col-12 mb-6 rounded-xl"
+          style="background-color: #f6f6f6;"
           outlined
         >
           <v-card
@@ -29,7 +29,59 @@
             style="background-color: transparent"
           >
             <v-card-title class="py-2">
-              Wallet composition - {{ wallet.name }}
+              Subkonto portfela - {{ wallet.name }}:
+              <v-spacer />
+              <b class="green">
+                {{ parseFloat(wallet.subAccountBalance).toFixed(2) }} {{ wallet.currency }}
+              </b>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                class="mr-3"
+                rounded
+                @click="showAddDialog = true"
+              >
+                Wpłać
+              </v-btn>
+              <v-btn
+                color="primary"
+                rounded
+                @click="showRemoveDialog = true"
+              >
+                Wypłać
+              </v-btn>
+            </v-card-title>
+          </v-card>
+        </v-card>
+
+        <v-card
+          class="col-12 mb-6 rounded-xl"
+          style="height: 525px; background-color: #f6f6f6;"
+          outlined
+        >
+          <!--TODO: dopasowac height carda w zaleznosci od wymiaru listy-->
+          <v-card
+            elevation="0"
+            style="background-color: transparent"
+          >
+            <v-card-title class="py-2">
+              Skład portfela - {{ wallet.name }}
+              <v-spacer />
+              <v-btn
+                color="primary"
+                class="mr-3"
+                rounded
+                @click="$router.push({ name: 'buy-product', params: { id: wallet.id } })"
+              >
+                Kup
+              </v-btn>
+              <v-btn
+                color="primary"
+                rounded
+                @click="$router.push({ name: 'sell-product', params: { id: wallet.id } })"
+              >
+                Sprzedaj
+              </v-btn>
             </v-card-title>
             <v-card-text>
               <div id="pieChart">
@@ -341,7 +393,7 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
                           {{ item.name }}
                         </router-link>
                       </td>
@@ -407,7 +459,7 @@
                       :key="item.id"
                     >
                       <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType  } }">
+                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
                           {{ item.name }}
                         </router-link>
                       </td>
@@ -498,6 +550,8 @@
         </v-expansion-panels>
       </v-container>
     </div>
+    <AddToSubAccountDialog v-if="showAddDialog" />
+    <RemoveFromSubAccountDialog v-if="showRemoveDialog" />
   </div>
 </template>
 
@@ -538,6 +592,14 @@ export default {
       get () { return this.getRealEstates() },
       set (val) { this.setRealEstates(val) }
     },
+    showAddDialog: {
+      get () { return this.getShowAddDialog() },
+      set (val) { this.setShowAddDialog(val) }
+    },
+    showRemoveDialog: {
+      get () { return this.getShowRemoveDialog() },
+      set (val) { this.setShowRemoveDialog(val) }
+    },
     stock: {
       get () { return this.getStock() },
       set (val) { this.setStock(val) }
@@ -552,6 +614,8 @@ export default {
     }
   },
   async mounted () {
+    const walletProducts = await this.$backend.wallets.getAllProductsInWallet(this.$route.params.id)
+    console.log('walletProducts', walletProducts)
     await this.getWalletInfo(this.$route.params.id)
     // TODO: refactor
     await this.getDepositProducts(this.$route.params.id)
@@ -641,6 +705,8 @@ export default {
       'getDeposits',
       'getEtfs',
       'getRealEstates',
+      'getShowAddDialog',
+      'getShowRemoveDialog',
       'getStock',
       'getTimeDeposits',
       'getWallet'
@@ -651,6 +717,8 @@ export default {
       'setDeposits',
       'setEtfs',
       'setRealEstates',
+      'setShowAddDialog',
+      'setShowRemoveDialog',
       'setStock',
       'setTimeDeposits',
       'setWallet'
@@ -696,5 +764,10 @@ export default {
 #pie-chart {
   height: 450px !important;
   width: 900px !important;
+}
+
+.green {
+  background-color: transparent !important;
+  color: #43A047;
 }
 </style>

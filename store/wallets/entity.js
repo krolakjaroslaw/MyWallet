@@ -9,7 +9,9 @@ const basicState = {
   stock: [],
   timeDeposits: [],
 
-  wallet: {}
+  wallet: {},
+  showAddDialog: false,
+  showRemoveDialog: false
 }
 
 export const state = () => ({
@@ -22,6 +24,8 @@ export const getters = {
   getDeposits: (store) => { return store.deposits },
   getEtfs: (store) => { return store.etfs },
   getRealEstates: (store) => { return store.realEstates },
+  getShowAddDialog: (store) => { return store.showAddDialog },
+  getShowRemoveDialog: (store) => { return store.showRemoveDialog },
   getStock: (store) => { return store.stock },
   getTimeDeposits: (store) => { return store.timeDeposits },
   getWallet: (store) => { return store.wallet }
@@ -47,6 +51,8 @@ export const mutations = {
   setDeposits: (store, payload) => { store.deposits = payload },
   setEtfs: (store, payload) => { store.etfs = payload },
   setRealEstates: (store, payload) => { store.realEstates = payload },
+  setShowAddDialog: (store, payload) => { store.showAddDialog = payload },
+  setShowRemoveDialog: (store, payload) => { store.showRemoveDialog = payload },
   setStock: (store, payload) => { store.stock = payload },
   setTimeDeposits: (store, payload) => { store.timeDeposits = payload },
   setWallet: (store, payload) => { store.wallet = payload }
@@ -147,6 +153,17 @@ export const actions = {
     }
   },
 
+  async getAllProductsInWallet ({ commit, dispatch, state }, walletId) {
+    // const response = await this.$backend.wallets.getAllProductsInWallet(walletId)
+
+    // if (response && response.status === 200) {
+    // commit('setDeposits', response.data)
+    // } else if (response && response.status !== 200) {
+    //   this.$toast.error(`Error: ${response.data.error}`)
+    //   console.log('error', response.status, response.data.error)
+    // }
+  },
+
   async getDepositProducts ({ commit, dispatch, state }, walletId) {
     const response = await this.$backend.wallets.getWalletDepositProducts(walletId)
 
@@ -238,6 +255,52 @@ export const actions = {
 
     if (response && response.status === 200) {
       this.$toast.success(`${purchaseState.name} successfully stopped`)
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async updateSubAccountBalance ({ rootState }) {
+    const purchaseState = rootState.wallets['operate-product']
+    const walletId = purchaseState.wallet.id
+    const request = {
+      balance: purchaseState.number * purchaseState.price
+    }
+    const response = await this.$backend.wallets.updateSubAccountBalance(walletId, request)
+
+    if (response && response.status === 200) {
+      this.$toast.success('Środki pomyślnie dodano do subkonta')
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async addToSubAccount ({ state }, value) {
+    const walletId = state.wallet.id
+    const request = {
+      balance: value
+    }
+    const response = await this.$backend.wallets.updateSubAccountBalance(walletId, request)
+
+    if (response && response.status === 200) {
+      this.$toast.success('Środki pomyślnie wpłacono na subkonto')
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async removeFromSubAccount ({ state }, value) {
+    const walletId = state.wallet.id
+    const request = {
+      balance: value * -1
+    }
+    const response = await this.$backend.wallets.updateSubAccountBalance(walletId, request)
+
+    if (response && response.status === 200) {
+      this.$toast.success('Środki pomyślnie wypłacono z subkonta')
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)

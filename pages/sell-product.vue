@@ -19,8 +19,8 @@ export default {
       } else if (this.group === 'REAL_ESTATE') {
         this.sellRealEstateProduct(this.getProduct().id)
       }
-      this.resetState()
-      this.$router.push({ name: 'wallet-details' })
+      this.$router.push({ name: 'wallets' })
+      this.showAccountDialog = true
     }
   }
 }

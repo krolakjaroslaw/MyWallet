@@ -474,43 +474,6 @@ export default {
             change: '-0.07 zł'
           }
         ]
-      ],
-      wallets2: [
-        {
-          name: 'Wallet 1',
-          sum: 100000.00,
-          currencies: 45000.00,
-          resources: 20000.00,
-          stock: 35000.00
-        },
-        {
-          name: 'Wallet 2',
-          sum: 100000.00,
-          currencies: 45000.00,
-          resources: 20000.00,
-          stock: 35000.00
-        },
-        {
-          name: 'Wallet 3',
-          sum: 100000.00,
-          currencies: 45000.00,
-          resources: 20000.00,
-          stock: 35000.00
-        },
-        {
-          name: 'Wallet 4',
-          sum: 100000.00,
-          currencies: 45000.00,
-          resources: 20000.00,
-          stock: 35000.00
-        },
-        {
-          name: 'Wallet 5',
-          sum: 100000.00,
-          currencies: 45000.00,
-          resources: 20000.00,
-          stock: 35000.00
-        }
       ]
     }
   },

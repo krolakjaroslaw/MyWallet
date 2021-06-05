@@ -71,46 +71,63 @@
                     </v-btn>
                   </div>
                 </v-card-title>
-                <!--TODO: currency & data-->
                 <v-card-text>
                   <v-row>
-                    <v-col class="pb-0" cols="5">
-                      <span class="font-weight-bold">Sum:</span>
+                    <v-col class="pb-0" cols="6">
+                      <span class="font-weight-bold">Suma:</span>
                     </v-col>
-                    <v-col class="pb-0 text-right" cols="4">
-                      <span class="font-weight-bold">${{ wallet.sum }}</span>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col class="py-0" cols="5">
-                      <span>Deposits:</span>
-                    </v-col>
-                    <v-col class="py-0 text-right" cols="4">
-                      <span>${{ wallet.currencies }}</span>
+                    <v-col class="pb-0 text-right" cols="6">
+                      <span class="font-weight-bold">{{ wallet.sum }} {{ wallet.currency }}</span>
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col class="py-0" cols="5">
-                      <span>Investments:</span>
+                    <v-col class="py-0" cols="6">
+                      <span>Inwestycje:</span>
                     </v-col>
-                    <v-col class="py-0 text-right" cols="4">
-                      <span>${{ wallet.currencies }}</span>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col class="py-0" cols="5">
-                      <span>Real estates:</span>
-                    </v-col>
-                    <v-col class="py-0 text-right" cols="4">
-                      <span>${{ wallet.currencies }}</span>
+                    <v-col class="py-0 text-right" cols="6">
+                      <span>{{ wallet.currencies }} {{ wallet.currency }}</span>
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col class="py-0" cols="5">
-                      <span>TIme deposits:</span>
+                    <v-col class="py-0" cols="6">
+                      <span>Konta bankowe:</span>
                     </v-col>
-                    <v-col class="py-0 text-right" cols="4">
-                      <span>${{ wallet.currencies }}</span>
+                    <v-col class="py-0 text-right" cols="6">
+                      <span>
+                        {{
+                          parseFloat(wallet.detailedProductInfoResponse
+                            .filter(item => item.productType === 'DEPOSIT')
+                            .map(item => item.totalScore)[0] || 0).toFixed(2)
+                        }} {{ wallet.currency }}
+                      </span>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="py-0" cols="6">
+                      <span>Lokaty:</span>
+                    </v-col>
+                    <v-col class="py-0 text-right" cols="6">
+                      <span>
+                        {{
+                          parseFloat(wallet.detailedProductInfoResponse
+                            .filter(item => item.productType === 'TIME_DEPOSIT')
+                            .map(item => item.totalScore)[0] || 0).toFixed(2)
+                        }} {{ wallet.currency }}
+                      </span>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="py-0" cols="6">
+                      <span>Nieruchomości:</span>
+                    </v-col>
+                    <v-col class="py-0 text-right" cols="6">
+                      <span>
+                        {{
+                          parseFloat(wallet.detailedProductInfoResponse
+                            .filter(item => item.productType === 'REAL_ESTATE')
+                            .map(item => item.totalScore)[0] || 0).toFixed(2)
+                        }} {{ wallet.currency }}
+                      </span>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -306,6 +323,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <SubAccountDialog v-if="showAccountDialog" />
   </div>
 </template>
 
@@ -349,6 +367,10 @@ export default {
       get () { return this.getEditWalletDialog() },
       set (val) { this.setEditWalletDialog(val) }
     },
+    showAccountDialog: {
+      get () { return this.getShowAccountDialog() },
+      set (val) { this.setShowAccountDialog(val) }
+    },
     wallets () { return this.getWallets() }
   },
   created () {
@@ -361,8 +383,10 @@ export default {
     ...mapActions('wallets', ['createWallet', 'deleteWallet', 'getWalletInfo', 'loadWallets', 'updateWalletName']),
     ...mapGetters('wallets', ['getAddWalletDialog', 'getDeleteWalletDialog', 'getEditWalletDialog',
       'getCurrency', 'getName', 'getWallets']),
+    ...mapGetters('wallets/operate-product', ['getShowAccountDialog']),
     ...mapMutations('wallets', ['resetState', 'setAddWalletDialog', 'setDeleteWalletDialog', 'setEditWalletDialog',
       'setCurrency', 'setName']),
+    ...mapMutations('wallets/operate-product', ['setShowAccountDialog']),
 
     addNewWallet () {
       this.createWallet()
