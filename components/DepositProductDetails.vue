@@ -93,9 +93,18 @@
       >
         <v-card-title class="d-flex flex-row justify-space-between fill-width py-2">
           <span>{{ name }}</span>
-          <span>
+          <div>
             <b>{{ productType === 'DEPOSIT' ? value : depositBaseAmount }} zł</b>
-          </span>
+            <v-btn
+              v-if="productType === 'DEPOSIT'"
+              color="primary"
+              class="ml-3"
+              rounded
+              @click="showChangeValueDialog = true"
+            >
+              Zmień stan konta
+            </v-btn>
+          </div>
         </v-card-title>
         <v-card-text>
           <div id="productChart">
@@ -147,13 +156,14 @@
         </v-simple-table>
       </v-card-text>
     </v-card>
+    <ChangeDepositBalanceDialog v-if="showChangeValueDialog" />
   </v-container>
 </template>
 
 <script>
 import chartData from 'assets/allegro-chart-data'
 import Chart from 'chart.js'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'DepositProductDetails',
@@ -182,7 +192,11 @@ export default {
     name () { return this.getName() },
     purchaseHistory () { return this.getPurchaseHistory() },
     startTime () { return this.getStartTime() },
-    value () { return this.getValue() }
+    value () { return this.getValue() },
+    showChangeValueDialog: {
+      get () { return this.getShowChangeValueDialog() },
+      set (val) { this.setShowChangeValueDialog(val) }
+    }
   },
   async mounted () {
     await this.getProductSummary(this.$route.params.id)
@@ -214,9 +228,11 @@ export default {
       'getInvestmentTimeCount',
       'getName',
       'getPurchaseHistory',
+      'getShowChangeValueDialog',
       'getStartTime',
       'getValue'
     ]),
+    ...mapMutations('products/entity', ['setShowChangeValueDialog']),
 
     createChart (chartId, chartData) {
       const ctx = document.getElementById(chartId)

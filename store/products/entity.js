@@ -26,7 +26,8 @@ const basicState = {
   symbolLong: '',
   value: 0.0,
   chartJson: [],
-  purchaseHistory: []
+  purchaseHistory: [],
+  showChangeValueDialog: false
 }
 
 export const state = () => ({
@@ -57,7 +58,8 @@ export const getters = {
   getStartTime: (store) => { return store.startTime },
   getSymbol: (store) => { return store.symbol },
   getSymbolLong: (store) => { return store.symbolLong },
-  getValue: (store) => { return store.value }
+  getValue: (store) => { return store.value },
+  getShowChangeValueDialog: (store) => { return store.showChangeValueDialog }
 }
 
 export const mutations = {
@@ -76,7 +78,8 @@ export const mutations = {
   },
   setProductType: (store, payload) => { store.productType = payload },
   setPurchaseHistory: (store, payload) => { store.purchaseHistory = payload },
-  setSymbolLong: (store, payload) => { store.symbolLong = payload }
+  setSymbolLong: (store, payload) => { store.symbolLong = payload },
+  setShowChangeValueDialog: (store, payload) => { store.showChangeValueDialog = payload }
 }
 
 export const actions = {
@@ -197,6 +200,35 @@ export const actions = {
       value: state.purchaseValuation
     })
     commit('setChartJson', data)
+  },
+
+  async changeRealEstateValue ({ commit }, { id, date, value }) {
+    const request = {
+      date,
+      value
+    }
+    const response = await this.$backend.products.updateRealEstateHistoryData(id, request)
+
+    if (response && response.status === 200) {
+      this.$toast.success('Zmieniono wartość nieruchomości')
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async changeDepositBalance ({ commit }, { id, balance }) {
+    const request = {
+      balance
+    }
+    const response = await this.$backend.products.updateDepositAccountBalance(id, request)
+
+    if (response && response.status === 200) {
+      this.$toast.success('Zmieniono stan konta')
+    } else if (response && response.status !== 200) {
+      this.$toast.error(`Error: ${response.data.error}`)
+      console.log('error', response.status, response.data.error)
+    }
   }
 }
 

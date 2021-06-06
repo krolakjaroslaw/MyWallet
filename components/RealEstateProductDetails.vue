@@ -59,6 +59,15 @@
             </template>
           </v-simple-table>
         </v-card-text>
+        <v-card-actions class="d-flex justify-center">
+          <v-btn
+            color="primary"
+            rounded
+            @click="showChangeValueDialog = true"
+          >
+            Zmień wartość
+          </v-btn>
+        </v-card-actions>
       </v-card>
       <v-card
         class="ml-2"
@@ -120,13 +129,14 @@
         </v-simple-table>
       </v-card-text>
     </v-card>
+    <ChangeRealEstateValueDialog v-if="showChangeValueDialog" />
   </v-container>
 </template>
 
 <script>
 import chartData from 'assets/allegro-chart-data'
 import Chart from 'chart.js'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'RealEstateProductDetails',
@@ -143,7 +153,11 @@ export default {
     profit () { return this.getProfit() },
     purchaseHistory () { return this.getPurchaseHistory() },
     purchaseValuation () { return this.getPurchaseValuation() },
-    rateOfReturn () { return this.getRateOfReturn() }
+    rateOfReturn () { return this.getRateOfReturn() },
+    showChangeValueDialog: {
+      get () { return this.getShowChangeValueDialog() },
+      set (val) { this.setShowChangeValueDialog(val) }
+    }
   },
   async mounted () {
     await this.getProductSummary(this.$route.params.id)
@@ -163,8 +177,10 @@ export default {
       'getProfit',
       'getPurchaseHistory',
       'getPurchaseValuation',
-      'getRateOfReturn'
+      'getRateOfReturn',
+      'getShowChangeValueDialog'
     ]),
+    ...mapMutations('products/entity', ['setShowChangeValueDialog']),
 
     createChart (chartId, chartData) {
       const ctx = document.getElementById(chartId)
