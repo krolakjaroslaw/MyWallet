@@ -70,7 +70,6 @@
                   :disabled="!valid"
                   dark
                   rounded
-                  @click="sendRequest"
                 >
                   Log in
                 </v-btn>

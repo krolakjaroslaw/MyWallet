@@ -106,7 +106,6 @@
                   dark
                   rounded
                   :disabled="!valid"
-                  @click="sendRequest"
                 >
                   Register
                 </v-btn>
