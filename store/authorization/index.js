@@ -16,7 +16,6 @@ const role = {
 
 export const state = () => ({
   ...basicState,
-  roles: [],
   currentUser: null
 })
 
@@ -27,7 +26,7 @@ export const getters = {
   getConfirmPassword: (store) => { return store.confirmPassword },
   getCurrentPassword: (store) => { return store.currentPassword },
   getCurrentUser: (store) => { return store.currentUser },
-  getIsAdmin: (store) => { return store.roles.includes(role.ROLE_ADMIN) }
+  getIsAdmin: (store) => { return store.currentUser.roles.includes(role.ROLE_ADMIN) }
 }
 
 export const mutations = {

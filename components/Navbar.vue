@@ -46,10 +46,11 @@
     </v-btn>
 
     <v-btn
+      v-if="isAdmin"
       plain
-      @click="$router.push({name: '/'})"
+      @click="$router.push({name: 'users'})"
     >
-      About
+      Users
     </v-btn>
 
     <v-spacer />
@@ -100,6 +101,9 @@ export default {
         ? 'transparent'
         : 'primary'
     },
+    isAdmin () {
+      return this.getCurrentUser() && this.getIsAdmin()
+    },
     logged () {
       return this.getCurrentUser()
     },
@@ -115,7 +119,7 @@ export default {
   },
   methods: {
     ...mapActions('authorization', ['logout']),
-    ...mapGetters('authorization', ['getCurrentUser']),
+    ...mapGetters('authorization', ['getCurrentUser', 'getIsAdmin']),
     signOut () {
       this.logout()
       this.$router.push({ name: 'sign-in' })

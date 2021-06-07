@@ -5,6 +5,7 @@ export const BASE_URL = {
 }
 
 export const API_PACKAGE = {
+  admin: '/admin',
   finance: '/finance',
   product: '/product',
   user: '/user',
@@ -19,7 +20,9 @@ export const ROUTES = {
   sellProduct: 'sell-product',
   stock: 'stock',
   stockName: 'stock-name',
+  userId: 'users-id',
   userProfile: 'user-profile',
-  wallets: 'wallets',
-  walletId: 'wallets-id'
+  users: 'users',
+  walletId: 'wallets-id',
+  wallets: 'wallets'
 }
