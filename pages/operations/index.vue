@@ -38,7 +38,7 @@
           <template #top>
             <v-text-field
               v-model="search"
-              label="Search"
+              label="Wyszukaj"
               class="mx-4"
             />
           </template>
@@ -66,8 +66,8 @@ export default {
   computed: {
     headers () {
       return [
-        { text: 'Date', value: 'createdAt', align: 'start', filterable: false },
-        { text: 'Type', value: 'eventType', align: 'start' },
+        { text: 'Data', value: 'createdAt', align: 'start', filterable: false },
+        { text: 'Operacja', value: 'eventType', align: 'start' },
         { text: 'Nazwa', value: 'name', align: 'start' },
         { text: 'Typ produktu', value: 'productType', align: 'start' },
         { text: 'Liczba jednostek', value: 'numberOfUnits', align: 'right', filterable: false },

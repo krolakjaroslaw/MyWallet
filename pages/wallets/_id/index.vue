@@ -24,71 +24,16 @@
           style="background-color: #f6f6f6;"
           outlined
         >
-          <v-card
-            elevation="0"
-            style="background-color: transparent"
-          >
-            <v-card-title class="py-2">
-              Subkonto portfela - {{ wallet.name }}:
-              <v-spacer />
-              <b class="green">
-                {{ parseFloat(wallet.subAccountBalance).toFixed(2) }} {{ wallet.currency }}
-              </b>
-              <v-spacer />
-              <v-btn
-                color="primary"
-                class="mr-3"
-                rounded
-                @click="showAddDialog = true"
-              >
-                Wpłać
-              </v-btn>
-              <v-btn
-                color="primary"
-                rounded
-                @click="showRemoveDialog = true"
-              >
-                Wypłać
-              </v-btn>
-            </v-card-title>
-          </v-card>
+          <SubAccountCard :wallet="wallet" />
         </v-card>
 
         <v-card
           class="col-12 mb-6 rounded-xl"
-          style="height: 525px; background-color: #f6f6f6;"
+          :class="productsCount > 0 ? 'chart-expanded' : 'chart'"
+          style="background-color: #f6f6f6;"
           outlined
         >
-          <!--TODO: dopasowac height carda w zaleznosci od wymiaru listy-->
-          <v-card
-            elevation="0"
-            style="background-color: transparent"
-          >
-            <v-card-title class="py-2">
-              Skład portfela - {{ wallet.name }}
-              <v-spacer />
-              <v-btn
-                color="primary"
-                class="mr-3"
-                rounded
-                @click="$router.push({ name: 'buy-product', params: { id: wallet.id } })"
-              >
-                Kup
-              </v-btn>
-              <v-btn
-                color="primary"
-                rounded
-                @click="$router.push({ name: 'sell-product', params: { id: wallet.id } })"
-              >
-                Sprzedaj
-              </v-btn>
-            </v-card-title>
-            <v-card-text>
-              <div id="pieChart">
-                <canvas id="pie-chart" />
-              </div>
-            </v-card-text>
-          </v-card>
+          <ChartCard :wallet="wallet" />
         </v-card>
 
         <v-expansion-panels
@@ -98,455 +43,13 @@
           popout
           style="width: 100%;"
         >
-          <v-expansion-panel
-            v-if="commodities.length > 0"
-            class="elevation-3"
-          >
-            <v-expansion-panel-header>
-              <template #default>
-                <v-row no-gutters>
-                  Commodities
-                </v-row>
-              </template>
-            </v-expansion-panel-header>
-
-            <v-expansion-panel-content class="pt-4">
-              <v-simple-table
-                dense
-                fixed-header
-              >
-                <template #default>
-                  <thead>
-                    <tr>
-                      <th class="text-center">
-                        Name
-                      </th>
-                      <th class="text-center">
-                        Number of units
-                      </th>
-                      <th class="text-center">
-                        Value
-                      </th>
-                      <th class="text-center">
-                        Profit
-                      </th>
-                      <th class="text-center">
-                        Rate of return
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in commodities"
-                      :key="item.id"
-                    >
-                      <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
-                          {{ item.symbol }}
-                        </router-link>
-                      </td>
-                      <td class="text-center">
-                        {{ item.numberOfUnits }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.currentPurchaseValue }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.profit }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.rateOfReturn }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-
-          <v-expansion-panel
-            v-if="currencies.length > 0"
-            class="elevation-3"
-          >
-            <v-expansion-panel-header>
-              <template #default>
-                <v-row no-gutters>
-                  Currencies
-                </v-row>
-              </template>
-            </v-expansion-panel-header>
-
-            <v-expansion-panel-content class="pt-4">
-              <v-simple-table
-                dense
-                fixed-header
-              >
-                <template #default>
-                  <thead>
-                    <tr>
-                      <th class="text-center">
-                        Name
-                      </th>
-                      <th class="text-center">
-                        Number of units
-                      </th>
-                      <th class="text-center">
-                        Value
-                      </th>
-                      <th class="text-center">
-                        Profit
-                      </th>
-                      <th class="text-center">
-                        Rate of return
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in currencies"
-                      :key="item.id"
-                    >
-                      <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
-                          {{ item.symbol }}
-                        </router-link>
-                      </td>
-                      <td class="text-center">
-                        {{ item.numberOfUnits }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.currentPurchaseValue }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.profit }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.rateOfReturn }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-
-          <v-expansion-panel
-            v-if="deposits.length > 0"
-            class="elevation-3"
-          >
-            <v-expansion-panel-header>
-              <template #default>
-                <v-row no-gutters>
-                  Deposits
-                </v-row>
-              </template>
-            </v-expansion-panel-header>
-
-            <v-expansion-panel-content class="pt-4">
-              <v-simple-table
-                dense
-                fixed-header
-              >
-                <template #default>
-                  <thead>
-                    <tr>
-                      <th class="text-center">
-                        Name
-                      </th>
-                      <th class="text-center">
-                        Currency
-                      </th>
-                      <th class="text-center">
-                        Value
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in deposits"
-                      :key="item.id"
-                    >
-                      <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
-                          {{ item.name }}
-                        </router-link>
-                      </td>
-                      <td class="text-center">
-                        {{ item.currency }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.value }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-
-          <v-expansion-panel
-            v-if="etfs.length > 0"
-            class="elevation-3"
-          >
-            <v-expansion-panel-header>
-              <template #default>
-                <v-row no-gutters>
-                  ETF GPW
-                </v-row>
-              </template>
-            </v-expansion-panel-header>
-
-            <v-expansion-panel-content class="pt-4">
-              <v-simple-table
-                dense
-                fixed-header
-              >
-                <template #default>
-                  <thead>
-                    <tr>
-                      <th class="text-center">
-                        Name
-                      </th>
-                      <th class="text-center">
-                        Number of units
-                      </th>
-                      <th class="text-center">
-                        Value
-                      </th>
-                      <th class="text-center">
-                        Profit
-                      </th>
-                      <th class="text-center">
-                        Rate of return
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in etfs"
-                      :key="item.id"
-                    >
-                      <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
-                          {{ item.symbol }}
-                        </router-link>
-                      </td>
-                      <td class="text-center">
-                        {{ item.numberOfUnits }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.currentPurchaseValue }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.profit }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.rateOfReturn }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-
-          <v-expansion-panel
-            v-if="realEstates.length > 0"
-            class="elevation-3"
-          >
-            <v-expansion-panel-header>
-              <template #default>
-                <v-row no-gutters>
-                  Real Estates
-                </v-row>
-              </template>
-            </v-expansion-panel-header>
-
-            <v-expansion-panel-content class="pt-4">
-              <v-simple-table
-                dense
-                fixed-header
-              >
-                <template #default>
-                  <thead>
-                    <tr>
-                      <th class="text-center">
-                        Name
-                      </th>
-                      <th class="text-center">
-                        Currency
-                      </th>
-                      <th class="text-center">
-                        Value
-                      </th>
-                      <th class="text-center">
-                        Profit
-                      </th>
-                      <th class="text-center">
-                        Rate of return
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in realEstates"
-                      :key="item.id"
-                    >
-                      <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
-                          {{ item.name }}
-                        </router-link>
-                      </td>
-                      <td class="text-center">
-                        {{ item.currency }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.currentValuation }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.totalProfit }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.rateOfReturn }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-
-          <v-expansion-panel
-            v-if="timeDeposits.length > 0"
-            class="elevation-3"
-          >
-            <v-expansion-panel-header>
-              <template #default>
-                <v-row no-gutters>
-                  Time Deposits
-                </v-row>
-              </template>
-            </v-expansion-panel-header>
-
-            <v-expansion-panel-content class="pt-4">
-              <v-simple-table
-                dense
-                fixed-header
-              >
-                <template #default>
-                  <thead>
-                    <tr>
-                      <th class="text-center">
-                        Name
-                      </th>
-                      <th class="text-center">
-                        Base amount
-                      </th>
-                      <th class="text-center">
-                        Current profit
-                      </th>
-                      <th class="text-center">
-                        Estimated profit
-                      </th>
-                      <th class="text-center">
-                        Interest rate
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in timeDeposits"
-                      :key="item.id"
-                    >
-                      <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
-                          {{ item.name }}
-                        </router-link>
-                      </td>
-                      <td class="text-center">
-                        {{ item.depositBaseAmount }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.currentProfit }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.estimatedProfit }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.interestRate }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-
-          <v-expansion-panel
-            v-if="stock.length > 0"
-            class="elevation-3"
-          >
-            <v-expansion-panel-header>
-              <template #default>
-                <v-row no-gutters>
-                  Stock GPW
-                </v-row>
-              </template>
-            </v-expansion-panel-header>
-
-            <v-expansion-panel-content class="pt-4">
-              <v-simple-table
-                dense
-                fixed-header
-              >
-                <template #default>
-                  <thead>
-                    <tr>
-                      <th class="text-center">
-                        Name
-                      </th>
-                      <th class="text-center">
-                        Number of units
-                      </th>
-                      <th class="text-center">
-                        Value
-                      </th>
-                      <th class="text-center">
-                        Profit
-                      </th>
-                      <th class="text-center">
-                        Rate of return
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in stock"
-                      :key="item.id"
-                    >
-                      <td class="text-center">
-                        <router-link :to="{ name: 'products-id', params: { id: item.id, type: item.productType } }">
-                          {{ item.symbol }}
-                        </router-link>
-                      </td>
-                      <td class="text-center">
-                        {{ item.numberOfUnits }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.currentPurchaseValue }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.profit }}
-                      </td>
-                      <td class="text-center">
-                        {{ item.rateOfReturn }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
+          <EtfsPanel />
+          <StockPanel />
+          <DepositsPanel />
+          <TimeDepositsPanel />
+          <RealEstatesPanel />
+          <CommoditiesPanel />
+          <CurrenciesPanel />
         </v-expansion-panels>
       </v-container>
     </div>
@@ -556,188 +59,39 @@
 </template>
 
 <script>
-import Chart from 'chart.js'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import pieChartData from 'assets/pie-chart-data'
 
 export default {
   name: 'WalletDetails',
   layout: 'parallax',
   data () {
     return {
-      pieChartData,
-      chartLabels: [],
-      chartValues: [],
       panel: []
     }
   },
   computed: {
-    commodities: {
-      get () { return this.getCommodities() },
-      set (val) { this.setCommodities(val) }
-    },
-    currencies: {
-      get () { return this.getCurrencies() },
-      set (val) { this.setCurrencies(val) }
-    },
-    deposits: {
-      get () { return this.getDeposits() },
-      set (val) { this.setDeposits(val) }
-    },
-    etfs: {
-      get () { return this.getEtfs() },
-      set (val) { this.setEtfs(val) }
-    },
-    realEstates: {
-      get () { return this.getRealEstates() },
-      set (val) { this.setRealEstates(val) }
-    },
-    showAddDialog: {
-      get () { return this.getShowAddDialog() },
-      set (val) { this.setShowAddDialog(val) }
-    },
-    showRemoveDialog: {
-      get () { return this.getShowRemoveDialog() },
-      set (val) { this.setShowRemoveDialog(val) }
-    },
-    stock: {
-      get () { return this.getStock() },
-      set (val) { this.setStock(val) }
-    },
-    timeDeposits: {
-      get () { return this.getTimeDeposits() },
-      set (val) { this.setTimeDeposits(val) }
-    },
-    wallet: {
-      get () { return this.getWallet() },
-      set (val) { this.setWallet(val) }
-    }
+    productsCount () { return this.getProductsCount() },
+    showAddDialog () { return this.getShowAddDialog() },
+    showRemoveDialog () { return this.getShowRemoveDialog() },
+    wallet () { return this.getWallet() }
   },
-  async mounted () {
-    const walletProducts = await this.$backend.wallets.getAllProductsInWallet(this.$route.params.id)
-    console.log('walletProducts', walletProducts)
+  async created () {
+    console.log('created')
+    await this.getAllProductsInWallet(this.$route.params.id)
     await this.getWalletInfo(this.$route.params.id)
-    // TODO: refactor
-    await this.getDepositProducts(this.$route.params.id)
-    await this.getInvestmentProducts(this.$route.params.id)
-    await this.getRealEstateProducts(this.$route.params.id)
-    await this.getTimeDepositProducts(this.$route.params.id)
-
-    if (this.commodities.length > 0) {
-      this.chartLabels.push('Commodities')
-      const sum = this.commodities
-        .map(item => item.currentPurchaseValue)
-        .reduce((sum, item) => sum + item)
-      this.chartValues.push(sum)
-    }
-
-    if (this.currencies.length > 0) {
-      this.chartLabels.push('Currencies')
-      const sum = this.currencies
-        .map(item => item.currentPurchaseValue)
-        .reduce((sum, item) => sum + item)
-      this.chartValues.push(sum)
-    }
-
-    if (this.deposits.length > 0) {
-      this.chartLabels.push('Deposits')
-      const sum = this.deposits
-        .map(item => item.value)
-        .reduce((sum, item) => sum + item)
-      this.chartValues.push(sum)
-    }
-
-    if (this.etfs.length > 0) {
-      this.chartLabels.push('ETFs')
-      const sum = this.etfs
-        .map(item => item.currentPurchaseValue)
-        .reduce((sum, item) => sum + item)
-      this.chartValues.push(sum)
-    }
-
-    if (this.realEstates.length > 0) {
-      this.chartLabels.push('Real Estates')
-      const sum = this.realEstates
-        .map(item => item.currentValuation)
-        .reduce((sum, item) => sum + item)
-      this.chartValues.push(sum)
-    }
-
-    if (this.stock.length > 0) {
-      this.chartLabels.push('Stock')
-      const sum = this.stock
-        .map(item => item.currentPurchaseValue)
-        .reduce((sum, item) => sum + item)
-      this.chartValues.push(sum)
-    }
-
-    if (this.timeDeposits.length > 0) {
-      this.chartLabels.push('Time Deposits')
-      const sum = this.timeDeposits
-        .map(item => item.depositBaseAmount)
-        .reduce((sum, item) => sum + item)
-      this.chartValues.push(sum)
-    }
-
-    const colors = [
-      'rgba(0, 0, 139, 1)',
-      'rgba(30, 144, 255, 1)',
-      'rgba(0, 0, 205, 1)',
-      'rgba(100, 149, 237, 1)',
-      'rgba(0, 191, 255, 1)',
-      'rgba(65, 105, 225, 1)',
-      'rgba(135, 206, 250, 1)'
-    ]
-    this.createChart('pie-chart', this.pieChartData(this.chartLabels, this.chartValues, colors))
+    console.log('created')
   },
   methods: {
     ...mapActions('wallets', ['getWalletInfo']),
-    ...mapActions('wallets/entity', [
-      'getDepositProducts',
-      'getInvestmentProducts',
-      'getRealEstateProducts',
-      'getTimeDepositProducts'
-    ]),
-    // ...mapGetters('wallets', ['getWallets']),
-    ...mapGetters('wallets/entity', [
-      'getCommodities',
-      'getCurrencies',
-      'getDeposits',
-      'getEtfs',
-      'getRealEstates',
-      'getShowAddDialog',
-      'getShowRemoveDialog',
-      'getStock',
-      'getTimeDeposits',
-      'getWallet'
-    ]),
-    ...mapMutations('wallets/entity', [
-      'setCommodities',
-      'setCurrencies',
-      'setDeposits',
-      'setEtfs',
-      'setRealEstates',
-      'setShowAddDialog',
-      'setShowRemoveDialog',
-      'setStock',
-      'setTimeDeposits',
-      'setWallet'
-    ]),
-
-    createChart (chartId, chartData) {
-      const ctx = document.getElementById(chartId)
-      const myChart = new Chart(ctx, {
-        type: chartData.type,
-        data: chartData.data,
-        options: chartData.options
-      })
-      console.log(myChart)
-    }
+    ...mapActions('wallets/entity', ['getAllProductsInWallet']),
+    ...mapGetters('wallets/entity', ['getProductsCount', 'getShowAddDialog', 'getShowRemoveDialog', 'getWallet']),
+    ...mapMutations('wallets/entity', ['setShowAddDialog', 'setShowRemoveDialog'])
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
 .page-header {
   width: 100%;
   height: 17vh;
@@ -753,21 +107,11 @@ export default {
   position: relative;
 }
 
-.v-expansion-panel--active > .v-expansion-panel-header {
-  min-height: 48px;
+.chart {
+  height: 75px;
 }
 
-.v-expansion-panel-header {
-  padding: 8px 12px;
-}
-
-#pie-chart {
-  height: 450px !important;
-  width: 900px !important;
-}
-
-.green {
-  background-color: transparent !important;
-  color: #43A047;
+.chart-expanded {
+  height: 525px;
 }
 </style>

@@ -122,8 +122,7 @@
               <span>{{ symbolLong }} ({{ symbol }})</span>
               <span>
                 <!--TODO-->
-                <b>58,1400 zł</b>
-                <span style="color: green">1,29%</span>
+                <b>{{ profileData.valueAverage }} zł</b>
               </span>
             </v-card-title>
             <!--TODO: scale-->

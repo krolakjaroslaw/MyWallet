@@ -85,8 +85,6 @@
           <span>{{ symbolLong }}</span>
           <span>
             <b>{{ currentUnitPrice }} zł</b>
-            <!--TODO-->
-            <span style="color: green">1,29%</span>
           </span>
         </v-card-title>
         <v-card-text>

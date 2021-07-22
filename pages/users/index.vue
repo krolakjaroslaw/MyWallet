@@ -38,7 +38,7 @@
           <template #top>
             <v-text-field
               v-model="search"
-              label="Search"
+              label="Wyszukaj"
               class="mx-4"
             />
           </template>
@@ -129,8 +129,8 @@ export default {
         { text: 'Nazwa', value: 'name', align: 'start' },
         { text: 'Role', value: 'roles', align: 'start' },
         { text: 'Id', value: 'id', align: 'start' },
-        { text: 'Data rejestracji', value: 'createdAt', align: 'right' },
-        { text: 'Usuń', value: 'delete', align: 'center' }
+        { text: 'Data rejestracji', value: 'createdAt', align: 'start' },
+        { text: 'Usuń', value: 'delete', align: 'center', filterable: false }
       ]
     },
     users () { return this.getUsers() }

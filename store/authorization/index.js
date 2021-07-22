@@ -70,7 +70,7 @@ export const actions = {
   logout ({ commit }) {
     sessionStorage.clear()
     commit('resetCurrentUser')
-    this.$toast.success('You have been successfully logged out')
+    this.$toast.success('Zostałeś wylogowany')
   },
 
   async registerUser ({ commit, state }) {
@@ -84,7 +84,7 @@ export const actions = {
     const response = await this.$backend.authorization.registerUser(request)
 
     if (response && response.status === 200) {
-      this.$toast.success('Your account has been successfully created')
+      this.$toast.success('Twoje konto zostało pomyślnie stworzone')
       await this.$router.push({ name: 'sign-in' })
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.errors.join('\n')}`)
@@ -112,7 +112,7 @@ export const actions = {
     const response = await this.$backend.authorization.updateUserName(state.currentUser.username)
 
     if (response && response.status === 200) {
-      this.$toast.success('Username successfully changed')
+      this.$toast.success('Zmiana nazwy użytkownika zakończona sukcesem')
       commit('updateName', response.data.name)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)

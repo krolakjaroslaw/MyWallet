@@ -43,18 +43,15 @@
         </h5>
       </div>
     </div>
-    <BasicElementsSelection />
-    <BasicElementsSelection />
   </div>
 </template>
 
 <script>
 import Parallax from '../components/Parallax'
-import BasicElementsSelection from '../components/welcome-page/BasicElementsSelection'
 
 export default {
   name: 'WelcomePage',
-  components: { BasicElementsSelection, Parallax },
+  components: { Parallax },
   layout: 'parallax'
 }
 </script>

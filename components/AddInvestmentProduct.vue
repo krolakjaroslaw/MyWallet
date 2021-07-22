@@ -18,7 +18,7 @@
             <template #activator="{ on, attrs }">
               <v-text-field
                 v-model="dateFormatted"
-                label="Date"
+                label="Data"
                 hint="MM/DD/YYYY"
                 prepend-icon="mdi-calendar"
                 :rules="[
@@ -41,7 +41,7 @@
           <v-text-field
             v-else-if="stepper === 3"
             v-model="date"
-            label="Date"
+            label="Data"
             readonly
           />
         </v-col>
@@ -54,7 +54,7 @@
         >
           <v-text-field
             v-model="number"
-            label="Number"
+            label="Liczba jednostek"
             type="number"
             class="mt-2"
             :rules="numberRules"
@@ -73,7 +73,7 @@
         >
           <v-text-field
             v-model="price"
-            label="Price"
+            label="Cena"
             type="number"
             :rules="[
               $rules.required,
@@ -94,7 +94,7 @@
         >
           <v-text-field
             v-model="commission"
-            label="Commission"
+            label="Prowizja"
             type="number"
             :rules="[
               $rules.required,
@@ -116,7 +116,7 @@
       >
         <v-text-field
           v-model="amount"
-          label="Amount"
+          label="Kwota"
           type="number"
           :disabled="stepper === 2"
           :outlined="stepper === 2"
@@ -134,7 +134,7 @@
       >
         <v-textarea
           v-model="comment"
-          label="Comment"
+          label="Komentarz"
           rows="3"
           auto-grow
           no-resize
@@ -162,7 +162,7 @@ export default {
   },
   computed: {
     amount () {
-      return parseFloat(this.number) * parseFloat(this.price) + parseFloat(this.commission)
+      return (parseFloat(this.number) * parseFloat(this.price) + parseFloat(this.commission)).toFixed(2)
     },
     comment: {
       get () { return this.getComment() },

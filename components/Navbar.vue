@@ -21,28 +21,28 @@
       plain
       @click="$router.push({name: 'dashboard'})"
     >
-      Dashboard
+      Start
     </v-btn>
 
     <v-btn
       plain
       @click="$router.push({name: 'wallets'})"
     >
-      Wallets
+      Portfele
     </v-btn>
 
     <v-btn
       plain
       @click="$router.push({name: 'operations'})"
     >
-      Operations
+      Operacje
     </v-btn>
 
     <v-btn
       plain
       @click="$router.push({name: 'stock'})"
     >
-      Stock
+      Giełda
     </v-btn>
 
     <v-btn
@@ -50,7 +50,7 @@
       plain
       @click="$router.push({name: 'users'})"
     >
-      Users
+      Użytkownicy
     </v-btn>
 
     <v-spacer />
@@ -73,7 +73,7 @@
       <v-icon left>
         mdi-logout
       </v-icon>
-      {{ logged ? 'Logout' : 'Login' }}
+      {{ logged ? 'Wyloguj' : 'Zaloguj' }}
     </v-btn>
   </v-app-bar>
 </template>
