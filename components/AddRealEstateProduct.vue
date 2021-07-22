@@ -8,7 +8,7 @@
       >
         <v-text-field
           v-model="name"
-          label="Name"
+          label="Nazwa"
           class="mt-2"
           :rules="[
             $rules.required
@@ -27,7 +27,7 @@
       >
         <v-text-field
           v-model="price"
-          label="Price"
+          label="Wartość"
           type="number"
           :rules="[
             $rules.required,

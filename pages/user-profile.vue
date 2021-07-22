@@ -2,7 +2,6 @@
 <template>
   <div>
     <div class="page-header">
-      <!--TODO: zmniejszyc tlo-->
       <parallax
         class="parallax"
         style="
@@ -26,23 +25,14 @@
         <!--    width="123"-->
         <!--  >-->
         <!--</div>-->
-
-        <h3 class="title-name">
-          {{ name }}
-        </h3>
-        <!--TODO-->
         <div class="content">
           <div class="social-description">
-            <h2>$260.000</h2>
-            <p>Your wallet</p>
+            <h2>260.000 zł</h2>
+            <p>Twoje portfele</p>
           </div>
           <div class="social-description">
             <h2>48</h2>
-            <p>days</p>
-          </div>
-          <div class="social-description">
-            <h2>$320.000</h2>
-            <p>Your master wallet</p>
+            <p>dni</p>
           </div>
         </div>
       </div>
@@ -57,7 +47,7 @@
           >
             <v-card-title>
               <h4 class="title mt-0 pt-0">
-                Edit Profile:
+                Edytuj profil:
               </h4>
             </v-card-title>
 
@@ -92,7 +82,7 @@
                       v-model="name"
                       append-icon="mdi-account-circle-outline"
                       type="text"
-                      label="Name"
+                      label="Nazwa użytkownika"
                       :rules="[
                         $rules.required,
                         $rules.minLength(5)
@@ -114,7 +104,7 @@
                 :disabled="!validName"
                 @click="editProfile"
               >
-                Submit
+                Zatwierdź
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -125,7 +115,7 @@
           >
             <v-card-title>
               <h4 class="title mt-0 pt-0">
-                Change password:
+                Zmień hasło:
               </h4>
             </v-card-title>
 
@@ -140,7 +130,7 @@
                       v-model="currentPassword"
                       append-icon="mdi-lock-outline"
                       type="password"
-                      label="Current password"
+                      label="Aktualne hasło"
                       :rules="[
                         $rules.required,
                         $rules.minLength(8)
@@ -161,7 +151,7 @@
                       v-model="password"
                       append-icon="mdi-lock-outline"
                       type="password"
-                      label="New password"
+                      label="Nowe hasło"
                       :rules="[
                         $rules.required,
                         $rules.minLength(8),
@@ -187,7 +177,7 @@
                       v-model="confirmPassword"
                       append-icon="mdi-lock-outline"
                       type="password"
-                      label="Confirm new password"
+                      label="Potwierdź nowe hasło"
                       :rules="[
                         $rules.required,
                         $rules.minLength(8),
@@ -210,7 +200,7 @@
                 :disabled="!validPass"
                 @click="updatePassword"
               >
-                Submit
+                Zatwierdź
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -254,6 +244,10 @@ export default {
       set (val) { this.setConfirmPassword(val) }
     }
   },
+  // TODO: suma portfeli plus data rejestracji
+  created () {
+
+  },
   destroyed () {
     this.resetState()
   },
@@ -278,7 +272,6 @@ export default {
     getImage () {
       return this.$backend.authorization.getUserPhoto()
         .then((response) => {
-          console.log('response', response)
           window.URL.createObjectURL(response.data)
         })
     }
@@ -295,12 +288,12 @@ export default {
 <style lang="scss" scoped>
 .page-header {
   width: 100%;
-  height: 70vh;
+  height: 25vh;
 
   .container {
-    height: 70vh;
+    height: 25vh;
     left: 0;
-    padding: 150px;
+    padding: 100px;
     position: absolute;
     right: 0;
     top: 0;
@@ -309,7 +302,7 @@ export default {
 
 .parallax {
   width: 100%;
-  height: 500px !important;
+  height: 250px !important;
 }
 
 .photo-container {
@@ -338,8 +331,8 @@ export default {
 
   .social-description {
     display: inline-block;
-    max-width: 200px;
-    width: 200px;
+    max-width: 300px;
+    width: 300px;
     text-align: center;
     margin: 15px 0 0;
 

@@ -9,7 +9,7 @@
         >
           <v-text-field
             v-model="name"
-            label="Name"
+            label="Nazwa"
             class="mt-2"
             :rules="[
               $rules.required,
@@ -40,7 +40,7 @@
                 v-model="dateFormatted"
                 hint="MM/DD/YYYY"
                 prepend-icon="mdi-calendar"
-                label="Date"
+                label="Data"
                 persistent-hint
                 :rules="[
                   $rules.required
@@ -61,7 +61,7 @@
           <v-text-field
             v-else-if="stepper === 3"
             v-model="date"
-            label="Date"
+            label="Data"
             readonly
           />
         </v-col>
@@ -74,7 +74,7 @@
         >
           <v-text-field
             v-model="price"
-            label="Deposit base amount"
+            label="Kwota bazowa"
             type="number"
             class="mt-2"
             :rules="[
@@ -96,7 +96,7 @@
         >
           <v-text-field
             v-model="interestRate"
-            label="Interest rate per year"
+            label="Oprocentowanie w skali roku"
             type="number"
             :rules="[
               $rules.required,
@@ -116,7 +116,7 @@
         >
           <v-text-field
             v-model="number"
-            label="Investment time"
+            label="Czas (liczbowo)"
             type="number"
             :rules="[
               $rules.required,
@@ -138,7 +138,7 @@
           <!--TODO: as select-->
           <v-text-field
             v-model="investmentTime"
-            label="Investment interval"
+            label="Okres lokaty"
             :rules="[
               $rules.required,
             ]"
@@ -158,7 +158,7 @@
           <!--TODO: as select-->
           <v-text-field
             v-model="capitalization"
-            label="Capitalization"
+            label="Okres kapitalizacji"
             :rules="[
               $rules.required,
             ]"
@@ -178,7 +178,7 @@
       >
         <v-textarea
           v-model="comment"
-          label="Comment"
+          label="Komentarz"
           rows="3"
           auto-grow
           no-resize

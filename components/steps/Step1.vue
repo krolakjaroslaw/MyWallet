@@ -10,7 +10,7 @@
           v-model="wallet"
           :items="wallets"
           item-text="name"
-          label="Wallet"
+          label="Portfel"
           class="select"
           :disabled="!!$route.params.id"
           dense
@@ -31,7 +31,7 @@
         <v-select
           v-model="group"
           :items="groups"
-          label="Group"
+          label="Typ produktu"
           class="select mt-2"
           dense
           rounded
@@ -49,7 +49,7 @@
           v-model="product"
           :items="products"
           item-text="symbol"
-          label="Product"
+          label="Produkt"
           class="select"
           :disabled="['DEPOSIT', 'REAL_ESTATE', 'TIME_DEPOSIT'].includes(group)"
           clearable
@@ -148,7 +148,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

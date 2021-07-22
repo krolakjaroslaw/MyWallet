@@ -9,7 +9,7 @@
         >
           <v-text-field
             v-model="name"
-            label="Name"
+            label="Nazwa"
             class="mt-2"
             :rules="[
               $rules.required,
@@ -29,7 +29,7 @@
         >
           <v-text-field
             v-model="price"
-            label="Value"
+            label="Suma"
             type="number"
             :rules="[
               $rules.required,
@@ -51,7 +51,7 @@
           <!--TODO: as select from api-->
           <v-text-field
             v-model="currency"
-            label="Currency"
+            label="Waluta"
             :rules="[
               $rules.required,
             ]"

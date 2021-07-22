@@ -5,15 +5,6 @@
     dark
   >
     <div class="container">
-      <nav>
-        <ul>
-          <li>
-            <a href="#">
-              About Us
-            </a>
-          </li>
-        </ul>
-      </nav>
       <div class="copyright">
         &copy; {{ year }}, Designed by MJ Company. Coded by MJ Company.
       </div>

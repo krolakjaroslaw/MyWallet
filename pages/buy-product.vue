@@ -20,7 +20,7 @@ export default {
         this.createTimeDepositProduct()
       }
       this.resetState()
-      this.$router.push({ name: 'wallet-details' })
+      this.$router.push({ name: 'wallets' })
     }
   }
 }

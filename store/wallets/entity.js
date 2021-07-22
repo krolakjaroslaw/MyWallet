@@ -9,6 +9,8 @@ const basicState = {
   stock: [],
   timeDeposits: [],
 
+  productsCount: 0,
+
   wallet: {},
   showAddDialog: false,
   showRemoveDialog: false
@@ -23,6 +25,7 @@ export const getters = {
   getCurrencies: (store) => { return store.currencies },
   getDeposits: (store) => { return store.deposits },
   getEtfs: (store) => { return store.etfs },
+  getProductsCount: (store) => { return store.productsCount },
   getRealEstates: (store) => { return store.realEstates },
   getShowAddDialog: (store) => { return store.showAddDialog },
   getShowRemoveDialog: (store) => { return store.showRemoveDialog },
@@ -50,6 +53,7 @@ export const mutations = {
   setCurrencies: (store, payload) => { store.currencies = payload },
   setDeposits: (store, payload) => { store.deposits = payload },
   setEtfs: (store, payload) => { store.etfs = payload },
+  setProductsCount: (store, payload) => { store.productsCount = payload },
   setRealEstates: (store, payload) => { store.realEstates = payload },
   setShowAddDialog: (store, payload) => { store.showAddDialog = payload },
   setShowRemoveDialog: (store, payload) => { store.showRemoveDialog = payload },
@@ -154,83 +158,18 @@ export const actions = {
   },
 
   async getAllProductsInWallet ({ commit, dispatch, state }, walletId) {
-    // const response = await this.$backend.wallets.getAllProductsInWallet(walletId)
-
-    // if (response && response.status === 200) {
-    // commit('setDeposits', response.data)
-    // } else if (response && response.status !== 200) {
-    //   this.$toast.error(`Error: ${response.data.error}`)
-    //   console.log('error', response.status, response.data.error)
-    // }
-  },
-
-  async getDepositProducts ({ commit, dispatch, state }, walletId) {
-    const response = await this.$backend.wallets.getWalletDepositProducts(walletId)
+    const response = await this.$backend.wallets.getAllProductsInWallet(walletId)
 
     if (response && response.status === 200) {
-      commit('setDeposits', response.data)
-    } else if (response && response.status !== 200) {
-      this.$toast.error(`Error: ${response.data.error}`)
-      console.log('error', response.status, response.data.error)
-    }
-  },
-
-  async getInvestmentProducts ({ commit, dispatch, state }, walletId) {
-    const groups = ['COMMODITY', 'CURRENCY', 'ETF_GPW', 'STOCK_GPW']
-
-    const commodityResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[0])
-
-    if (commodityResponse && commodityResponse.status === 200) {
-      commit('setCommodities', commodityResponse.data)
-    } else if (commodityResponse && commodityResponse.status !== 200) {
-      this.$toast.error(`Error: ${commodityResponse.data.error}`)
-      console.log('error', commodityResponse.status, commodityResponse.data.error)
-    }
-
-    const currencyResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[1])
-
-    if (currencyResponse && currencyResponse.status === 200) {
-      commit('setCurrencies', currencyResponse.data)
-    } else if (currencyResponse && currencyResponse.status !== 200) {
-      this.$toast.error(`Error: ${currencyResponse.data.error}`)
-      console.log('error', currencyResponse.status, currencyResponse.data.error)
-    }
-
-    const etfResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[2])
-
-    if (etfResponse && etfResponse.status === 200) {
-      commit('setEtfs', etfResponse.data)
-    } else if (etfResponse && etfResponse.status !== 200) {
-      this.$toast.error(`Error: ${etfResponse.data.error}`)
-      console.log('error', etfResponse.status, etfResponse.data.error)
-    }
-
-    const stockResponse = await this.$backend.wallets.getWalletInvestmentProducts(walletId, groups[3])
-
-    if (stockResponse && stockResponse.status === 200) {
-      commit('setStock', stockResponse.data)
-    } else if (stockResponse && stockResponse.status !== 200) {
-      this.$toast.error(`Error: ${stockResponse.data.error}`)
-      console.log('error', stockResponse.status, stockResponse.data.error)
-    }
-  },
-
-  async getRealEstateProducts ({ commit, dispatch, state }, walletId) {
-    const response = await this.$backend.wallets.getWalletRealEstateProducts(walletId)
-
-    if (response && response.status === 200) {
-      commit('setRealEstates', response.data)
-    } else if (response && response.status !== 200) {
-      this.$toast.error(`Error: ${response.data.error}`)
-      console.log('error', response.status, response.data.error)
-    }
-  },
-
-  async getTimeDepositProducts ({ commit, dispatch, state }, walletId) {
-    const response = await this.$backend.wallets.getWalletTimeDepositProducts(walletId)
-
-    if (response && response.status === 200) {
-      commit('setTimeDeposits', response.data)
+      commit('setCommodities', response.data.commodity)
+      commit('setCurrencies', response.data.currency)
+      commit('setDeposits', response.data.deposit)
+      commit('setEtfs', response.data.etfGpw)
+      commit('setRealEstates', response.data.realEstate)
+      commit('setStock', response.data.stockGpw)
+      commit('setTimeDeposits', response.data.timeDeposit)
+      commit('setProductsCount', response.data.productsCount)
+      console.log('commits ended')
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)

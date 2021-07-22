@@ -7,6 +7,7 @@ const basicState = {
     label: 'PLN - złoty polski',
     name: 'PLN'
   },
+  selectedItem: null,
   // dialogs
   addWalletDialog: false,
   deleteWalletDialog: false,
@@ -24,6 +25,7 @@ export const getters = {
   getEditWalletDialog: (store) => { return store.editWalletDialog },
   getCurrency: (store) => { return store.currency },
   getName: (store) => { return store.name },
+  getSelectedItem: (store) => { return store.selectedItem },
   getWallets: (store) => { return store.wallets }
 }
 
@@ -45,6 +47,7 @@ export const mutations = {
   setEditWalletDialog: (store, payload) => { store.editWalletDialog = payload },
   setCurrency: (store, payload) => { store.currency = payload },
   setName: (store, payload) => { store.name = payload },
+  setSelectedItem: (store, payload) => { store.selectedItem = payload },
   setWallets: (store, payload) => { store.wallets = payload },
   updateWalletName: (store, payload) => {
     const index = store.wallets.findIndex(item => item.id === payload.id)
@@ -61,7 +64,7 @@ export const actions = {
     const response = await this.$backend.wallets.createWallet(request)
 
     if (response && response.status === 201) {
-      this.$toast.success('Wallet created successfully')
+      this.$toast.success('Stworzenie portfela zakończone sukcesem')
       commit('addWallet', response.data)
       dispatch('loadWallets')
       commit('resetState')
@@ -75,7 +78,7 @@ export const actions = {
     const response = await this.$backend.wallets.deleteWallet(id)
 
     if (response && response.status === 200) {
-      this.$toast.success('Wallet deleted successfully')
+      this.$toast.success('Usunięcie portfela zakończone sukcesem')
       commit('deleteWallet', response.data)
       dispatch('loadWallets')
     } else if (response && response.status !== 200) {
@@ -117,7 +120,7 @@ export const actions = {
     const response = await this.$backend.wallets.updateWalletName(request)
 
     if (response && response.status === 200) {
-      this.$toast.success('Wallet name updated successfully')
+      this.$toast.success('Zmiana nazwy portfela zakończona sukcesem')
       commit('updateWalletName', response.data)
       commit('resetState')
     } else if (response && response.status !== 200) {

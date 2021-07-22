@@ -63,7 +63,7 @@
               <template #top>
                 <v-text-field
                   v-model="search"
-                  label="Search"
+                  label="Wyszukaj"
                   class="mx-4"
                 />
               </template>
@@ -95,7 +95,7 @@
               <template #top>
                 <v-text-field
                   v-model="search"
-                  label="Search"
+                  label="Wyszukaj"
                   class="mx-4"
                 />
               </template>
@@ -133,7 +133,7 @@
               <template #top>
                 <v-text-field
                   v-model="search"
-                  label="Search"
+                  label="Wyszukaj"
                   class="mx-4"
                 />
               </template>
@@ -165,7 +165,7 @@
               <template #top>
                 <v-text-field
                   v-model="search"
-                  label="Search"
+                  label="Wyszukaj"
                   class="mx-4"
                 />
               </template>
@@ -197,7 +197,7 @@
               <template #top>
                 <v-text-field
                   v-model="search"
-                  label="Search"
+                  label="Wyszukaj"
                   class="mx-4"
                 />
               </template>

@@ -39,7 +39,7 @@
 
               <v-divider
                 v-if="index + 1 < steps.length"
-                style="width: 295px;"
+                style="width: 245px;"
               />
             </div>
           </v-stepper-header>
@@ -65,17 +65,17 @@
                 rounded
                 @click="stepper--"
               >
-                Back
+                Wróć
               </v-btn>
 
               <v-btn
                 class="mx-2"
-                color="primary"
+                :color="stepper === steps.length ? 'primary' : 'default'"
                 :disabled="!isValid"
                 rounded
                 @click="stepper === steps.length ? submit() : stepper++"
               >
-                {{ stepper === steps.length ? 'Submit' : 'Continue' }}
+                {{ stepper === steps.length ? 'Zatwierdź' : 'Kontynuuj' }}
               </v-btn>
             </div>
           </v-stepper-items>
@@ -100,9 +100,9 @@ export default {
     return {
       valid: false,
       steps: [
-        { header: 'Choose wallet & product' },
-        { header: 'Fill details' },
-        { header: 'Summary & preview' }
+        { header: 'Wybierz portfel i produkt' },
+        { header: 'Wypełnij szczegóły' },
+        { header: 'Podsumowanie i podgląd' }
       ]
     }
   },

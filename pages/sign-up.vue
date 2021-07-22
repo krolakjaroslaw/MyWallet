@@ -29,85 +29,54 @@
             >
           </div>
 
-          <v-form
-            v-model="valid"
-            @submit.prevent="sendRequest"
-          >
+          <v-form v-model="valid" @submit.prevent="sendRequest">
             <v-card-text class="py-1">
               <v-text-field
-                v-model="name"
-                prepend-inner-icon="mdi-account-circle-outline"
-                label="Username"
+                v-model="name" prepend-inner-icon="mdi-account-circle-outline" label="Nazwa użytkownika"
                 :rules="[
                   $rules.required,
-                  $rules.regexCheck( /^[\w-.\s]*$/gi, 'Only letters, numbers and \'.-_\' allowed')
+                  $rules.regexCheck( /^[\w-.\s]*$/gi, 'Dozwolone są tylko litery, cyfry i \'.-_\'')
                 ]"
-                dark
-                filled
-                rounded
-                dense
+                dark filled rounded dense
               />
 
               <v-text-field
-                v-model="email"
-                prepend-inner-icon="mdi-at"
-                label="Email"
+                v-model="email" prepend-inner-icon="mdi-at" label="Email"
                 :rules="[
                   $rules.required,
-                  $rules.regexCheck( /^[^\s@]+@[^\s@]+\.[^\s@]+$/gi, 'Please provide correct email')
+                  $rules.regexCheck( /^[^\s@]+@[^\s@]+\.[^\s@]+$/gi, 'Podaj prawidłowy email')
                 ]"
-                dark
-                filled
-                rounded
-                dense
+                dark filled rounded dense
               />
 
               <v-text-field
-                v-model="password"
-                prepend-inner-icon="mdi-lock-outline"
-                type="password"
-                label="Password"
+                v-model="password" prepend-inner-icon="mdi-lock-outline" type="password" label="Hasło"
                 :rules="[
                   $rules.required,
                   $rules.minLength(8),
-                  $rules.regexCheck(/(?=.*[a-z])/gi, 'Password must have at least one lowercase character'),
-                  $rules.regexCheck(/(?=.*[A-Z])/gi, 'Password must have at least one uppercase character'),
-                  $rules.regexCheck(/(?=.*[0-9])/gi, 'Password must have at least one number character'),
-                  $rules.regexCheck(/(?=.*[!@#$%^&*()_+])/gi, 'Password must have at least one special character'),
+                  $rules.regexCheck(/(?=.*[a-z])/gi, 'Wymagana jest minimum jedna mała litera'),
+                  $rules.regexCheck(/(?=.*[A-Z])/gi, 'Wymagana jest minimum jedna wielka litera'),
+                  $rules.regexCheck(/(?=.*[0-9])/gi, 'Wymagana jest minimum jedna cyfra'),
+                  $rules.regexCheck(/(?=.*[!@#$%^&*()_+])/gi, 'Wymagany jest minimum jeden znak specjalny'),
                 ]"
-                dark
-                filled
-                rounded
-                dense
+                dark filled rounded dense
               />
 
               <v-text-field
-                v-model="confirmPassword"
-                prepend-inner-icon="mdi-lock-outline"
-                type="password"
-                label="Confirm Password"
+                v-model="confirmPassword" prepend-inner-icon="mdi-lock-outline" type="password" label="Potwierdź hasło"
                 :rules="[
                   $rules.required,
                   $rules.minLength(8),
-                  v => password === confirmPassword || 'Passwords do not match'
+                  _ => password === confirmPassword || 'Hasła się różnią'
                 ]"
-                dark
-                filled
-                rounded
-                dense
+                dark filled rounded dense
               />
             </v-card-text>
 
             <v-card-actions>
               <div class="buttons">
-                <v-btn
-                  color="primary"
-                  type="submit"
-                  dark
-                  rounded
-                  :disabled="!valid"
-                >
-                  Register
+                <v-btn color="primary" type="submit" :disabled="!valid" dark rounded>
+                  Zarejestruj się
                 </v-btn>
               </div>
             </v-card-actions>

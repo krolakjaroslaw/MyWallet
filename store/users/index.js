@@ -40,7 +40,7 @@ export const actions = {
 
     if (response && response.status === 200) {
       this.$toast.success('Użytkownik usunięty')
-      commit('deleteUser', response.data)
+      // commit('deleteUser', response.data)
       dispatch('loadUsers')
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)

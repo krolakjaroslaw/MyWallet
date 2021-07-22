@@ -31,7 +31,24 @@
             </v-card-title>
 
             <v-card-text class="py-1">
-              <div class="display-1">
+              <div
+                v-if="wallets.length === 0"
+                class="d-flex flex-column flex-wrap justify-center mt-8"
+              >
+                <div class="text-center">
+                  Nie posiadasz jeszcze żadnego portfela finansowego.
+                </div>
+                <div class="text-center">
+                  Kliknij przycisk, aby dodać nowy portfel
+                  <v-btn fab x-small color="primary" @click.stop="openAddDialog">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+              <div
+                v-else
+                class="display-1"
+              >
                 <v-simple-table dense>
                   <template #default>
                     <tbody>
@@ -90,7 +107,22 @@
             </v-card-title>
 
             <v-card-text class="d-flex justify-center py-1">
+              <div
+                v-if="wallets.length === 0"
+                class="d-flex flex-column flex-wrap justify-center mt-16"
+              >
+                <div class="text-center">
+                  Nie posiadasz jeszcze żadnego portfela finansowego.
+                </div>
+                <div class="text-center">
+                  Kliknij przycisk, aby dodać nowy portfel
+                  <v-btn fab x-small color="primary" @click.stop="openAddDialog">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </div>
+              </div>
               <v-expansion-panels
+                v-else
                 v-model="panel"
                 focusable
                 style="width: 700px;"
@@ -115,13 +147,26 @@
                         <span class="font-weight-bold">Suma:</span>
                       </v-col>
                       <v-col class="pb-0 text-right" cols="3">
-                        <span class="font-weight-bold">{{ wallet.sum }} {{ wallet.currency }}</span>
+                        <span class="font-weight-bold">
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .map(item => item.totalScore)
+                              .reduce((a, b) => a + b, 0) || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
                       </v-col>
                       <v-col class="pb-0" cols="3">
                         <span class="font-weight-bold">Inwestycje:</span>
                       </v-col>
                       <v-col class="pb-0 text-right" cols="3">
-                        <span class="font-weight-bold">{{ wallet.sum }} {{ wallet.currency }}</span>
+                        <span class="font-weight-bold">
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .filter(item => ['ETF_GPW', 'STOCK_GPW', 'CURRENCY', 'COMMODITY'].includes(item.productType))
+                              .map(item => item.totalScore)
+                              .reduce((a, b) => a + b, 0) || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
                       </v-col>
                     </v-row>
                     <v-row>
@@ -129,7 +174,14 @@
                         <span>Inwestycje:</span>
                       </v-col>
                       <v-col class="py-0 text-right" cols="3">
-                        <span>{{ wallet.currencies }} {{ wallet.currency }}</span>
+                        <span>
+                          {{
+                            parseFloat(wallet.detailedProductInfoResponse
+                              .filter(item => ['ETF_GPW', 'STOCK_GPW', 'CURRENCY', 'COMMODITY'].includes(item.productType))
+                              .map(item => item.totalScore)
+                              .reduce((a, b) => a + b, 0) || 0).toFixed(2)
+                          }} {{ wallet.currency }}
+                        </span>
                       </v-col>
                       <v-col class="py-0" cols="3">
                         <span>ETF_GPW:</span>
@@ -260,7 +312,6 @@
                       calculate-widths
                       hide-default-header
                       hide-default-footer
-                      :loading="tables[i].length === 0"
                       loading-text="Loading items..."
                       :headers="headers"
                       :items="tables[i]"
@@ -292,7 +343,7 @@
                         <span class="bold">{{ item.name }}</span>
                       </template>
                       <template #[`item.rate`]="{ item }">
-                        <span class="bold" :class="getColor(item)">{{ item.rate }}</span>
+                        <span class="bold" :class="getColor(item)">{{ item.value }}</span>
                       </template>
                       <template #[`item.change`]="{ item }">
                         <span :class="getColor(item)">{{ item.change }}</span>
@@ -310,7 +361,7 @@
             outlined
           >
             <v-card-title class="py-2">
-              Giełda
+              Kursy
             </v-card-title>
 
             <!--TODO:-->
@@ -335,7 +386,6 @@
                       calculate-widths
                       hide-default-header
                       hide-default-footer
-                      :loading="tables[i].length === 0"
                       loading-text="Loading items..."
                       :headers="headers"
                       :items="tables[i]"
@@ -367,7 +417,7 @@
                         <span class="bold">{{ item.name }}</span>
                       </template>
                       <template #[`item.rate`]="{ item }">
-                        <span class="bold" :class="getColor(item)">{{ item.rate }}</span>
+                        <span class="bold" :class="getColor(item)">{{ item.value }}</span>
                       </template>
                       <template #[`item.change`]="{ item }">
                         <span :class="getColor(item)">{{ item.change }}</span>
@@ -385,96 +435,21 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Dashboard',
   layout: 'parallax',
   data () {
     return {
+      commodities: [],
+      currencies: [],
+      etfs: [],
+      stock: [],
       panel: 0,
       panel2: 0,
-      titles: [
-        'WALUTY', 'SUROWCE', 'CENY PALIW'
-      ],
-      tables: [
-        [
-          {
-            name: 'EUR',
-            rate: 4.6226.toFixed(4),
-            change: '0.0000 (0.00%)'
-          },
-          {
-            name: 'USD',
-            rate: 3.8865.toFixed(4),
-            change: '0.0159 (0.41%)'
-          },
-          {
-            name: 'CHF',
-            rate: 4.182.toFixed(4),
-            change: '-0.0017 (-0.04%)'
-          },
-          {
-            name: 'GBP',
-            rate: 5.4116.toFixed(4),
-            change: '0.0076 (0.14%)'
-          },
-          {
-            name: 'JPY',
-            rate: 3.5707.toFixed(4),
-            change: '0.0207 (0.58%)'
-          }
-        ],
-        [
-          {
-            name: 'ROPA',
-            rate: 64.55.toFixed(2),
-            change: '1.63 (2.59%)'
-          },
-          {
-            name: 'ZŁOTO',
-            rate: 1743.9.toFixed(2),
-            change: '10.10 (0.58%)'
-          },
-          {
-            name: 'SREBRO',
-            rate: 26.33.toFixed(2),
-            change: '0.24 (0.92%)'
-          },
-          {
-            name: 'PLATYNA',
-            rate: 1196.1.toFixed(2),
-            change: '-10.00 (-0.83%)'
-          },
-          {
-            name: 'MIEDŹ',
-            rate: 9064.25.toFixed(2),
-            change: '68.25 (0.76%)'
-          }
-        ],
-        [
-          {
-            name: 'Euro 95',
-            rate: '5.20 zł',
-            change: '-0.12 zł'
-          },
-          {
-            name: 'Superplus 98',
-            rate: '5.38 zł',
-            change: '-0.11 zł'
-          },
-          {
-            name: 'Olej napędowy',
-            rate: '5.20 zł',
-            change: '-0.12 zł'
-          },
-          {
-            name: 'LPG',
-            rate: '2.60 zł',
-            change: '-0.07 zł'
-          }
-        ]
-      ]
+      titles: ['SUROWCE', 'WALUTY', 'ETFY', 'GIEŁDA'],
+      tables: []
     }
   },
   computed: {
@@ -485,14 +460,58 @@ export default {
         { text: 'Zmiana', value: 'change', align: 'right' }
       ]
     },
+    showAddDialog: {
+      get () { return this.getAddWalletDialog() },
+      set (val) { this.setAddWalletDialog(val) }
+    },
     wallets () { return this.getWallets() }
   },
   async created () {
     await this.loadWallets()
+    this.commodities = (await this.$backend.stock.getCommodity()).data
+      .sort((a, b) => b.askPrice - a.askPrice)
+      .slice(0, 5)
+      .map(item => ({
+        name: item.symbol,
+        value: parseFloat(item.askPrice).toFixed(4),
+        change: parseFloat(item.bidDatChangePercentage).toFixed(2) + '%'
+      }))
+    this.tables.push(this.commodities)
+    this.currencies = (await this.$backend.stock.getCurrency()).data
+      .filter(item => item.symbol.includes('PLN') && !item.symbol.includes('BOSSA'))
+      .map(item => ({
+        name: item.symbol.split('.')[0],
+        value: parseFloat(item.askPrice).toFixed(4),
+        change: parseFloat(item.bidDatChangePercentage).toFixed(2) + '%'
+      }))
+    this.tables.push(this.currencies)
+    this.etfs = (await this.$backend.stock.getAllEtf()).data
+      .sort((a, b) => b.askSize - a.askSize)
+      .slice(0, 5)
+      .map(item => ({
+        name: item.symbol,
+        value: parseFloat(item.askSize).toFixed(4),
+        change: parseFloat(item.change).toFixed(2) + '%'
+      }))
+    this.tables.push(this.etfs)
+    this.stock = (await this.$backend.stock.getAllStock()).data
+      .sort((a, b) => b.askSize - a.askSize)
+      .slice(0, 5)
+      .map(item => ({
+        name: item.symbol,
+        value: parseFloat(item.askSize).toFixed(4),
+        change: parseFloat(item.change).toFixed(2) + '%'
+      }))
+    this.tables.push(this.stock)
   },
   methods: {
     ...mapActions('wallets', ['loadWallets']),
-    ...mapGetters('wallets', ['getWallets']),
+    ...mapGetters('wallets', ['getAddWalletDialog', 'getWallets']),
+    ...mapMutations('wallets', ['setAddWalletDialog']),
+    openAddDialog () {
+      this.$router.push({ name: 'wallets' })
+      this.showAddDialog = true
+    },
     getColor (item) {
       if (item.change.includes('-')) return 'red'
       if (item.change.includes('0.0000')) return 'black'

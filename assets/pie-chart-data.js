@@ -22,6 +22,9 @@ const pieChartData = (labels, data, colors) => {
       title: {
         display: false,
         text: 'Chart.js Pie Chart'
+      },
+      tooltips: {
+        bodyFontSize: 20
       }
     }
   }

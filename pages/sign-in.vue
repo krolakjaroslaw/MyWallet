@@ -30,66 +30,33 @@
           </div>
 
           <v-form
-            v-model="valid"
-            @submit.prevent="sendRequest"
-          >
+            v-model="valid" @submit.prevent="sendRequest">
             <v-card-text class="py-1">
-              <v-text-field
-                v-model="email"
-                prepend-inner-icon="mdi-at"
-                label="Email"
-                :rules="[
-                  $rules.required,
-                ]"
-                dark
-                filled
-                rounded
-                dense
+              <v-text-field v-model="email" prepend-inner-icon="mdi-at" label="Email"
+                :rules="[$rules.required]"
+                dark filled rounded dense
               />
 
               <v-text-field
-                v-model="password"
-                prepend-inner-icon="mdi-lock-outline"
-                type="password"
-                label="Password"
-                :rules="[
-                  $rules.required,
-                ]"
-                dark
-                filled
-                rounded
-                dense
+                v-model="password" prepend-inner-icon="mdi-lock-outline" type="password" label="Hasło"
+                :rules="[$rules.required]"
+                dark filled rounded dense
               />
             </v-card-text>
 
             <v-card-actions>
               <div class="buttons">
-                <v-btn
-                  color="primary"
-                  type="submit"
-                  :disabled="!valid"
-                  dark
-                  rounded
-                >
-                  Log in
+                <v-btn color="primary" type="submit" :disabled="!valid" dark rounded>
+                  Zaloguj się
                 </v-btn>
 
                 <div class="secondary-buttons mt-3">
-                  <v-btn
-                    color="white"
-                    x-small
-                    plain
-                    @click="$router.push({ name: 'sign-up' })"
-                  >
-                    Create Account
+                  <v-btn color="white" x-small plain @click="$router.push({ name: 'sign-up' })">
+                    Stwórz konto
                   </v-btn>
 
-                  <v-btn
-                    color="white"
-                    x-small
-                    plain
-                  >
-                    Forgot password?
+                  <v-btn color="white" x-small plain>
+                    Zapomniałeś hasła?
                   </v-btn>
                 </div>
               </div>

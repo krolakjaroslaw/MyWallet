@@ -149,9 +149,6 @@ export const actions = {
       dateTo: convertStringToCurrentMillisPlusDay(today),
       maxPeriod: false
     }
-    // TODO: ?
-    const response = await this.$backend.products.getGpwStockDetailedInfo(state.symbol)
-    console.log('getStockData', response)
     const chartResponse = await this.$backend.products.getGpwStockChartInfo(state.symbolLong, request)
     commit('setChartJson', chartResponse.data.main)
   },

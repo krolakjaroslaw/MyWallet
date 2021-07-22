@@ -28,6 +28,7 @@ export default ({ route, $permissions, store, redirect }) => {
   if (!$permissions.getCurrentUser()) {
     if (!saveUserInStore(store)) {
       redirect({ name: 'sign-in' })
+      return
     }
   }
 
