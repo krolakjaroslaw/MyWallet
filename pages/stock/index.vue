@@ -119,7 +119,7 @@
               :hide-default-footer="indexes.length <= 20"
               :loading="indexes.length === 0"
               loading-text="Loading items..."
-              :headers="stockHeaders"
+              :headers="indexHeaders"
               :items="indexes"
               :search="search"
               item-key="symbol"
@@ -228,6 +228,16 @@ export default {
     }
   },
   computed: {
+    indexHeaders () {
+      return [
+        { text: 'Walor', value: 'symbol', align: 'start' },
+        { text: 'Symbol', value: 'symbolShort', align: 'start' },
+        { text: 'Kurs', value: 'quote', align: 'right', filterable: false },
+        { text: 'Zmiana', value: 'change', align: 'right', filterable: false },
+        { text: 'Max', value: 'quoteMax', align: 'right', filterable: false },
+        { text: 'Min', value: 'quoteMin', align: 'right', filterable: false }
+      ]
+    },
     stockHeaders () {
       return [
         { text: 'Walor', value: 'symbol', align: 'start' },

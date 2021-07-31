@@ -30,7 +30,7 @@
                     Kwota bazowa:
                   </th>
                   <td class="px-2 text-right">
-                    {{ depositBaseAmount }}
+                    {{ depositBaseAmount.toFixed(2) }}
                   </td>
                 </tr>
                 <tr>
@@ -38,7 +38,7 @@
                     Aktualny zysk:
                   </th>
                   <td class="px-2 text-right">
-                    {{ currentProfit }}
+                    {{ currentProfit.toFixed(2) }}
                   </td>
                 </tr>
                 <tr>
@@ -46,7 +46,7 @@
                     Przewidywany zysk:
                   </th>
                   <td class="px-2 text-right">
-                    {{ estimatedProfit }}
+                    {{ estimatedProfit.toFixed(2) }}
                   </td>
                 </tr>
                 <tr>
@@ -54,7 +54,7 @@
                     Oprocentowanie:
                   </th>
                   <td class="px-2 text-right">
-                    {{ interestRate }}
+                    {{ interestRate.toFixed(2) }}
                   </td>
                 </tr>
                 <tr>
@@ -193,17 +193,23 @@ export default {
     purchaseHistory () { return this.getPurchaseHistory() },
     startTime () { return this.getStartTime() },
     value () { return this.getValue() },
+    productId: {
+      get () { return this.getProductId() },
+      set (val) { this.setProductId(val) }
+    },
     showChangeValueDialog: {
       get () { return this.getShowChangeValueDialog() },
       set (val) { this.setShowChangeValueDialog(val) }
     }
   },
   async mounted () {
-    await this.getProductSummary(this.$route.params.id)
-    await this.getHistoryData(this.$route.params.id)
-    this.productType === 'DEPOSIT'
-      ? this.getDepositChartData()
-      : this.getTimeDepositChartData()
+    this.productId = this.$route.params.id
+    await this.updateData(this.productId)
+    // await this.getProductSummary(this.$route.params.id)
+    // await this.getHistoryData(this.$route.params.id)
+    // this.productType === 'DEPOSIT'
+    //   ? this.getDepositChartData()
+    //   : this.getTimeDepositChartData()
 
     const labels = this.chartJson.map(el => new Date(el.date))
     const values = this.chartJson.map(el => el.value)
@@ -214,7 +220,8 @@ export default {
       'getDepositChartData',
       'getHistoryData',
       'getProductSummary',
-      'getTimeDepositChartData'
+      'getTimeDepositChartData',
+      'updateData'
     ]),
     ...mapGetters('products/entity', [
       'getCapitalization',
@@ -227,12 +234,13 @@ export default {
       'getInvestmentTime',
       'getInvestmentTimeCount',
       'getName',
+      'getProductId',
       'getPurchaseHistory',
       'getShowChangeValueDialog',
       'getStartTime',
       'getValue'
     ]),
-    ...mapMutations('products/entity', ['setShowChangeValueDialog']),
+    ...mapMutations('products/entity', ['setProductId', 'setShowChangeValueDialog']),
 
     createChart (chartId, chartData) {
       const ctx = document.getElementById(chartId)

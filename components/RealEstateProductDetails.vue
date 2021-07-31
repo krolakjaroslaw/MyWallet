@@ -154,33 +154,40 @@ export default {
     purchaseHistory () { return this.getPurchaseHistory() },
     purchaseValuation () { return this.getPurchaseValuation() },
     rateOfReturn () { return this.getRateOfReturn() },
+    productId: {
+      get () { return this.getProductId() },
+      set (val) { this.setProductId(val) }
+    },
     showChangeValueDialog: {
       get () { return this.getShowChangeValueDialog() },
       set (val) { this.setShowChangeValueDialog(val) }
     }
   },
   async mounted () {
-    await this.getProductSummary(this.$route.params.id)
-    await this.getHistoryData(this.$route.params.id)
-    this.getRealEstateChartData()
+    this.productId = this.$route.params.id
+    await this.updateData(this.productId)
+    // await this.getProductSummary(this.$route.params.id)
+    // await this.getHistoryData(this.$route.params.id)
+    // this.getRealEstateChartData()
 
     const labels = this.chartJson.map(el => new Date(el.date))
     const values = this.chartJson.map(el => el.value)
     this.createChart('chart', this.chartData(labels, values, values[0]))
   },
   methods: {
-    ...mapActions('products/entity', ['getHistoryData', 'getProductSummary', 'getRealEstateChartData']),
+    ...mapActions('products/entity', ['getHistoryData', 'getProductSummary', 'getRealEstateChartData', 'updateData']),
     ...mapGetters('products/entity', [
       'getChartJson',
       'getCurrentValuation',
       'getName',
+      'getProductId',
       'getProfit',
       'getPurchaseHistory',
       'getPurchaseValuation',
       'getRateOfReturn',
       'getShowChangeValueDialog'
     ]),
-    ...mapMutations('products/entity', ['setShowChangeValueDialog']),
+    ...mapMutations('products/entity', ['setProductId', 'setShowChangeValueDialog']),
 
     createChart (chartId, chartData) {
       const ctx = document.getElementById(chartId)

@@ -27,11 +27,11 @@
         <!--</div>-->
         <div class="content">
           <div class="social-description">
-            <h2>260.000 zł</h2>
+            <h2>{{ sum }} zł</h2>
             <p>Twoje portfele</p>
           </div>
           <div class="social-description">
-            <h2>48</h2>
+            <h2>{{ days }}</h2>
             <p>dni</p>
           </div>
         </div>
@@ -102,7 +102,7 @@
                 class="mx-auto mb-2 px-5"
                 rounded
                 :disabled="!validName"
-                @click="editProfile"
+                @click="updateUserName(name)"
               >
                 Zatwierdź
               </v-btn>
@@ -212,23 +212,23 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'UserProfile',
   layout: 'parallax',
   data () {
     return {
-      userPhoto: null,
+      // userPhoto: null,
       validName: true,
-      validPass: true
+      validPass: true,
+      days: 0,
+      sum: 0
     }
   },
   computed: {
     name: {
-      get () {
-        if (!this.getCurrentUser()) return 'Guest'
-        return this.getCurrentUser().username
-      },
+      get () { return this.getName() },
       set (val) { this.setName(val) }
     },
     currentPassword: {
@@ -242,39 +242,44 @@ export default {
     confirmPassword: {
       get () { return this.getConfirmPassword() },
       set (val) { this.setConfirmPassword(val) }
+    },
+    wallets () {
+      return this.getWallets()
     }
   },
-  // TODO: suma portfeli plus data rejestracji
-  created () {
-
+  async created () {
+    const registrationDate = moment((await this.$backend.authorization.getUserDetails()).data.accountCreatedDate)
+    const today = moment(new Date())
+    this.days = today.diff(registrationDate, 'days')
+    this.name = this.getCurrentUser() ? this.getCurrentUser().username : 'Guest'
+    this.sum = this.wallets.map(item => item.totalScore).reduce((a, b) => a + b, 0).toFixed(2)
   },
   destroyed () {
     this.resetState()
   },
   methods: {
     ...mapActions('authorization', ['updatePassword', 'updateUserName']),
-    ...mapGetters('authorization', ['getConfirmPassword', 'getCurrentPassword', 'getCurrentUser', 'getPassword']),
-    ...mapMutations('authorization', ['resetState', 'setConfirmPassword', 'setCurrentPassword', 'setName', 'setPassword']),
-    editProfile () {
-      if (this.name) this.updateUserName()
-
-      if (this.userPhoto) {
-        // const reader = new FileReader()
-        // reader.readAsDataURL(this.userPhoto)
-        // reader.onload = (e) => {
-        //   this.image = e.target.result
-        // }
-        const dataForm = new FormData()
-        dataForm.append('file', this.userPhoto)
-        this.$backend.authorization.updateUserPhoto(dataForm)
-      }
-    },
-    getImage () {
-      return this.$backend.authorization.getUserPhoto()
-        .then((response) => {
-          window.URL.createObjectURL(response.data)
-        })
-    }
+    ...mapGetters('authorization', ['getConfirmPassword', 'getCurrentPassword', 'getCurrentUser', 'getName', 'getPassword']),
+    ...mapGetters('wallets', ['getWallets']),
+    ...mapMutations('authorization', ['resetState', 'setConfirmPassword', 'setCurrentPassword', 'setName', 'setPassword'])
+    // editUserName () {
+    // if (this.userPhoto) {
+    // const reader = new FileReader()
+    // reader.readAsDataURL(this.userPhoto)
+    // reader.onload = (e) => {
+    //   this.image = e.target.result
+    // }
+    // const dataForm = new FormData()
+    // dataForm.append('file', this.userPhoto)
+    // this.$backend.authorization.updateUserPhoto(dataForm)
+    // }
+    // }
+    // getImage () {
+    //   return this.$backend.authorization.getUserPhoto()
+    //     .then((response) => {
+    //       window.URL.createObjectURL(response.data)
+    //     })
+    // }
     // const reader = new FileReader()
     // reader.readAsDataURL(response.data)
     // reader.onload = (e) => {

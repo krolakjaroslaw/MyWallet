@@ -288,7 +288,7 @@
             outlined
           >
             <v-card-title class="py-2">
-              Wykresy
+              WIG-20
             </v-card-title>
             <!--TODO:-->
             <v-card-text class="d-flex justify-center py-1">
@@ -301,54 +301,9 @@
                 hide-delimiter-background
                 show-arrows-on-hover
               >
-                <v-carousel-item
-                  v-for="(table, i) in tables"
-                  :key="i"
-                  justify="center"
-                >
+                <v-carousel-item justify="center">
                   <div class="display-1">
-                    <v-data-table
-                      dense
-                      calculate-widths
-                      hide-default-header
-                      hide-default-footer
-                      loading-text="Loading items..."
-                      :headers="headers"
-                      :items="tables[i]"
-                      item-key="name"
-                      class="elevation-3 rounded-lg"
-                      style="width: 500px;"
-                      :footer-props="{
-                        howCurrentPage: false,
-                        showFirstLastPage: false,
-                        itemsPerPageOptions: [5]
-                      }"
-                    >
-                      <template #header="{ props: { headers } }">
-                        <thead>
-                          <tr>
-                            <th :colspan="headers.length">
-                              {{ titles[i] }}
-                            </th>
-                          </tr>
-                        </thead>
-                      </template>
-                      <template #[`item.name`]="{ item }">
-                        <v-icon v-if="item.change.includes('0.0000')">
-                          mdi-equal
-                        </v-icon>
-                        <v-icon v-else :color="getColor(item)">
-                          {{ item.change.includes('-') ? 'mdi-menu-down' : 'mdi-menu-up' }}
-                        </v-icon>
-                        <span class="bold">{{ item.name }}</span>
-                      </template>
-                      <template #[`item.rate`]="{ item }">
-                        <span class="bold" :class="getColor(item)">{{ item.value }}</span>
-                      </template>
-                      <template #[`item.change`]="{ item }">
-                        <span :class="getColor(item)">{{ item.change }}</span>
-                      </template>
-                    </v-data-table>
+                    <canvas id="chart" />
                   </div>
                 </v-carousel-item>
               </v-carousel>
@@ -436,12 +391,18 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import moment from 'moment'
+import Chart from 'chart.js'
+import chartData from 'assets/product-details-chart-data'
 
 export default {
   name: 'Dashboard',
   layout: 'parallax',
   data () {
     return {
+      chartData,
+      myChart: {},
+      chartsData: [],
       commodities: [],
       currencies: [],
       etfs: [],
@@ -503,6 +464,16 @@ export default {
         change: parseFloat(item.change).toFixed(2) + '%'
       }))
     this.tables.push(this.stock)
+
+    const today = moment(new Date()).toDate().valueOf()
+    const yearAgo = moment(new Date()).subtract(1, 'year').toDate().valueOf()
+
+    const chart = await this.$backend.products.getGpwStockChartInfo(
+      'WIG20',
+      { today: false, dateFrom: yearAgo, dateTo: today, maxPeriod: false })
+    const labels = chart.data.main.map(el => new Date(el[0]))
+    const values = chart.data.main.map(el => el[1])
+    this.createChart('chart', this.chartData(labels, values))
   },
   methods: {
     ...mapActions('wallets', ['loadWallets']),
@@ -521,6 +492,15 @@ export default {
       if (item.sum < 0) return 'red'
       if (item.sum === 0) return 'black'
       else return 'green'
+    },
+    createChart (chartId, chartData) {
+      const ctx = document.getElementById(chartId)
+      console.log('ctx', ctx)
+      this.myChart = new Chart(ctx, {
+        type: chartData.type,
+        data: chartData.data,
+        options: chartData.options
+      })
     }
   }
 }

@@ -39,10 +39,12 @@ export default {
     }
   },
   created () {
-    this.productType = this.$route.params.type
+    if (!localStorage.getItem('productType')) localStorage.setItem('productType', this.$route.params.type)
+    this.productType = localStorage.getItem('productType')
   },
   destroyed () {
     this.resetState()
+    localStorage.removeItem('productType')
   },
   methods: {
     ...mapGetters('products/entity', ['getProductType']),

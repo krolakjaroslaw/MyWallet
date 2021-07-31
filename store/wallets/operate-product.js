@@ -16,7 +16,6 @@ const step2State = {
 
 const basicState = {
   ...step2State,
-  showAccountDialog: false,
   stepper: 1,
 
   // Step1
@@ -29,7 +28,8 @@ export const state = () => ({
   ...basicState,
   groups: [],
   products: [],
-  wallets: []
+  wallets: [],
+  showAccountDialog: false
 })
 
 export const getters = {

@@ -16,22 +16,29 @@
         "
       />
       <div class="container">
-        <div class="content-center brand">
-          <img class="n-logo" :src="'now-logo.png'" alt="">
+        <div class="brand">
+          <div>
+            <img
+              class="n-logo"
+              :src="'logo.png'"
+              alt=""
+            >
+          </div>
 
-          <h1 class="h1-seo">
-            My Wallet
-          </h1>
+<!--          <h1 class="h1-seo">-->
+<!--            My Wallet-->
+<!--          </h1>-->
 
-          <h3 class="h3-seo">
-            A beautiful service for beautiful people. <br> Start earning.
-          </h3>
+<!--          <h3 class="h3-seo">-->
+<!--            A beautiful service for beautiful people. <br> Start earning.-->
+<!--          </h3>-->
 
           <v-btn
             rounded
             plain
             outlined
             dark
+            style="max-width: 200px;"
             @click="$router.push({name: 'sign-in'})"
           >
             Get started
@@ -68,11 +75,6 @@ export default {
     position: absolute;
     right: 0;
     top: 0;
-
-    .content-center {
-      color: rgba(255, 255, 255, .9);
-      text-align: center;
-    }
   }
 
   .category-absolute {
@@ -89,22 +91,10 @@ export default {
 }
 
 .brand {
+  text-align: center;
+
   .n-logo {
-    max-width: 100px;
-    margin-bottom: 40px;
-  }
-
-  .h1-seo {
-    font-size: 2.8em;
-    text-transform: uppercase;
-    font-weight: 300;
-    margin-bottom: 20px;
-  }
-
-  .h3-seo {
-    font-size: 1.9em;
-    font-weight: 400;
-    margin-bottom: 30px;
+    width: 400px;
   }
 }
 

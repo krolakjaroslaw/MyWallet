@@ -23,39 +23,68 @@
         >
           <div class="logo-container">
             <img
-              :src="'now-logo.png'"
+              :src="'logo.png'"
               alt=""
               @click="$router.push({name: 'index'})"
             >
           </div>
 
           <v-form
-            v-model="valid" @submit.prevent="sendRequest">
+            v-model="valid"
+            @submit.prevent="sendRequest"
+          >
             <v-card-text class="py-1">
-              <v-text-field v-model="email" prepend-inner-icon="mdi-at" label="Email"
+              <v-text-field
+                v-model="email"
+                prepend-inner-icon="mdi-at"
+                label="Email"
                 :rules="[$rules.required]"
-                dark filled rounded dense
+                dark
+                filled
+                rounded
+                dense
               />
 
               <v-text-field
-                v-model="password" prepend-inner-icon="mdi-lock-outline" type="password" label="Hasło"
+                v-model="password"
+                prepend-inner-icon="mdi-lock-outline"
+                type="password"
+                label="Hasło"
                 :rules="[$rules.required]"
-                dark filled rounded dense
+                dark
+                filled
+                rounded
+                dense
               />
             </v-card-text>
 
             <v-card-actions>
               <div class="buttons">
-                <v-btn color="primary" type="submit" :disabled="!valid" dark rounded>
+                <v-btn
+                  color="primary"
+                  type="submit"
+                  :disabled="!valid"
+                  dark
+                  rounded
+                >
                   Zaloguj się
                 </v-btn>
 
                 <div class="secondary-buttons mt-3">
-                  <v-btn color="white" x-small plain @click="$router.push({ name: 'sign-up' })">
+                  <v-btn
+                    color="white"
+                    x-small
+                    plain
+                    @click="$router.push({ name: 'sign-up' })"
+                  >
                     Stwórz konto
                   </v-btn>
 
-                  <v-btn color="white" x-small plain>
+                  <v-btn
+                    color="white"
+                    x-small
+                    plain
+                  >
                     Zapomniałeś hasła?
                   </v-btn>
                 </div>
@@ -111,7 +140,7 @@ export default {
   .container {
     height: 100vh;
     left: 0;
-    padding: 200px;
+    padding: 150px;
     position: absolute;
     right: 0;
     top: 0;
@@ -119,10 +148,9 @@ export default {
     .logo-container {
       color: rgba(255, 255, 255, .9);
       text-align: center;
-      margin-bottom: 48px;
 
       & img {
-        max-width: 100px;
+        max-width: 400px;
       }
     }
   }

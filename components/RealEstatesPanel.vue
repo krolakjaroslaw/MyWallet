@@ -53,7 +53,7 @@
                 {{ item.currentValuation }}
               </td>
               <td class="text-center">
-                {{ item.totalProfit }}
+                {{ item.profit }}
               </td>
               <td class="text-center">
                 {{ item.rateOfReturn }}

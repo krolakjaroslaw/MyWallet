@@ -90,8 +90,7 @@ export default {
     ...mapActions('wallets', ['loadWallets']),
     ...mapGetters('wallets', ['getAddWalletDialog', 'getDeleteWalletDialog', 'getEditWalletDialog', 'getWallets']),
     ...mapGetters('wallets/operate-product', ['getShowAccountDialog']),
-    ...mapMutations('wallets', ['resetState', 'setAddWalletDialog']),
-    ...mapMutations('wallets/operate-product', ['setShowAccountDialog'])
+    ...mapMutations('wallets', ['resetState', 'setAddWalletDialog'])
   }
 }
 </script>
