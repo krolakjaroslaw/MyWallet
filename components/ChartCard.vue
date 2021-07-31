@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import Chart from 'chart.js'
 import pieChartData from 'assets/pie-chart-data'
 
@@ -88,7 +88,9 @@ export default {
       set (val) { this.setTimeDeposits(val) }
     }
   },
-  mounted () {
+  async mounted () {
+    console.log('products', this.etfs, this.stock, this.deposits, this.timeDeposits, this.realEstates, this.commodities, this.currencies)
+    await this.getAllProductsInWallet(this.$route.params.id)
     if (this.etfs.length > 0) {
       this.chartLabels.push('ETFy')
       const sum = this.etfs
@@ -154,9 +156,12 @@ export default {
       'rgba(65, 105, 225, 1)',
       'rgba(135, 206, 250, 1)'
     ]
+    console.log('chart', this.chartLabels)
+    console.log('chart', this.chartValues)
     this.createChart('pie-chart', this.pieChartData(this.chartLabels, this.chartValues, colors))
   },
   methods: {
+    ...mapActions('wallets/entity', ['getAllProductsInWallet']),
     ...mapGetters('wallets/entity', ['getCommodities', 'getCurrencies', 'getDeposits', 'getEtfs', 'getRealEstates',
       'getStock', 'getTimeDeposits']),
     ...mapMutations('wallets/entity', ['setCommodities', 'setCurrencies', 'setDeposits', 'setEtfs', 'setRealEstates',

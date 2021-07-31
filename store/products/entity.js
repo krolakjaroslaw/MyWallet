@@ -18,6 +18,7 @@ const basicState = {
   name: '',
   numberOfUnits: 0,
   profit: 0.0,
+  productId: '',
   productType: '',
   purchaseValuation: 0.0,
   rateOfReturn: 0.0,
@@ -51,6 +52,7 @@ export const getters = {
   getName: (store) => { return store.name },
   getNumberOfUnits: (store) => { return store.numberOfUnits },
   getProfit: (store) => { return store.profit },
+  getProductId: (store) => { return store.productId },
   getProductType: (store) => { return store.productType },
   getPurchaseHistory: (store) => { return store.purchaseHistory },
   getPurchaseValuation: (store) => { return store.purchaseValuation },
@@ -76,6 +78,7 @@ export const mutations = {
       store[key] = payload[key]
     })
   },
+  setProductId: (store, payload) => { store.productId = payload },
   setProductType: (store, payload) => { store.productType = payload },
   setPurchaseHistory: (store, payload) => { store.purchaseHistory = payload },
   setSymbolLong: (store, payload) => { store.symbolLong = payload },
@@ -110,6 +113,24 @@ export const actions = {
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)
+    }
+  },
+
+  async updateData ({ dispatch, state }, productId) {
+    await dispatch('getProductSummary', productId)
+    await dispatch('getHistoryData', productId)
+    switch (state.productType) {
+      case 'DEPOSIT': {
+        dispatch('getDepositChartData')
+        break
+      }
+      case 'REAL_ESTATE': {
+        dispatch('getRealEstateChartData')
+        break
+      }
+      case 'TIME_DEPOSIT': {
+        dispatch('getTimeDepositChartData')
+      }
     }
   },
 
@@ -163,10 +184,13 @@ export const actions = {
       date: convertStringToCurrentMillis(moment(new Date()).format('YYYY-MM-DD')),
       value: state.depositBaseAmount + state.currentProfit
     })
+
+    let unit = 'M'
+    if (state.investmentTermTime === 'DAYS') unit = 'D'
+    else if (state.investmentTermTime === 'YEARS') unit = 'Y'
     data.push({
-      // TODO: flex it
       date: convertStringToCurrentMillis(
-        moment(state.startTime).add(state.investmentTermTimeCount, 'M').format('YYYY-MM-DD')
+        moment(state.startTime).add(state.investmentTermTimeCount, unit).format('YYYY-MM-DD')
       ),
       value: state.depositBaseAmount + state.estimatedProfit
     })
@@ -178,12 +202,13 @@ export const actions = {
       date: convertStringToCurrentMillis(item.balanceChangeDate),
       value: item.balance
     }))
-
-    data.push({
-      date: convertStringToCurrentMillis(moment(new Date()).format('YYYY-MM-DD')),
-      value: state.value
+    let sum = 0
+    const newData = []
+    data.forEach((item) => {
+      sum += item.value
+      newData.push({ date: item.date, value: sum })
     })
-    commit('setChartJson', data)
+    commit('setChartJson', newData)
   },
 
   getRealEstateChartData ({ commit, state }) {
@@ -191,37 +216,39 @@ export const actions = {
       date: convertStringToCurrentMillis(item.valuationDate),
       value: item.valuation
     }))
-
     data.push({
       date: convertStringToCurrentMillis(moment(new Date()).format('YYYY-MM-DD')),
-      value: state.purchaseValuation
+      value: data[data.length - 1].value
     })
     commit('setChartJson', data)
   },
 
-  async changeRealEstateValue ({ commit }, { id, date, value }) {
+  async changeRealEstateValue ({ commit, dispatch, state }, { date, value }) {
     const request = {
       date,
       value
     }
-    const response = await this.$backend.products.updateRealEstateHistoryData(id, request)
+    const response = await this.$backend.products.updateRealEstateHistoryData(state.productId, request)
 
     if (response && response.status === 200) {
       this.$toast.success('Zmieniono wartość nieruchomości')
+      dispatch('updateData', state.productId)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)
     }
   },
 
-  async changeDepositBalance ({ commit }, { id, balance }) {
+  async changeDepositBalance ({ commit, dispatch, state }, balance) {
     const request = {
       balance
     }
-    const response = await this.$backend.products.updateDepositAccountBalance(id, request)
+    console.log('id', state.productId)
+    const response = await this.$backend.products.updateDepositAccountBalance(state.productId, request)
 
     if (response && response.status === 200) {
       this.$toast.success('Zmieniono stan konta')
+      dispatch('updateData', state.productId)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)

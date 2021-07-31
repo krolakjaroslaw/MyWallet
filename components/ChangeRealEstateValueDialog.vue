@@ -120,7 +120,7 @@ export default {
     },
 
     changeValue () {
-      this.changeRealEstateValue({ id: this.$route.params.id, date: this.date, value: this.value })
+      this.changeRealEstateValue({ date: this.date, value: this.value })
       this.showChangeValueDialog = false
     },
 

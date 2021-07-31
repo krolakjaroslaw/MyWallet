@@ -76,14 +76,10 @@ export default {
     wallet () { return this.getWallet() }
   },
   async created () {
-    console.log('created')
-    await this.getAllProductsInWallet(this.$route.params.id)
     await this.getWalletInfo(this.$route.params.id)
-    console.log('created')
   },
   methods: {
     ...mapActions('wallets', ['getWalletInfo']),
-    ...mapActions('wallets/entity', ['getAllProductsInWallet']),
     ...mapGetters('wallets/entity', ['getProductsCount', 'getShowAddDialog', 'getShowRemoveDialog', 'getWallet']),
     ...mapMutations('wallets/entity', ['setShowAddDialog', 'setShowRemoveDialog'])
   }

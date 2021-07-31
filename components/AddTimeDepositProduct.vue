@@ -136,9 +136,11 @@
           class="py-0 mx-auto"
         >
           <!--TODO: as select-->
-          <v-text-field
+          <v-select
             v-model="investmentTime"
+            :items="investmentTimeOptions"
             label="Okres lokaty"
+            class="select mt-2"
             :rules="[
               $rules.required,
             ]"
@@ -155,10 +157,11 @@
           cols="6"
           class="py-0 mx-auto"
         >
-          <!--TODO: as select-->
-          <v-text-field
+          <v-select
             v-model="capitalization"
+            :items="capitalizationOptions"
             label="Okres kapitalizacji"
+            class="select mt-2"
             :rules="[
               $rules.required,
             ]"
@@ -201,7 +204,13 @@ export default {
   data () {
     return {
       valid: true,
-      menu: false
+      menu: false,
+      investmentTimeOptions: [
+        'DAYS', 'MONTHS', 'YEARS'
+      ],
+      capitalizationOptions: [
+        'DAY', 'MONTH', 'YEAR', 'AT_THE_END'
+      ]
     }
   },
   computed: {

@@ -66,8 +66,9 @@ export const actions = {
   async buyOrSellInvestmentProduct ({ rootState }, operationType) {
     const purchaseState = rootState.wallets['operate-product']
     const walletId = purchaseState.wallet.id
+    console.log('before request', purchaseState.product)
     const request = {
-      name: ['COMMODITY', 'CURRENCY'].includes(purchaseState.group)
+      name: ['COMMODITY', 'CURRENCY', 'STOCK_GPW'].includes(purchaseState.group)
         ? purchaseState.product.symbol
         : purchaseState.product.symbolShort,
       productType: purchaseState.group.toUpperCase(),
@@ -77,6 +78,7 @@ export const actions = {
       commissionValue: purchaseState.commission,
       comment: purchaseState.comment
     }
+    console.log('request', request)
     const response = await this.$backend.wallets.addInvestmentToWallet(walletId, request)
 
     if (response && response.status === 200) {
@@ -158,6 +160,7 @@ export const actions = {
   },
 
   async getAllProductsInWallet ({ commit, dispatch, state }, walletId) {
+    console.log('getAllProducts')
     const response = await this.$backend.wallets.getAllProductsInWallet(walletId)
 
     if (response && response.status === 200) {
@@ -169,7 +172,7 @@ export const actions = {
       commit('setStock', response.data.stockGpw)
       commit('setTimeDeposits', response.data.timeDeposit)
       commit('setProductsCount', response.data.productsCount)
-      console.log('commits ended')
+      console.log('commits ended', response.data)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)
@@ -216,7 +219,7 @@ export const actions = {
     }
   },
 
-  async addToSubAccount ({ state }, value) {
+  async addToSubAccount ({ dispatch, state }, value) {
     const walletId = state.wallet.id
     const request = {
       balance: value
@@ -225,13 +228,14 @@ export const actions = {
 
     if (response && response.status === 200) {
       this.$toast.success('Środki pomyślnie wpłacono na subkonto')
+      dispatch('wallets/getWalletInfo', walletId, { root: true })
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)
     }
   },
 
-  async removeFromSubAccount ({ state }, value) {
+  async removeFromSubAccount ({ dispatch, state }, value) {
     const walletId = state.wallet.id
     const request = {
       balance: value * -1
@@ -240,6 +244,7 @@ export const actions = {
 
     if (response && response.status === 200) {
       this.$toast.success('Środki pomyślnie wypłacono z subkonta')
+      dispatch('wallets/getWalletInfo', walletId, { root: true })
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)

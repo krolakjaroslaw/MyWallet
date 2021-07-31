@@ -89,6 +89,7 @@ export const actions = {
   },
 
   async getWalletInfo ({ commit, state }, id) {
+    console.log('getWalletInfo', id)
     const response = await this.$backend.wallets.getWalletInfo(id)
     console.log('getWalletInfo', response.data)
     if (response && response.status === 200) {

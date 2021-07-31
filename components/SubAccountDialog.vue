@@ -54,10 +54,12 @@ export default {
     addToSubAccount () {
       this.updateSubAccountBalance()
       this.resetState()
+      this.showAccountDialog = false
     },
 
     closeDialog () {
       this.resetState()
+      this.showAccountDialog = false
     }
   }
 }

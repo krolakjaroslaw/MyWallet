@@ -23,34 +23,50 @@
         >
           <div class="logo-container">
             <img
-              :src="'now-logo.png'"
+              :src="'logo.png'"
               alt=""
               @click="$router.push({name: 'index'})"
             >
           </div>
 
-          <v-form v-model="valid" @submit.prevent="sendRequest">
+          <v-form
+            v-model="valid"
+            @submit.prevent="sendRequest"
+          >
             <v-card-text class="py-1">
               <v-text-field
-                v-model="name" prepend-inner-icon="mdi-account-circle-outline" label="Nazwa użytkownika"
+                v-model="name"
+                prepend-inner-icon="mdi-account-circle-outline"
+                label="Nazwa użytkownika"
                 :rules="[
                   $rules.required,
                   $rules.regexCheck( /^[\w-.\s]*$/gi, 'Dozwolone są tylko litery, cyfry i \'.-_\'')
                 ]"
-                dark filled rounded dense
+                dark
+                filled
+                rounded
+                dense
               />
 
               <v-text-field
-                v-model="email" prepend-inner-icon="mdi-at" label="Email"
+                v-model="email"
+                prepend-inner-icon="mdi-at"
+                label="Email"
                 :rules="[
                   $rules.required,
                   $rules.regexCheck( /^[^\s@]+@[^\s@]+\.[^\s@]+$/gi, 'Podaj prawidłowy email')
                 ]"
-                dark filled rounded dense
+                dark
+                filled
+                rounded
+                dense
               />
 
               <v-text-field
-                v-model="password" prepend-inner-icon="mdi-lock-outline" type="password" label="Hasło"
+                v-model="password"
+                prepend-inner-icon="mdi-lock-outline"
+                type="password"
+                label="Hasło"
                 :rules="[
                   $rules.required,
                   $rules.minLength(8),
@@ -59,23 +75,38 @@
                   $rules.regexCheck(/(?=.*[0-9])/gi, 'Wymagana jest minimum jedna cyfra'),
                   $rules.regexCheck(/(?=.*[!@#$%^&*()_+])/gi, 'Wymagany jest minimum jeden znak specjalny'),
                 ]"
-                dark filled rounded dense
+                dark
+                filled
+                rounded
+                dense
               />
 
               <v-text-field
-                v-model="confirmPassword" prepend-inner-icon="mdi-lock-outline" type="password" label="Potwierdź hasło"
+                v-model="confirmPassword"
+                prepend-inner-icon="mdi-lock-outline"
+                type="password"
+                label="Potwierdź hasło"
                 :rules="[
                   $rules.required,
                   $rules.minLength(8),
                   _ => password === confirmPassword || 'Hasła się różnią'
                 ]"
-                dark filled rounded dense
+                dark
+                filled
+                rounded
+                dense
               />
             </v-card-text>
 
             <v-card-actions>
               <div class="buttons">
-                <v-btn color="primary" type="submit" :disabled="!valid" dark rounded>
+                <v-btn
+                  color="primary"
+                  type="submit"
+                  :disabled="!valid"
+                  dark
+                  rounded
+                >
                   Zarejestruj się
                 </v-btn>
               </div>
@@ -146,10 +177,9 @@ export default {
     .logo-container {
       color: rgba(255, 255, 255, .9);
       text-align: center;
-      margin-bottom: 48px;
 
       & img {
-        max-width: 100px;
+        max-width: 400px;
       }
     }
   }

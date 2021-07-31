@@ -147,6 +147,7 @@ export default {
     this.$nuxt.$on('isValid', this.check)
   },
   beforeDestroy () {
+    this.resetState()
     this.$nuxt.$off('isValid')
   },
   methods: {

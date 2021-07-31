@@ -68,6 +68,7 @@ export const mutations = {
         .replaceAll('&nbsp;', '').replaceAll('&nbsp', '')
         .split('szt')[0]
     }
+    console.log('profileData', store.profileData)
   },
   setSymbol: (store, payload) => { store.symbol = payload },
   setSymbolLong: (store, payload) => { store.symbolLong = payload }

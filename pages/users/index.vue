@@ -51,7 +51,7 @@
             {{ item.roles.join(', ') }}
           </template>
           <template #[`item.createdAt`]="{ item }">
-            {{ formattedDate(item.createdAt) }}
+            {{ formattedDate(item.accountCreatedDate) }}
           </template>
           <template #[`item.delete`]="{ item }">
             <v-btn

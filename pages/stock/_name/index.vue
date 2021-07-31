@@ -122,7 +122,7 @@
               <span>{{ symbolLong }} ({{ symbol }})</span>
               <span>
                 <!--TODO-->
-                <b>{{ profileData.valueAverage }} zł</b>
+                <b>{{ profileData.quote }} zł</b>
               </span>
             </v-card-title>
             <!--TODO: scale-->
@@ -315,9 +315,17 @@ export default {
     }
   },
   async mounted () {
-    this.symbolLong = this.$route.params.name
-    if (this.$route.params.symbol) this.symbol = this.$route.params.symbol
-    await this.getStockData(this.$route.params.type)
+    const params = {
+      name: this.$route.params.name,
+      symbol: this.$route.params.symbol,
+      type: this.$route.params.type
+    }
+    if (!localStorage.getItem('params')) localStorage.setItem('params', JSON.stringify(params))
+    const localParams = JSON.parse(localStorage.getItem('params'))
+
+    this.symbolLong = localParams.name
+    if (localStorage.getItem('params').symbol) this.symbol = localParams.symbol
+    await this.getStockData(localParams.type)
 
     const labels = this.chartJson.map(el => new Date(el[0]))
     const values = this.chartJson.map(el => el[1])
@@ -325,6 +333,7 @@ export default {
   },
   destroyed () {
     this.resetState()
+    localStorage.removeItem('params')
   },
   methods: {
     ...mapActions('products/stock', ['getStockData']),

@@ -12,7 +12,7 @@
         <!--TODO: form + validation-->
         <v-text-field
           v-model="balance"
-          label="Nowy stan konta"
+          label="Kwota"
           class="mt-4"
           type="number"
           :rules="[
@@ -74,7 +74,7 @@ export default {
     ...mapMutations('products/entity', ['setShowChangeValueDialog']),
 
     changeBalance () {
-      this.changeDepositBalance({ id: this.$route.params.id, balance: this.balance })
+      this.changeDepositBalance(this.balance)
       this.showChangeValueDialog = false
     },
 
