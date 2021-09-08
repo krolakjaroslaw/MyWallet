@@ -1,7 +1,6 @@
 <!--suppress JSCheckFunctionSignatures, JSUnresolvedVariable, CssOverwrittenProperties, CssUnknownTarget -->
 <template>
   <div class="page-header">
-    <!--    TODO: move to separate component-->
     <parallax
       class="parallax"
       style="
@@ -127,6 +126,7 @@ export default {
     ...mapActions('authorization', ['login']),
     sendRequest () {
       this.login()
+      this.valid = true
     }
   }
 }

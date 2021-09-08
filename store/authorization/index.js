@@ -109,7 +109,6 @@ export const actions = {
   },
 
   async updateUserName ({ commit, state }, name) {
-    console.log('name', name)
     const response = await this.$backend.authorization.updateUserName(name)
 
     if (response && response.status === 200) {

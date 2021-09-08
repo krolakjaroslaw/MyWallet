@@ -16,15 +16,6 @@
         "
       />
       <div class="container">
-        <!--<div class="photo-container">-->
-        <!--  &lt;!&ndash;TODO&ndash;&gt;-->
-        <!--  <img-->
-        <!--    :src="getImage()"-->
-        <!--    alt=""-->
-        <!--    height="123"-->
-        <!--    width="123"-->
-        <!--  >-->
-        <!--</div>-->
         <div class="content">
           <div class="social-description">
             <h2>{{ sum }} zł</h2>
@@ -53,26 +44,6 @@
 
             <v-card-text class="py-1">
               <v-form v-model="validName">
-                <!--<v-row class="my-4">-->
-                <!--  <v-col-->
-                <!--    cols="6"-->
-                <!--    class="buttons py-0 mx-auto"-->
-                <!--  >-->
-                <!--    <v-file-input-->
-                <!--      v-model="userPhoto"-->
-                <!--      prepend-icon="mdi-camera"-->
-                <!--      accept="image/*"-->
-                <!--      label="Photo"-->
-                <!--      :rules="[-->
-                <!--        $rules.maxSize(1000)-->
-                <!--      ]"-->
-                <!--      outlined-->
-                <!--      rounded-->
-                <!--      dense-->
-                <!--    />-->
-                <!--  </v-col>-->
-                <!--</v-row>-->
-
                 <v-row class="my-0">
                   <v-col
                     cols="6"
@@ -211,7 +182,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -219,7 +190,6 @@ export default {
   layout: 'parallax',
   data () {
     return {
-      // userPhoto: null,
       validName: true,
       validPass: true,
       days: 0,
@@ -227,6 +197,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('wallets', ['wallets']),
     name: {
       get () { return this.getName() },
       set (val) { this.setName(val) }
@@ -242,9 +213,6 @@ export default {
     confirmPassword: {
       get () { return this.getConfirmPassword() },
       set (val) { this.setConfirmPassword(val) }
-    },
-    wallets () {
-      return this.getWallets()
     }
   },
   async created () {
@@ -252,7 +220,8 @@ export default {
     const today = moment(new Date())
     this.days = today.diff(registrationDate, 'days')
     this.name = this.getCurrentUser() ? this.getCurrentUser().username : 'Guest'
-    this.sum = this.wallets.map(item => item.totalScore).reduce((a, b) => a + b, 0).toFixed(2)
+    const wallets = JSON.parse(localStorage.getItem('wallets'))
+    this.sum = wallets.map(item => item.totalScore).reduce((a, b) => a + b, 0).toFixed(2)
   },
   destroyed () {
     this.resetState()
@@ -260,32 +229,7 @@ export default {
   methods: {
     ...mapActions('authorization', ['updatePassword', 'updateUserName']),
     ...mapGetters('authorization', ['getConfirmPassword', 'getCurrentPassword', 'getCurrentUser', 'getName', 'getPassword']),
-    ...mapGetters('wallets', ['getWallets']),
     ...mapMutations('authorization', ['resetState', 'setConfirmPassword', 'setCurrentPassword', 'setName', 'setPassword'])
-    // editUserName () {
-    // if (this.userPhoto) {
-    // const reader = new FileReader()
-    // reader.readAsDataURL(this.userPhoto)
-    // reader.onload = (e) => {
-    //   this.image = e.target.result
-    // }
-    // const dataForm = new FormData()
-    // dataForm.append('file', this.userPhoto)
-    // this.$backend.authorization.updateUserPhoto(dataForm)
-    // }
-    // }
-    // getImage () {
-    //   return this.$backend.authorization.getUserPhoto()
-    //     .then((response) => {
-    //       window.URL.createObjectURL(response.data)
-    //     })
-    // }
-    // const reader = new FileReader()
-    // reader.readAsDataURL(response.data)
-    // reader.onload = (e) => {
-    //   this.image = e.target.result
-    //   console.log('image', this.image)
-    // }
   }
 }
 </script>

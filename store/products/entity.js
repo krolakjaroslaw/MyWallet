@@ -44,7 +44,6 @@ export const getters = {
   getCurrentPurchaseValue: (store) => { return store.currentPurchaseValue },
   getCurrentUnitPrice: (store) => { return store.currentUnitPrice },
   getCurrentValuation: (store) => { return store.currentValuation },
-  getDepositBaseAmount: (store) => { return store.depositBaseAmount },
   getEstimatedProfit: (store) => { return store.estimatedProfit },
   getInterestRate: (store) => { return store.interestRate },
   getInvestmentTime: (store) => { return store.investmentTermTime },
@@ -55,9 +54,7 @@ export const getters = {
   getProductId: (store) => { return store.productId },
   getProductType: (store) => { return store.productType },
   getPurchaseHistory: (store) => { return store.purchaseHistory },
-  getPurchaseValuation: (store) => { return store.purchaseValuation },
   getRateOfReturn: (store) => { return store.rateOfReturn },
-  getStartTime: (store) => { return store.startTime },
   getSymbol: (store) => { return store.symbol },
   getSymbolLong: (store) => { return store.symbolLong },
   getValue: (store) => { return store.value },
@@ -82,7 +79,8 @@ export const mutations = {
   setProductType: (store, payload) => { store.productType = payload },
   setPurchaseHistory: (store, payload) => { store.purchaseHistory = payload },
   setSymbolLong: (store, payload) => { store.symbolLong = payload },
-  setShowChangeValueDialog: (store, payload) => { store.showChangeValueDialog = payload }
+  setShowChangeValueDialog: (store, payload) => { store.showChangeValueDialog = payload },
+  setChart: (store, payload) => { store.chart = payload }
 }
 
 export const actions = {
@@ -117,6 +115,7 @@ export const actions = {
   },
 
   async updateData ({ dispatch, state }, productId) {
+    console.log('updateData', productId, state.productType)
     await dispatch('getProductSummary', productId)
     await dispatch('getHistoryData', productId)
     switch (state.productType) {
@@ -130,6 +129,7 @@ export const actions = {
       }
       case 'TIME_DEPOSIT': {
         dispatch('getTimeDepositChartData')
+        break
       }
     }
   },
@@ -154,6 +154,7 @@ export const actions = {
     }
 
     if (response && response.status === 200) {
+      console.log('response', response)
       commit('setPurchaseHistory', response.data)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
@@ -206,7 +207,11 @@ export const actions = {
     const newData = []
     data.forEach((item) => {
       sum += item.value
-      newData.push({ date: item.date, value: sum })
+      if (!newData.map(el => el.date).includes(item.date)) newData.push({ date: item.date, value: sum })
+    })
+    newData.push({
+      date: convertStringToCurrentMillis(moment(new Date()).format('YYYY-MM-DD')),
+      value: sum
     })
     commit('setChartJson', newData)
   },
@@ -224,10 +229,7 @@ export const actions = {
   },
 
   async changeRealEstateValue ({ commit, dispatch, state }, { date, value }) {
-    const request = {
-      date,
-      value
-    }
+    const request = { date, value }
     const response = await this.$backend.products.updateRealEstateHistoryData(state.productId, request)
 
     if (response && response.status === 200) {
@@ -240,10 +242,7 @@ export const actions = {
   },
 
   async changeDepositBalance ({ commit, dispatch, state }, balance) {
-    const request = {
-      balance
-    }
-    console.log('id', state.productId)
+    const request = { balance }
     const response = await this.$backend.products.updateDepositAccountBalance(state.productId, request)
 
     if (response && response.status === 200) {

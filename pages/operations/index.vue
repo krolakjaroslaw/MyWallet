@@ -1,4 +1,4 @@
-<!--suppress CssUnknownTarget, CssOverwrittenProperties -->
+<!--suppress JSUnresolvedVariable -->
 <template>
   <div>
     <div class="page-header">
@@ -53,34 +53,24 @@
 
 <script>
 import moment from 'moment'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Operations',
   layout: 'parallax',
   data () {
     return {
-      search: '',
-      events: []
+      search: ''
     }
   },
   computed: {
-    headers () {
-      return [
-        { text: 'Data', value: 'createdAt', align: 'start', filterable: false },
-        { text: 'Operacja', value: 'eventType', align: 'start' },
-        { text: 'Nazwa', value: 'name', align: 'start' },
-        { text: 'Typ produktu', value: 'productType', align: 'start' },
-        { text: 'Liczba jednostek', value: 'numberOfUnits', align: 'right', filterable: false },
-        { text: 'Wartość', value: 'value', align: 'right', filterable: false }
-      ]
-    }
+    ...mapState('operations', ['events', 'headers'])
   },
-  async created () {
-    // TODO: move to store
-    this.events = (await this.$backend.stock.getUserEvents()).data
-    console.log('events', this.events)
+  created () {
+    this.loadEvents()
   },
   methods: {
+    ...mapActions('operations', ['loadEvents']),
     formattedDate (date) {
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
     }
@@ -102,10 +92,5 @@ export default {
 .section {
   padding: 10px 0;
   position: relative;
-}
-
-.green {
-  background-color: transparent !important;
-  color: #43A047;
 }
 </style>

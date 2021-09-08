@@ -135,7 +135,6 @@
           cols="6"
           class="py-0 mx-auto"
         >
-          <!--TODO: as select-->
           <v-select
             v-model="investmentTime"
             :items="investmentTimeOptions"

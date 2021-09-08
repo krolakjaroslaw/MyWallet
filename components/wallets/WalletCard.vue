@@ -1,3 +1,4 @@
+<!--suppress JSUnresolvedVariable -->
 <template>
   <v-card
     class="rounded-xl my-5"
@@ -84,16 +85,36 @@
       </v-row>
       <v-row>
         <v-col cols="12 text-right">
-          <v-btn icon small @click="$router.push({ name: 'buy-product', params: { id: wallet.id } })">
-            <v-icon color="primary">
-              mdi-database-plus
-            </v-icon>
-          </v-btn>
-          <v-btn icon small @click="$router.push({ name: 'sell-product', params: { id: wallet.id } })">
-            <v-icon color="primary">
-              mdi-database-minus
-            </v-icon>
-          </v-btn>
+          <v-tooltip top>
+            <template #activator="{ on }">
+              <v-btn
+                icon
+                small
+                v-on="on"
+                @click="$router.push({ name: 'buy-product', params: { id: wallet.id } })"
+              >
+                <v-icon color="primary">
+                  mdi-database-plus
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Kup produkt</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template #activator="{ on }">
+              <v-btn
+                icon
+                small
+                v-on="on"
+                @click="$router.push({ name: 'sell-product', params: { id: wallet.id } })"
+              >
+                <v-icon color="primary">
+                  mdi-database-minus
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Sprzedaj produkt</span>
+          </v-tooltip>
         </v-col>
       </v-row>
     </v-card-text>
@@ -154,7 +175,6 @@ export default {
     },
 
     getDetailedProductInfo (wallet, productType) {
-      console.log('walletInfo', wallet.detailedProductInfoResponse)
       if (wallet.detailedProductInfoResponse) {
         if (productType === 'SUM') {
           return wallet.detailedProductInfoResponse
