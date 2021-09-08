@@ -46,7 +46,6 @@ export const mutations = {
     store.realEstates = []
     store.stock = []
     store.timeDeposits = []
-
     store.wallet = {}
   },
   setCommodities: (store, payload) => { store.commodities = payload },
@@ -66,7 +65,6 @@ export const actions = {
   async buyOrSellInvestmentProduct ({ rootState }, operationType) {
     const purchaseState = rootState.wallets['operate-product']
     const walletId = purchaseState.wallet.id
-    console.log('before request', purchaseState.product)
     const request = {
       name: ['COMMODITY', 'CURRENCY', 'STOCK_GPW'].includes(purchaseState.group)
         ? purchaseState.product.symbol
@@ -78,7 +76,6 @@ export const actions = {
       commissionValue: purchaseState.commission,
       comment: purchaseState.comment
     }
-    console.log('request', request)
     const response = await this.$backend.wallets.addInvestmentToWallet(walletId, request)
 
     if (response && response.status === 200) {
@@ -160,7 +157,6 @@ export const actions = {
   },
 
   async getAllProductsInWallet ({ commit, dispatch, state }, walletId) {
-    console.log('getAllProducts')
     const response = await this.$backend.wallets.getAllProductsInWallet(walletId)
 
     if (response && response.status === 200) {
@@ -172,7 +168,6 @@ export const actions = {
       commit('setStock', response.data.stockGpw)
       commit('setTimeDeposits', response.data.timeDeposit)
       commit('setProductsCount', response.data.productsCount)
-      console.log('commits ended', response.data)
     } else if (response && response.status !== 200) {
       this.$toast.error(`Error: ${response.data.error}`)
       console.log('error', response.status, response.data.error)

@@ -59,10 +59,30 @@
 </template>
 
 <script>
+import ChartCard from '@/components/wallets/entity/ChartCard'
+import CommoditiesPanel from '@/components/wallets/entity/panels/CommoditiesPanel'
+import CurrenciesPanel from '@/components/wallets/entity/panels/CurrenciesPanel'
+import DepositsPanel from '@/components/wallets/entity/panels/DepositsPanel'
+import EtfsPanel from '@/components/wallets/entity/panels/EtfsPanel'
+import RealEstatesPanel from '@/components/wallets/entity/panels/RealEstatesPanel'
+import StockPanel from '@/components/wallets/entity/panels/StockPanel'
+import SubAccountCard from '@/components/wallets/entity/SubAccountCard'
+import TimeDepositsPanel from '@/components/wallets/entity/panels/TimeDepositsPanel'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'WalletDetails',
+  components: {
+    ChartCard,
+    CommoditiesPanel,
+    CurrenciesPanel,
+    DepositsPanel,
+    EtfsPanel,
+    RealEstatesPanel,
+    StockPanel,
+    SubAccountCard,
+    TimeDepositsPanel
+  },
   layout: 'parallax',
   data () {
     return {

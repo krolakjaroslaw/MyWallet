@@ -25,14 +25,6 @@
             >
           </div>
 
-<!--          <h1 class="h1-seo">-->
-<!--            My Wallet-->
-<!--          </h1>-->
-
-<!--          <h3 class="h3-seo">-->
-<!--            A beautiful service for beautiful people. <br> Start earning.-->
-<!--          </h3>-->
-
           <v-btn
             rounded
             plain

@@ -89,7 +89,6 @@ export default {
     }
   },
   async mounted () {
-    console.log('products', this.etfs, this.stock, this.deposits, this.timeDeposits, this.realEstates, this.commodities, this.currencies)
     await this.getAllProductsInWallet(this.$route.params.id)
     if (this.etfs.length > 0) {
       this.chartLabels.push('ETFy')
@@ -156,8 +155,6 @@ export default {
       'rgba(65, 105, 225, 1)',
       'rgba(135, 206, 250, 1)'
     ]
-    console.log('chart', this.chartLabels)
-    console.log('chart', this.chartValues)
     this.createChart('pie-chart', this.pieChartData(this.chartLabels, this.chartValues, colors))
   },
   methods: {

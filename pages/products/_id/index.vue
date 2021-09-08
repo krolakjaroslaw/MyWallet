@@ -1,5 +1,3 @@
-<!--suppress CssUnknownTarget, CssOverwrittenProperties -->
-<!--eslint-disable vue/no-parsing-error-->
 <template>
   <div>
     <div class="page-header">
@@ -27,10 +25,13 @@
 </template>
 
 <script>
+import DepositProductDetails from '@/components/products/entity/DepositProductDetails'
+import RealEstateProductDetails from '@/components/products/entity/RealEstateProductDetails'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ProductDetails',
+  components: { DepositProductDetails, RealEstateProductDetails },
   layout: 'parallax',
   computed: {
     productType: {

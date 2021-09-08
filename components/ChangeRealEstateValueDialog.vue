@@ -82,15 +82,23 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ChangeRealEstateValueDialog',
+  props: {
+    chart: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
       date: null,
       value: 0.0,
       valid: true,
-      menu: false
+      menu: false,
+      myChart: this.chart
     }
   },
   computed: {
+    chartJson () { return this.getChartJson() },
     dateFormatted: {
       get () { return this.formatDate(this.date) },
       set (val) { this.date = this.parseDate(val) }
@@ -102,7 +110,7 @@ export default {
   },
   methods: {
     ...mapActions('products/entity', ['changeRealEstateValue']),
-    ...mapGetters('products/entity', ['getShowChangeValueDialog']),
+    ...mapGetters('products/entity', ['getChartJson', 'getShowChangeValueDialog']),
     ...mapMutations('products/entity', ['setShowChangeValueDialog']),
 
     formatDate (date) {
@@ -122,6 +130,16 @@ export default {
     changeValue () {
       this.changeRealEstateValue({ date: this.date, value: this.value })
       this.showChangeValueDialog = false
+    },
+
+    updateChart () {
+      this.myChart.data.labels = []
+      this.myChart.data.datasets[0].data = []
+      const labels = this.chartJson.map(el => new Date(el.date))
+      const values = this.chartJson.map(el => el.value)
+      this.myChart.data.labels = labels
+      this.myChart.data.datasets[0].data = values
+      this.myChart.update()
     },
 
     closeDialog () {

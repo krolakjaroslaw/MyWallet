@@ -105,6 +105,7 @@ export default {
       return this.getCurrentUser() && this.getIsAdmin()
     },
     logged () {
+      console.log('logged', this.getCurrentUser())
       return this.getCurrentUser()
     },
     username () {

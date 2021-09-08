@@ -1,8 +1,7 @@
-<!--suppress CssOverwrittenProperties, CssUnknownTarget -->
+<!--suppress CssOverwrittenProperties, CssUnknownTarget, JSUnresolvedVariable -->
 <template>
   <div>
     <div class="page-header">
-      <!--TODO: move to separate component-->
       <parallax
         class="parallax"
         style="
@@ -18,7 +17,6 @@
       />
     </div>
 
-    <!--TODO: modularity-->
     <div class="section">
       <v-container>
         <v-card
@@ -38,8 +36,18 @@
               />
               <v-tooltip bottom :disabled="wallets.length < 5">
                 <template #activator="{ on }">
-                  <div class="d-flex justify-center align-center" style="height: 220px; width: 350px;" v-on="on">
-                    <v-btn fab x-large color="primary" :disabled="wallets.length === 5" @click.stop="showAddDialog = true">
+                  <div
+                    class="d-flex justify-center align-center"
+                    style="height: 220px; width: 350px;"
+                    v-on="on"
+                  >
+                    <v-btn
+                      fab
+                      x-large
+                      color="primary"
+                      :disabled="wallets.length === 5"
+                      @click.stop="showAddDialog = true"
+                    >
                       <v-icon>mdi-plus</v-icon>
                     </v-btn>
                   </div>
@@ -53,17 +61,19 @@
     </div>
 
     <AddWalletDialog v-if="showAddDialog" />
-    <EditWalletDialog v-if="showEditDialog" />
-    <DeleteWalletDialog v-if="showDeleteDialog" />
+    <EditWalletDialog v-if="editWalletDialog" />
+    <DeleteWalletDialog v-if="deleteWalletDialog" />
     <SubAccountDialog v-if="showAccountDialog" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import WalletCard from '@/components/wallets/WalletCard'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'Wallets',
+  components: { WalletCard },
   layout: 'parallax',
   data () {
     return {
@@ -71,25 +81,22 @@ export default {
     }
   },
   computed: {
+    ...mapState('wallets', ['deleteWalletDialog', 'editWalletDialog', 'wallets']),
+    ...mapState('wallets/operate-product', ['showAccountDialog']),
     showAddDialog: {
       get () { return this.getAddWalletDialog() },
       set (val) { this.setAddWalletDialog(val) }
-    },
-    showDeleteDialog () { return this.getDeleteWalletDialog() },
-    showEditDialog () { return this.getEditWalletDialog() },
-    showAccountDialog () { return this.getShowAccountDialog() },
-    wallets () { return this.getWallets() }
+    }
   },
   async created () {
-    await this.loadWallets()
+    if (this.wallets.length === 0) await this.loadWallets()
   },
   destroyed () {
     this.resetState()
   },
   methods: {
     ...mapActions('wallets', ['loadWallets']),
-    ...mapGetters('wallets', ['getAddWalletDialog', 'getDeleteWalletDialog', 'getEditWalletDialog', 'getWallets']),
-    ...mapGetters('wallets/operate-product', ['getShowAccountDialog']),
+    ...mapGetters('wallets', ['getAddWalletDialog']),
     ...mapMutations('wallets', ['resetState', 'setAddWalletDialog'])
   }
 }
@@ -109,14 +116,5 @@ export default {
 .section {
   padding: 10px 0;
   position: relative;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.green {
-  background-color: transparent !important;
-  color: #43A047;
 }
 </style>

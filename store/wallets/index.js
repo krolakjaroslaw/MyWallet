@@ -48,7 +48,10 @@ export const mutations = {
   setCurrency: (store, payload) => { store.currency = payload },
   setName: (store, payload) => { store.name = payload },
   setSelectedItem: (store, payload) => { store.selectedItem = payload },
-  setWallets: (store, payload) => { store.wallets = payload },
+  setWallets: (store, payload) => {
+    store.wallets = payload
+    localStorage.setItem('wallets', JSON.stringify(store.wallets))
+  },
   updateWalletName: (store, payload) => {
     const index = store.wallets.findIndex(item => item.id === payload.id)
     store.wallets[index].name = payload.name
@@ -89,9 +92,8 @@ export const actions = {
   },
 
   async getWalletInfo ({ commit, state }, id) {
-    console.log('getWalletInfo', id)
     const response = await this.$backend.wallets.getWalletInfo(id)
-    console.log('getWalletInfo', response.data)
+
     if (response && response.status === 200) {
       commit('wallets/entity/setWallet', response.data, { root: true })
     } else if (response && response.status !== 200) {
